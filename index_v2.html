@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM — Portal de Gestión de Equipo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; background: #f0f2f5; color: #1f2328; min-height: 100vh; display: flex; flex-direction: column; }
+
+    .header { background: #161616; height: 56px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; position: sticky; top: 0; z-index: 50; }
+    .header-left { display: flex; align-items: center; gap: 14px; }
+    .ibm-logo svg { width: 54px; height: auto; }
+    .hdiv { width: 1px; height: 22px; background: #393939; }
+    .htitle { color: #c6c6c6; font-size: 13px; }
+    .htitle strong { color: #fff; }
+    .monday-pill { display: inline-flex; align-items: center; gap: 6px; background: #0f62fe; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 600; text-decoration: none; transition: background .2s; }
+    .monday-pill:hover { background: #0353e9; }
+
+    .hero { background: linear-gradient(135deg,#161616 0%,#262626 100%); padding: 52px 32px 48px; text-align: center; }
+    .hero-eye { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #0f62fe; margin-bottom: 14px; }
+    .hero-title { font-size: clamp(24px,4vw,36px); font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 12px; }
+    .hero-sub { font-size: 14px; color: #a8b0bb; max-width: 520px; margin: 0 auto 24px; line-height: 1.7; }
+    .hero-meta { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 20px; padding: 6px 16px; font-size: 12px; color: #8d9299; }
+    .hero-meta span { color: #c6c6c6; font-weight: 600; }
+
+    main { flex: 1; max-width: 960px; width: 100%; margin: 0 auto; padding: 36px 24px 56px; }
+    .slabel { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #57606a; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .slabel::after { content: ''; flex: 1; height: 1px; background: #e5e7eb; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap: 18px; margin-bottom: 36px; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.06); display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.1); }
+    .card-stripe { height: 4px; }
+    .s-blue   { background: #0f62fe; }
+    .s-purple { background: #7c5cd8; }
+    .s-green  { background: #10b981; }
+
+    .card-body { padding: 20px 20px 16px; flex: 1; display: flex; flex-direction: column; }
+    .icon-row { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .cicon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .ib { background: #dbeafe; } .ip { background: #ede9fe; } .ig { background: #d1fae5; }
+    .cbadge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: .5px; }
+    .bnew  { background: #dbeafe; color: #1d4ed8; }
+    .blive { background: #d1fae5; color: #065f46; }
+
+    .ctitle { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+    .cdesc  { font-size: 12px; color: #57606a; line-height: 1.6; flex: 1; margin-bottom: 14px; }
+    .cfeats { list-style: none; margin-bottom: 14px; }
+    .cfeats li { font-size: 11px; color: #374151; padding: 3px 0; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid #f7f8fa; }
+    .cfeats li:last-child { border-bottom: none; }
+    .dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .db { background: #0f62fe; } .dp { background: #7c5cd8; } .dg { background: #10b981; }
+
+    .clink { display: flex; align-items: center; justify-content: center; gap: 7px; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none; transition: background .2s; }
+    .lb { background: #0f62fe; color: #fff; } .lb:hover { background: #0353e9; }
+    .lp { background: #7c5cd8; color: #fff; } .lp:hover { background: #6d48d0; }
+    .lg { background: #10b981; color: #fff; } .lg:hover { background: #059669; }
+
+    .quick { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 32px; }
+    .ql { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 12px; font-weight: 600; color: #374151; text-decoration: none; transition: border-color .2s, color .2s; }
+    .ql:hover { border-color: #0f62fe; color: #0f62fe; }
+
+    footer { background: #161616; padding: 18px 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .fl { font-size: 12px; color: #6f6f6f; }
+    .fl strong { color: #a8b0bb; }
+    .flinks { display: flex; gap: 18px; }
+    .flinks a { font-size: 12px; color: #6f6f6f; text-decoration: none; }
+    .flinks a:hover { color: #c6c6c6; }
+
+    @media (max-width: 600px) { .htitle { display: none; } .hero { padding: 32px 18px 28px; } main { padding: 24px 16px 40px; } }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-left">
+    <div class="ibm-logo">
+      <svg viewBox="0 0 300 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0"   y="0"   width="50" height="12" fill="#fff"/><rect x="0"   y="20"  width="50" height="12" fill="#fff"/><rect x="0"   y="40"  width="50" height="12" fill="#fff"/><rect x="0"   y="60"  width="50" height="12" fill="#fff"/><rect x="0"   y="80"  width="50" height="12" fill="#fff"/><rect x="0"   y="100" width="50" height="12" fill="#fff"/>
+        <rect x="70"  y="0"   width="100" height="12" fill="#fff"/><rect x="70"  y="20"  width="30" height="12" fill="#fff"/><rect x="140" y="20"  width="30" height="12" fill="#fff"/><rect x="70"  y="40"  width="30" height="12" fill="#fff"/><rect x="140" y="40"  width="30" height="12" fill="#fff"/><rect x="70"  y="60"  width="100" height="12" fill="#fff"/><rect x="70"  y="80"  width="30" height="12" fill="#fff"/><rect x="140" y="80"  width="30" height="12" fill="#fff"/><rect x="70"  y="100" width="30" height="12" fill="#fff"/><rect x="140" y="100" width="30" height="12" fill="#fff"/>
+        <rect x="190" y="0"   width="100" height="12" fill="#fff"/><rect x="190" y="20"  width="100" height="12" fill="#fff"/><rect x="210" y="40"  width="60"  height="12" fill="#fff"/><rect x="210" y="60"  width="60"  height="12" fill="#fff"/><rect x="190" y="80"  width="100" height="12" fill="#fff"/><rect x="190" y="100" width="100" height="12" fill="#fff"/>
+      </svg>
+    </div>
+    <div class="hdiv"></div>
+    <div class="htitle"><strong>Portal IBM</strong> — Gestión de Equipo</div>
+  </div>
+  <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="monday-pill">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    Monday Board
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-eye">IBM · Portal de Gestión de Equipo</div>
+  <h1 class="hero-title">Tus herramientas de gestión<br>en un solo lugar</h1>
+  <p class="hero-sub">Confirma actualizaciones de sistemas, carga evidencias y gestiona solicitudes de horas extras, todo conectado a Monday.</p>
+  <div class="hero-meta">🔗 Board Monday: <span>18432741374</span> &nbsp;·&nbsp; ✅ GitHub Pages activo</div>
+</section>
+
+<main>
+
+  <div class="slabel">Dashboards disponibles</div>
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-stripe s-blue"></div>
+      <div class="card-body">
+        <div class="icon-row"><div class="cicon ib">📋</div><span class="cbadge bnew">Nuevo</span></div>
+        <div class="ctitle">Confirmación de Actualizaciones</div>
+        <div class="cdesc">Cada colaborador ingresa su información y adjunta evidencias de Time, Success Factors y My Hour Plan.</div>
+        <ul class="cfeats">
+          <li><span class="dot db"></span>Campos editables por colaborador</li>
+          <li><span class="dot db"></span>Soporte en cualquier formato de archivo</li>
+          <li><span class="dot db"></span>Confirmación con timestamp individual</li>
+          <li><span class="dot db"></span>Sincronización con Monday Board</li>
+        </ul>
+        <a href="dashboard_actualizaciones.html" class="clink lb">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Abrir dashboard
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe s-purple"></div>
+      <div class="card-body">
+        <div class="icon-row"><div class="cicon ip">⏰</div><span class="cbadge bnew">Nuevo</span></div>
+        <div class="ctitle">Solicitud de Horas Extras</div>
+        <div class="cdesc">Solicita horas extras con aprobación exclusiva del líder encargado. Cola de aprobación en tiempo real.</div>
+        <ul class="cfeats">
+          <li><span class="dot dp"></span>Formulario de solicitud completo</li>
+          <li><span class="dot dp"></span>Aprobación exclusiva por líder Monday</li>
+          <li><span class="dot dp"></span>Estadísticas de horas aprobadas</li>
+          <li><span class="dot dp"></span>Sincronización con Monday Board</li>
+        </ul>
+        <a href="dashboard_actualizaciones.html" class="clink lp" onclick="sessionStorage.setItem('slide','2')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Solicitar horas extras
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-stripe s-green"></div>
+      <div class="card-body">
+        <div class="icon-row"><div class="cicon ig">📅</div><span class="cbadge blive">Activo</span></div>
+        <div class="ctitle">Gestión de Ausencias</div>
+        <div class="cdesc">Registro y seguimiento de ausencias del equipo con cronograma visual conectado a Monday.</div>
+        <ul class="cfeats">
+          <li><span class="dot dg"></span>Calendario de ausencias</li>
+          <li><span class="dot dg"></span>Vacaciones, permisos, incapacidades</li>
+          <li><span class="dot dg"></span>Filtrado automático de solicitudes</li>
+          <li><span class="dot dg"></span>Conectado a Monday en tiempo real</li>
+        </ul>
+        <a href="dashboard_ausencias.html" class="clink lg">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          Abrir dashboard
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="slabel">Accesos rápidos</div>
+  <div class="quick">
+    <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="ql">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Monday Board 18432741374
+    </a>
+    <a href="https://w3.ibm.com" target="_blank" rel="noopener" class="ql">🕐 IBM Time Tracker</a>
+    <a href="https://performancemanager.successfactors.com" target="_blank" rel="noopener" class="ql">🌐 Success Factors</a>
+    <a href="https://github.com/AMC304-beep/DASHBOARD-CONSTRUCCI-N-V2" target="_blank" rel="noopener" class="ql">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      Repositorio GitHub V2
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  <div class="fl">© <strong>IBM Corporation</strong> — Portal de Gestión · Board <strong>18432741374</strong></div>
+  <div class="flinks">
+    <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener">Monday</a>
+    <a href="https://github.com/AMC304-beep/DASHBOARD-CONSTRUCCI-N-V2" target="_blank" rel="noopener">GitHub</a>
+    <a href="dashboard_actualizaciones.html">Dashboard</a>
+  </div>
+</footer>
+
+</body>
+</html>
