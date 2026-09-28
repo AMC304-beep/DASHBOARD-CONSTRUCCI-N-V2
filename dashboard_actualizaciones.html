@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IBM – Confirmación Actualizaciones & Horas Extras</title>
+  <style>
+    /* ── Reset & Base ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+      background: #f0f2f5;
+      color: #1f2328;
+      min-height: 100vh;
+    }
+
+    /* ── IBM Header ──────────────────────────────────────────────── */
+    .ibm-header {
+      background: #161616;
+      padding: 0 28px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .ibm-logo svg { width: 58px; height: auto; }
+    .ibm-header-title { color: #f4f4f4; font-size: 13px; font-weight: 500; letter-spacing: .3px; }
+    .monday-btn {
+      background: #0f62fe;
+      color: #fff;
+      border: none;
+      padding: 7px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background .2s;
+    }
+    .monday-btn:hover { background: #0353e9; }
+
+    /* ── Slide Navigation ────────────────────────────────────────── */
+    .slide-nav {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      padding: 0 28px;
+      gap: 0;
+    }
+    .slide-tab {
+      padding: 14px 24px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #57606a;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+    }
+    .slide-tab:hover { color: #0f62fe; }
+    .slide-tab.active { color: #0f62fe; border-bottom-color: #0f62fe; }
+
+    /* ── Slides ──────────────────────────────────────────────────── */
+    .slide { display: none; padding: 28px; max-width: 1200px; margin: 0 auto; }
+    .slide.active { display: block; }
+
+    /* ── Section Title ───────────────────────────────────────────── */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1f2328;
+      margin-bottom: 6px;
+    }
+    .section-sub {
+      font-size: 13px;
+      color: #57606a;
+      margin-bottom: 24px;
+    }
+
+    /* ── Status Cards Grid ───────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .status-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .card-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+    .icon-time    { background: #dbeafe; }
+    .icon-sf      { background: #dcfce7; }
+    .icon-hourplan{ background: #fef9c3; }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .badge-pending   { background: #fff3cd; color: #856404; }
+    .badge-confirmed { background: #d1fae5; color: #065f46; }
+    .badge-overdue   { background: #fee2e2; color: #991b1b; }
+
+    .card-body { padding: 16px 18px; }
+    .field-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #f7f8fa;
+      font-size: 13px;
+    }
+    .field-row:last-child { border-bottom: none; }
+    .field-label { color: #57606a; }
+    .field-value { font-weight: 600; color: #1f2328; }
+
+    /* ── Confirm Button ──────────────────────────────────────────── */
+    .confirm-row {
+      padding: 14px 18px;
+      border-top: 1px solid #f0f2f5;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .btn-confirm {
+      background: #0f62fe;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-confirm:hover { background: #0353e9; }
+    .btn-confirm.confirmed {
+      background: #10b981;
+      cursor: default;
+    }
+    .confirm-ts {
+      font-size: 11px;
+      color: #57606a;
+      display: none;
+    }
+    .confirm-ts.visible { display: inline; }
+
+    /* ── Upload Section ──────────────────────────────────────────── */
+    .upload-section {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .upload-section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .upload-section p {
+      font-size: 13px;
+      color: #57606a;
+      margin-bottom: 18px;
+    }
+    .upload-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .upload-box {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 20px 16px;
+      text-align: center;
+      background: #fafafa;
+      transition: border-color .2s, background .2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .upload-box:hover { border-color: #0f62fe; background: #eff6ff; }
+    .upload-box.drag-over { border-color: #0f62fe; background: #dbeafe; }
+    .upload-box input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+    .upload-icon { font-size: 28px; margin-bottom: 8px; }
+    .upload-label { font-size: 13px; font-weight: 700; color: #1f2328; margin-bottom: 4px; }
+    .upload-hint  { font-size: 11px; color: #57606a; }
+    .file-list    { margin-top: 10px; font-size: 12px; color: #1f2328; text-align: left; }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 6px;
+      background: #f0f9ff;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+    .file-item .remove-file {
+      margin-left: auto;
+      color: #ef4444;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .btn-upload-monday {
+      margin-top: 18px;
+      background: #7c5cd8;
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background .2s;
+    }
+    .btn-upload-monday:hover { background: #6d48d0; }
+    .upload-status {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #10b981;
+      font-weight: 600;
+      display: none;
+    }
+    .upload-status.visible { display: block; }
+
+    /* ── Summary Bar ─────────────────────────────────────────────── */
+    .summary-bar {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 18px 24px;
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 28px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .summary-item { text-align: center; }
+    .summary-num  { font-size: 26px; font-weight: 800; color: #0f62fe; }
+    .summary-lbl  { font-size: 11px; color: #57606a; font-weight: 500; text-transform: uppercase; }
+
+    /* ── Slide 2 – Horas Extras ──────────────────────────────────── */
+    .ot-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    @media (max-width: 768px) { .ot-container { grid-template-columns: 1fr; } }
+
+    .form-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .form-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 18px; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #57606a;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 5px;
+      font-size: 13px;
+      color: #1f2328;
+      background: #fff;
+      transition: border-color .2s;
+      font-family: inherit;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #0f62fe;
+      box-shadow: 0 0 0 3px rgba(15,98,254,.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .btn-submit-ot {
+      width: 100%;
+      background: #0f62fe;
+      color: #fff;
+      border: none;
+      padding: 11px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background .2s;
+    }
+    .btn-submit-ot:hover { background: #0353e9; }
+
+    /* Approval Queue */
+    .approval-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .approval-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .approval-sub { font-size: 12px; color: #57606a; margin-bottom: 18px; }
+
+    .req-item {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      background: #fafafa;
+    }
+    .req-item-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .req-name    { font-size: 13px; font-weight: 700; }
+    .req-meta    { font-size: 11px; color: #57606a; margin-top: 2px; }
+    .req-reason  { font-size: 12px; color: #374151; margin-bottom: 10px; font-style: italic; }
+    .req-actions { display: flex; gap: 8px; }
+    .btn-approve {
+      background: #10b981;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-approve:hover { background: #059669; }
+    .btn-reject {
+      background: #ef4444;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-reject:hover { background: #dc2626; }
+    .req-status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      white-space: nowrap;
+    }
+    .req-pending  { background: #fff3cd; color: #856404; }
+    .req-approved { background: #d1fae5; color: #065f46; }
+    .req-rejected { background: #fee2e2; color: #991b1b; }
+
+    .lider-notice {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #1d4ed8;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .lider-notice strong { display: block; margin-bottom: 2px; }
+
+    /* ── Toast ───────────────────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #161616;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,.2);
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform .3s, opacity .3s;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 4px solid #10b981; }
+    .toast.error   { border-left: 4px solid #ef4444; }
+    .toast.info    { border-left: 4px solid #0f62fe; }
+
+    /* ── Empty state ─────────────────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 32px;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+    .empty-state .empty-icon { font-size: 36px; margin-bottom: 8px; }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .ibm-header-title { display: none; }
+      .slide { padding: 16px; }
+      .cards-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── IBM Header ──────────────────────────────────────────────────── -->
+<header class="ibm-header">
+  <div class="ibm-logo">
+    <!-- IBM logo (horizontal stripe SVG) -->
+    <svg viewBox="0 0 300 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0"   y="0"  width="50" height="12" fill="#fff"/>
+      <rect x="0"   y="20" width="50" height="12" fill="#fff"/>
+      <rect x="0"   y="40" width="50" height="12" fill="#fff"/>
+      <rect x="0"   y="60" width="50" height="12" fill="#fff"/>
+      <rect x="0"   y="80" width="50" height="12" fill="#fff"/>
+      <rect x="0"   y="100" width="50" height="12" fill="#fff"/>
+      <rect x="70"  y="0"  width="100" height="12" fill="#fff"/>
+      <rect x="70"  y="20" width="30"  height="12" fill="#fff"/>
+      <rect x="140" y="20" width="30"  height="12" fill="#fff"/>
+      <rect x="70"  y="40" width="30"  height="12" fill="#fff"/>
+      <rect x="140" y="40" width="30"  height="12" fill="#fff"/>
+      <rect x="70"  y="60" width="100" height="12" fill="#fff"/>
+      <rect x="70"  y="80" width="30"  height="12" fill="#fff"/>
+      <rect x="140" y="80" width="30"  height="12" fill="#fff"/>
+      <rect x="70"  y="100" width="30" height="12" fill="#fff"/>
+      <rect x="140" y="100" width="30" height="12" fill="#fff"/>
+      <rect x="190" y="0"  width="100" height="12" fill="#fff"/>
+      <rect x="190" y="20" width="100" height="12" fill="#fff"/>
+      <rect x="210" y="40" width="60"  height="12" fill="#fff"/>
+      <rect x="210" y="60" width="60"  height="12" fill="#fff"/>
+      <rect x="190" y="80" width="100" height="12" fill="#fff"/>
+      <rect x="190" y="100" width="100" height="12" fill="#fff"/>
+    </svg>
+  </div>
+  <span class="ibm-header-title">Portal de Gestión de Actualizaciones &amp; Horas Extras — Monday Board 18432741374</span>
+  <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="monday-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+    Abrir en Monday
+  </a>
+</header>
+
+<!-- ── Slide Navigation ────────────────────────────────────────────── -->
+<nav class="slide-nav">
+  <div class="slide-tab active" onclick="showSlide(1, this)">📋 Slide 1 — Confirmación de Actualizaciones</div>
+  <div class="slide-tab" onclick="showSlide(2, this)">⏰ Slide 2 — Solicitud de Horas Extras</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 1 – Confirmación de actualizaciones
+═══════════════════════════════════════════════════════════════════════ -->
+<div class="slide active" id="slide1">
+
+  <!-- Summary Bar -->
+  <div class="summary-bar">
+    <div class="summary-item">
+      <div class="summary-num" id="totalPending">0</div>
+      <div class="summary-lbl">Pendientes</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num" id="totalConfirmed" style="color:#10b981">0</div>
+      <div class="summary-lbl">Confirmados</div>
+    </div>
+    <div class="summary-item">
+      <div class="summary-num" id="totalOverdue" style="color:#ef4444">0</div>
+      <div class="summary-lbl">Vencidos</div>
+    </div>
+    <div style="margin-left:auto; font-size:12px; color:#57606a;">
+      📅 Semana: <strong id="currentWeek">–</strong> &nbsp;|&nbsp;
+      🔗 Board: <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" style="color:#0f62fe; font-weight:700;">18432741374</a>
+    </div>
+  </div>
+
+  <!-- Section title -->
+  <div class="section-title">Estado de Actualizaciones de Sistemas</div>
+  <div class="section-sub">Confirma que las actualizaciones de <strong>Time</strong>, <strong>Success Factors</strong> y <strong>My Hour Plan</strong> han sido realizadas correctamente esta semana.</div>
+
+  <!-- Status Cards -->
+  <div class="cards-grid">
+
+    <!-- TIME card -->
+    <div class="status-card" id="card-time">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon icon-time">🕐</div>
+          Time (IBM Time Tracker)
+        </div>
+        <span class="status-badge badge-pending" id="badge-time">Pendiente</span>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <span class="field-label">Última actualización</span>
+          <span class="field-value" id="time-lastUpdate">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Horas registradas</span>
+          <span class="field-value" id="time-hours">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Período</span>
+          <span class="field-value" id="time-period">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Responsable</span>
+          <span class="field-value" id="time-owner">—</span>
+        </div>
+        <div class="field-row" style="margin-top:8px;">
+          <span class="field-label">Notas</span>
+          <input type="text" id="time-notes" placeholder="Agregar nota…" style="width:60%;padding:5px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;" />
+        </div>
+      </div>
+      <div class="confirm-row">
+        <button class="btn-confirm" id="btn-time" onclick="confirmUpdate('time')">✔ Confirmar actualización</button>
+        <span class="confirm-ts" id="ts-time"></span>
+      </div>
+    </div>
+
+    <!-- SUCCESS FACTORS card -->
+    <div class="status-card" id="card-sf">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon icon-sf">🌐</div>
+          Success Factors (SAP HCM)
+        </div>
+        <span class="status-badge badge-pending" id="badge-sf">Pendiente</span>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <span class="field-label">Última actualización</span>
+          <span class="field-value" id="sf-lastUpdate">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Módulo</span>
+          <span class="field-value" id="sf-module">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Período</span>
+          <span class="field-value" id="sf-period">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Responsable</span>
+          <span class="field-value" id="sf-owner">—</span>
+        </div>
+        <div class="field-row" style="margin-top:8px;">
+          <span class="field-label">Notas</span>
+          <input type="text" id="sf-notes" placeholder="Agregar nota…" style="width:60%;padding:5px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;" />
+        </div>
+      </div>
+      <div class="confirm-row">
+        <button class="btn-confirm" id="btn-sf" onclick="confirmUpdate('sf')">✔ Confirmar actualización</button>
+        <span class="confirm-ts" id="ts-sf"></span>
+      </div>
+    </div>
+
+    <!-- MY HOUR PLAN card -->
+    <div class="status-card" id="card-hp">
+      <div class="card-header">
+        <div class="card-title">
+          <div class="card-icon icon-hourplan">📅</div>
+          My Hour Plan
+        </div>
+        <span class="status-badge badge-pending" id="badge-hp">Pendiente</span>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <span class="field-label">Última actualización</span>
+          <span class="field-value" id="hp-lastUpdate">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Plan semana</span>
+          <span class="field-value" id="hp-plan">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Período</span>
+          <span class="field-value" id="hp-period">—</span>
+        </div>
+        <div class="field-row">
+          <span class="field-label">Responsable</span>
+          <span class="field-value" id="hp-owner">—</span>
+        </div>
+        <div class="field-row" style="margin-top:8px;">
+          <span class="field-label">Notas</span>
+          <input type="text" id="hp-notes" placeholder="Agregar nota…" style="width:60%;padding:5px 8px;border:1px solid #d1d5db;border-radius:4px;font-size:12px;" />
+        </div>
+      </div>
+      <div class="confirm-row">
+        <button class="btn-confirm" id="btn-hp" onclick="confirmUpdate('hp')">✔ Confirmar actualización</button>
+        <span class="confirm-ts" id="ts-hp"></span>
+      </div>
+    </div>
+
+  </div><!-- /cards-grid -->
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <h3>📎 Carga de Evidencias por Sistema</h3>
+    <p>Adjunta capturas, PDFs, documentos Word o Excel como evidencia de cada actualización. Formatos aceptados: PDF, JPG, PNG, DOCX, XLSX, SCREENSHOT.</p>
+
+    <div class="upload-grid">
+
+      <!-- Upload: Time -->
+      <div>
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#57606a; margin-bottom:8px;">🕐 Time</div>
+        <div class="upload-box" id="drop-time" ondragover="dragOver(event,'drop-time')" ondragleave="dragLeave('drop-time')" ondrop="dropFile(event,'time')">
+          <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.bmp,.gif,.webp" onchange="handleFiles(this.files,'time')" />
+          <div class="upload-icon">📁</div>
+          <div class="upload-label">Arrastra o haz clic</div>
+          <div class="upload-hint">PDF · JPG · PNG · DOCX · XLSX · Screenshot</div>
+          <div class="file-list" id="files-time"></div>
+        </div>
+      </div>
+
+      <!-- Upload: Success Factors -->
+      <div>
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#57606a; margin-bottom:8px;">🌐 Success Factors</div>
+        <div class="upload-box" id="drop-sf" ondragover="dragOver(event,'drop-sf')" ondragleave="dragLeave('drop-sf')" ondrop="dropFile(event,'sf')">
+          <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.bmp,.gif,.webp" onchange="handleFiles(this.files,'sf')" />
+          <div class="upload-icon">📁</div>
+          <div class="upload-label">Arrastra o haz clic</div>
+          <div class="upload-hint">PDF · JPG · PNG · DOCX · XLSX · Screenshot</div>
+          <div class="file-list" id="files-sf"></div>
+        </div>
+      </div>
+
+      <!-- Upload: My Hour Plan -->
+      <div>
+        <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#57606a; margin-bottom:8px;">📅 My Hour Plan</div>
+        <div class="upload-box" id="drop-hp" ondragover="dragOver(event,'drop-hp')" ondragleave="dragLeave('drop-hp')" ondrop="dropFile(event,'hp')">
+          <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.bmp,.gif,.webp" onchange="handleFiles(this.files,'hp')" />
+          <div class="upload-icon">📁</div>
+          <div class="upload-label">Arrastra o haz clic</div>
+          <div class="upload-hint">PDF · JPG · PNG · DOCX · XLSX · Screenshot</div>
+          <div class="file-list" id="files-hp"></div>
+        </div>
+      </div>
+
+    </div><!-- /upload-grid -->
+
+    <button class="btn-upload-monday" onclick="syncToMonday()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Sincronizar confirmaciones y evidencias con Monday
+    </button>
+    <div class="upload-status" id="uploadStatus">✅ Evidencias sincronizadas correctamente con Monday Board 18432741374</div>
+  </div><!-- /upload-section -->
+
+</div><!-- /slide1 -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SLIDE 2 – Solicitud de Horas Extras
+═══════════════════════════════════════════════════════════════════════ -->
+<div class="slide" id="slide2">
+
+  <div class="section-title">Solicitud de Horas Extras</div>
+  <div class="section-sub">Completa el formulario para solicitar horas extras. La aprobación es <strong>exclusiva del líder encargado</strong>. Recibirás notificación una vez revisada tu solicitud.</div>
+
+  <div class="lider-notice">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>
+      <strong>Flujo de aprobación: Solo Líder</strong>
+      Las solicitudes de horas extras solo pueden ser aprobadas o rechazadas por el líder encargado del equipo. No se requiere aprobación adicional de otras instancias.
+    </div>
+  </div>
+
+  <div class="ot-container">
+
+    <!-- Form: Nueva solicitud -->
+    <div class="form-card">
+      <h3>➕ Nueva Solicitud de Horas Extras</h3>
+
+      <div class="form-group">
+        <label>Nombre del colaborador</label>
+        <input type="text" id="ot-name" placeholder="Ej. Juan Pérez" />
+      </div>
+      <div class="form-group">
+        <label>Correo IBM</label>
+        <input type="email" id="ot-email" placeholder="usuario@ibm.com" />
+      </div>
+      <div class="form-group">
+        <label>Fecha de horas extras</label>
+        <input type="date" id="ot-date" />
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group">
+          <label>Hora inicio</label>
+          <input type="time" id="ot-start" />
+        </div>
+        <div class="form-group">
+          <label>Hora fin</label>
+          <input type="time" id="ot-end" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Total horas solicitadas</label>
+        <input type="number" id="ot-total" min="0.5" max="16" step="0.5" placeholder="Ej. 2.5" />
+      </div>
+      <div class="form-group">
+        <label>Proyecto / Tarea</label>
+        <input type="text" id="ot-project" placeholder="Nombre del proyecto o número de tarea" />
+      </div>
+      <div class="form-group">
+        <label>Líder responsable</label>
+        <select id="ot-leader">
+          <option value="">— Seleccionar líder —</option>
+          <option value="lider1">Líder 1 – Equipo A</option>
+          <option value="lider2">Líder 2 – Equipo B</option>
+          <option value="lider3">Líder 3 – Equipo C</option>
+          <option value="lider4">Líder 4 – Operaciones</option>
+          <option value="lider5">Líder 5 – Desarrollo</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Justificación</label>
+        <textarea id="ot-reason" placeholder="Describe el motivo de las horas extras…"></textarea>
+      </div>
+      <button class="btn-submit-ot" onclick="submitOTRequest()">📤 Enviar solicitud al líder</button>
+    </div>
+
+    <!-- Approval Queue -->
+    <div class="approval-card">
+      <h3>📋 Cola de Aprobaciones (Líder)</h3>
+      <div class="approval-sub">Solo el líder encargado puede aprobar o rechazar las solicitudes.</div>
+
+      <div id="otQueue">
+        <div class="empty-state" id="emptyQueue">
+          <div class="empty-icon">📭</div>
+          No hay solicitudes pendientes
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div style="margin-top:20px; display:flex; gap:16px; flex-wrap:wrap; padding-top:16px; border-top:1px solid #e5e7eb;">
+        <div class="summary-item">
+          <div class="summary-num" id="ot-pending" style="font-size:20px;">0</div>
+          <div class="summary-lbl">Pendientes</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-num" id="ot-approved" style="font-size:20px; color:#10b981;">0</div>
+          <div class="summary-lbl">Aprobadas</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-num" id="ot-rejected" style="font-size:20px; color:#ef4444;">0</div>
+          <div class="summary-lbl">Rechazadas</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-num" id="ot-totalHrs" style="font-size:20px; color:#7c5cd8;">0</div>
+          <div class="summary-lbl">Horas aprobadas</div>
+        </div>
+      </div>
+
+      <button class="btn-upload-monday" style="margin-top:16px;" onclick="syncOTtoMonday()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Sincronizar aprobaciones con Monday
+      </button>
+    </div>
+
+  </div>
+</div><!-- /slide2 -->
+
+<!-- ── Toast ─────────────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════
+   STATE & CONSTANTS
+════════════════════════════════════════════════════════════════════ */
+const MONDAY_BOARD = '18432741374';
+const MONDAY_URL   = `https://ibm.monday.com/boards/${MONDAY_BOARD}`;
+
+// Monday API Token should be provided via environment / secure config.
+// DO NOT hardcode tokens here. For production, use a backend proxy.
+const MONDAY_API_TOKEN = null; // Set via secure backend integration
+
+const uploadedFiles = { time: [], sf: [], hp: [] };
+const confirmations = { time: false, sf: false, hp: false };
+let otRequests = [];
+let otIdCounter = 1;
+
+/* ════════════════════════════════════════════════════════════════════
+   INIT
+════════════════════════════════════════════════════════════════════ */
+function init() {
+  const now    = new Date();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+
+  const fmt = d => d.toLocaleDateString('es-CO', { day:'2-digit', month:'short' });
+  document.getElementById('currentWeek').textContent = `${fmt(monday)} – ${fmt(friday)} ${now.getFullYear()}`;
+
+  const weekStr = `Semana ${getWeekNumber(now)} – ${now.getFullYear()}`;
+  const today   = now.toLocaleDateString('es-CO', { weekday:'long', day:'2-digit', month:'short' });
+
+  // Pre-fill card fields
+  fillCard('time', { lastUpdate: today, hours: '—', period: weekStr, owner: '—' });
+  fillCard('sf',   { lastUpdate: today, module: 'Time & Attendance', period: weekStr, owner: '—' });
+  fillCard('hp',   { lastUpdate: today, plan: 'Planificado', period: weekStr, owner: '—' });
+
+  // Set OT date default to today
+  document.getElementById('ot-date').valueAsDate = now;
+
+  updateSummary();
+}
+
+function fillCard(id, data) {
+  const el = (sel) => document.getElementById(`${id}-${sel}`);
+  if (data.lastUpdate) el('lastUpdate').textContent = data.lastUpdate;
+  if (data.hours)      el('hours') && (el('hours').textContent = data.hours);
+  if (data.module)     el('module') && (el('module').textContent = data.module);
+  if (data.plan)       el('plan') && (el('plan').textContent = data.plan);
+  if (data.period)     el('period').textContent = data.period;
+  if (data.owner)      el('owner').textContent = data.owner;
+}
+
+function getWeekNumber(d) {
+  const onejan = new Date(d.getFullYear(), 0, 1);
+  return Math.ceil((((d - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   SLIDE NAVIGATION
+════════════════════════════════════════════════════════════════════ */
+function showSlide(num, tab) {
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.slide-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`slide${num}`).classList.add('active');
+  tab.classList.add('active');
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   CONFIRMATION LOGIC
+════════════════════════════════════════════════════════════════════ */
+function confirmUpdate(id) {
+  const btn   = document.getElementById(`btn-${id}`);
+  const badge = document.getElementById(`badge-${id}`);
+  const ts    = document.getElementById(`ts-${id}`);
+
+  if (btn.classList.contains('confirmed')) return;
+
+  confirmations[id] = true;
+  btn.classList.add('confirmed');
+  btn.textContent = '✅ Confirmado';
+
+  badge.textContent = 'Confirmado';
+  badge.className   = 'status-badge badge-confirmed';
+
+  const now = new Date().toLocaleString('es-CO', { dateStyle:'short', timeStyle:'short' });
+  ts.textContent = `Confirmado el ${now}`;
+  ts.classList.add('visible');
+
+  updateSummary();
+  showToast(`✅ ${getSystemName(id)} confirmado correctamente`, 'success');
+}
+
+function getSystemName(id) {
+  return { time: 'Time', sf: 'Success Factors', hp: 'My Hour Plan' }[id] || id;
+}
+
+function updateSummary() {
+  const all      = ['time','sf','hp'];
+  const confirmed = all.filter(id => confirmations[id]).length;
+  const pending   = all.length - confirmed;
+  document.getElementById('totalConfirmed').textContent = confirmed;
+  document.getElementById('totalPending').textContent   = pending;
+  document.getElementById('totalOverdue').textContent   = 0; // computed per business rules
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   FILE UPLOAD LOGIC
+════════════════════════════════════════════════════════════════════ */
+const ALLOWED_TYPES = ['application/pdf','image/jpeg','image/png','image/gif',
+  'image/webp','image/bmp','application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+
+const ICONS = {
+  'pdf':'📄','jpeg':'🖼','jpg':'🖼','png':'🖼','gif':'🖼',
+  'webp':'🖼','bmp':'🖼','docx':'📝','doc':'📝','xlsx':'📊','xls':'📊'
+};
+
+function fileIcon(name) {
+  const ext = name.split('.').pop().toLowerCase();
+  return ICONS[ext] || '📎';
+}
+
+function handleFiles(files, category) {
+  [...files].forEach(f => {
+    if (!ALLOWED_TYPES.includes(f.type) && f.type !== '') {
+      showToast(`⚠️ Tipo de archivo no permitido: ${f.name}`, 'error');
+      return;
+    }
+    if (f.size > 25 * 1024 * 1024) {
+      showToast(`⚠️ Archivo demasiado grande (máx. 25 MB): ${f.name}`, 'error');
+      return;
+    }
+    uploadedFiles[category].push(f);
+  });
+  renderFileList(category);
+}
+
+function dropFile(e, category) {
+  e.preventDefault();
+  dragLeave(`drop-${category}`);
+  handleFiles(e.dataTransfer.files, category);
+}
+
+function dragOver(e, boxId) {
+  e.preventDefault();
+  document.getElementById(boxId).classList.add('drag-over');
+}
+function dragLeave(boxId) {
+  document.getElementById(boxId).classList.remove('drag-over');
+}
+
+function renderFileList(category) {
+  const container = document.getElementById(`files-${category}`);
+  container.innerHTML = '';
+  uploadedFiles[category].forEach((f, idx) => {
+    const item = document.createElement('div');
+    item.className = 'file-item';
+    item.innerHTML = `${fileIcon(f.name)} <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${f.name}</span>
+      <span class="remove-file" onclick="removeFile('${category}',${idx})">✕</span>`;
+    container.appendChild(item);
+  });
+}
+
+function removeFile(category, idx) {
+  uploadedFiles[category].splice(idx, 1);
+  renderFileList(category);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   MONDAY SYNC (Slide 1)
+   NOTE: Production use requires a secure backend proxy with the Monday
+   API token stored server-side — never expose API tokens in client JS.
+════════════════════════════════════════════════════════════════════ */
+function syncToMonday() {
+  const totalFiles = uploadedFiles.time.length + uploadedFiles.sf.length + uploadedFiles.hp.length;
+  const confirmed  = Object.values(confirmations).filter(Boolean).length;
+
+  if (confirmed === 0 && totalFiles === 0) {
+    showToast('⚠️ Confirma al menos un sistema o adjunta evidencias antes de sincronizar.', 'error');
+    return;
+  }
+
+  // Build summary for Monday update
+  const notes = [];
+  ['time','sf','hp'].forEach(id => {
+    const n = document.getElementById(`${id}-notes`).value.trim();
+    const f = uploadedFiles[id].length;
+    const c = confirmations[id];
+    notes.push(`${getSystemName(id)}: ${c ? '✅ Confirmado' : '⏳ Pendiente'}${n ? ' | ' + n : ''}${f ? ` | ${f} archivo(s)` : ''}`);
+  });
+
+  const summary = `[IBM Dashboard] ${new Date().toLocaleString('es-CO')}\n${notes.join('\n')}`;
+
+  console.info('Monday sync payload:', {
+    board: MONDAY_BOARD,
+    summary,
+    files: { time: uploadedFiles.time.map(f=>f.name), sf: uploadedFiles.sf.map(f=>f.name), hp: uploadedFiles.hp.map(f=>f.name) }
+  });
+
+  // Simulate success (real impl requires backend API call with Monday OAuth token)
+  simulateSync(() => {
+    const statusEl = document.getElementById('uploadStatus');
+    statusEl.textContent = `✅ Sincronizado con Monday Board ${MONDAY_BOARD} — ${new Date().toLocaleString('es-CO')}`;
+    statusEl.classList.add('visible');
+    showToast('✅ Confirmaciones y evidencias enviadas a Monday', 'success');
+  });
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   OT REQUEST LOGIC (Slide 2)
+════════════════════════════════════════════════════════════════════ */
+function submitOTRequest() {
+  const name    = document.getElementById('ot-name').value.trim();
+  const email   = document.getElementById('ot-email').value.trim();
+  const date    = document.getElementById('ot-date').value;
+  const start   = document.getElementById('ot-start').value;
+  const end     = document.getElementById('ot-end').value;
+  const total   = parseFloat(document.getElementById('ot-total').value);
+  const project = document.getElementById('ot-project').value.trim();
+  const leader  = document.getElementById('ot-leader').value;
+  const reason  = document.getElementById('ot-reason').value.trim();
+
+  if (!name || !email || !date || !start || !end || !total || !project || !leader || !reason) {
+    showToast('⚠️ Por favor completa todos los campos antes de enviar.', 'error');
+    return;
+  }
+  if (!email.endsWith('@ibm.com')) {
+    showToast('⚠️ Usa tu correo IBM (@ibm.com).', 'error');
+    return;
+  }
+
+  const req = {
+    id: otIdCounter++,
+    name, email, date, start, end, total, project, leader, reason,
+    status: 'pending',
+    submittedAt: new Date().toLocaleString('es-CO')
+  };
+  otRequests.unshift(req);
+  renderQueue();
+  clearOTForm();
+  showToast(`📤 Solicitud enviada al líder. ID: #${req.id}`, 'info');
+}
+
+function clearOTForm() {
+  ['ot-name','ot-email','ot-start','ot-end','ot-total','ot-project','ot-reason'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('ot-leader').value = '';
+  document.getElementById('ot-date').valueAsDate = new Date();
+}
+
+function renderQueue() {
+  const container = document.getElementById('otQueue');
+  const empty     = document.getElementById('emptyQueue');
+
+  if (otRequests.length === 0) {
+    container.innerHTML = '';
+    container.appendChild(empty);
+    empty.style.display = '';
+    updateOTStats();
+    return;
+  }
+
+  container.innerHTML = '';
+  otRequests.forEach(req => {
+    const div = document.createElement('div');
+    div.className = 'req-item';
+    div.id = `req-${req.id}`;
+
+    const statusClass = { pending: 'req-pending', approved: 'req-approved', rejected: 'req-rejected' }[req.status];
+    const statusLabel = { pending: '⏳ Pendiente', approved: '✅ Aprobada', rejected: '❌ Rechazada' }[req.status];
+
+    const leaderLabels = {
+      lider1:'Líder 1 – Equipo A', lider2:'Líder 2 – Equipo B',
+      lider3:'Líder 3 – Equipo C', lider4:'Líder 4 – Operaciones', lider5:'Líder 5 – Desarrollo'
+    };
+
+    div.innerHTML = `
+      <div class="req-item-header">
+        <div>
+          <div class="req-name">#${req.id} · ${req.name}</div>
+          <div class="req-meta">${req.email} &nbsp;|&nbsp; ${req.date} &nbsp;|&nbsp; ${req.start}–${req.end} &nbsp;|&nbsp; <strong>${req.total}h</strong></div>
+          <div class="req-meta">Proyecto: ${req.project} &nbsp;|&nbsp; Líder: ${leaderLabels[req.leader] || req.leader}</div>
+          <div class="req-meta" style="margin-top:2px; color:#9ca3af;">Enviado: ${req.submittedAt}</div>
+        </div>
+        <span class="req-status-badge ${statusClass}">${statusLabel}</span>
+      </div>
+      <div class="req-reason">"${req.reason}"</div>
+      ${req.status === 'pending' ? `
+      <div class="req-actions">
+        <button class="btn-approve" onclick="resolveRequest(${req.id},'approved')">✅ Aprobar</button>
+        <button class="btn-reject"  onclick="resolveRequest(${req.id},'rejected')">❌ Rechazar</button>
+      </div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+
+  updateOTStats();
+}
+
+function resolveRequest(id, status) {
+  const req = otRequests.find(r => r.id === id);
+  if (!req || req.status !== 'pending') return;
+  req.status = status;
+  renderQueue();
+  const msg = status === 'approved'
+    ? `✅ Solicitud #${id} aprobada por el líder.`
+    : `❌ Solicitud #${id} rechazada por el líder.`;
+  showToast(msg, status === 'approved' ? 'success' : 'error');
+}
+
+function updateOTStats() {
+  const pending  = otRequests.filter(r => r.status === 'pending').length;
+  const approved = otRequests.filter(r => r.status === 'approved').length;
+  const rejected = otRequests.filter(r => r.status === 'rejected').length;
+  const totalHrs = otRequests.filter(r => r.status === 'approved').reduce((s,r) => s + r.total, 0);
+
+  document.getElementById('ot-pending').textContent  = pending;
+  document.getElementById('ot-approved').textContent = approved;
+  document.getElementById('ot-rejected').textContent = rejected;
+  document.getElementById('ot-totalHrs').textContent = totalHrs.toFixed(1);
+}
+
+function syncOTtoMonday() {
+  if (otRequests.length === 0) {
+    showToast('⚠️ No hay solicitudes para sincronizar.', 'error');
+    return;
+  }
+  const payload = otRequests.map(r => ({
+    id: r.id, name: r.name, hours: r.total, status: r.status, leader: r.leader, date: r.date
+  }));
+  console.info('OT Monday sync payload:', payload);
+  simulateSync(() => showToast('✅ Horas extras sincronizadas con Monday', 'success'));
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════════════════════════ */
+function simulateSync(callback) {
+  const btn = event.currentTarget || document.activeElement;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Sincronizando…'; }
+  setTimeout(() => {
+    if (btn) { btn.disabled = false; btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Sincronizar`; }
+    callback();
+  }, 1600);
+}
+
+let toastTimer;
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
