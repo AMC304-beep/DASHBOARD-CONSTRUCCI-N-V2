@@ -529,43 +529,45 @@
    Se descubren automáticamente al hacer clic en "Descubrir columnas"
    o pueden ingresarse manualmente si ya los conoces.
    
-   MAPEO DE COLUMNAS:
-   Nombre en Monday        → ID Monday (descubierto en runtime)
+   COLUMNAS REALES — Board 18432741374
    ─────────────────────────────────────────────────
-   Adcar                   → adcar (o el ID real)
-   Correo                  → correo
-   Gerencia                → gerencia
-   Time                    → time (status)
-   Soporte Time            → files (columna de archivos)
-   Success Factors         → success_factors (status)
-   Soporte Success Factors → files (columna de archivos)
-   My Hour Plan            → my_hour_plan (status)
-   Soporte My Hour Plan    → files (columna de archivos)
-   Comentarios             → comentarios (text)
-   Fecha Solicitud HE      → fecha_solicitud_he (date)
-   Horas Extras            → horas_extras (numbers)
-   Aprobador               → aprobador (people / text)
-   Estado de Aprobación    → estado_aprobacion (status)
+   name                  → Nombre del ítem (Adcar va en el título)
+   person                → Person (people)
+   color_mm7hc288        → Gerencia (status) · NOR-PAC|NORESTE|CENTRO - SUR|PACIFICO
+   color_mm7h4cdb        → Time (status) · Pendiente|Actualizado|Sin Actualizar
+   file_mm7hg5fg         → Soporte Time (file)
+   color_mm7hdfqa        → Sucess factors (status) · Pendiente|Actualizado|Sin actualizar
+   file_mm7hqp3m         → Soporte Sucess (file)
+   status                → My Hours Plan (status) · Pendiente|Actualizado|Sin actualizar
+   file_mm7h43r0         → Soporte Hours Plan (file)
+   text_mm7h6n1c         → Comentarios (text)
+   timerange_mm7m57ra    → Fecha Solicitud HE (timeline)
+   numeric_mm7mrmr6      → Horas Extras (numbers)
+   color_mm7mtfss        → Aprobador (status) · Jesus Alberto Perez|Victor Suarez
+   color_mm7mtv3w        → Estado Aprobación (status) · En revisión|Aprobación|Rechazadas
+   text_mm7my82t         → Comentarios HE (text)
 ══════════════════════════════════════════════════════════════════ */
 const BOARD_ID   = '18432741374';
 const MONDAY_API = 'https://api.monday.com/v2';
 const MONDAY_URL = `https://ibm.monday.com/boards/${BOARD_ID}`;
 
-/* IDs de columnas — se actualizan automáticamente al descubrir */
-let COL = {
-  adcar:              'text',        // ajustado en runtime
-  correo:             'email',
-  gerencia:           'text0',
-  time:               'status',
-  sf:                 'status4',
-  hp:                 'status9',
-  comentarios:        'long_text',
-  fecha_he:           'date4',
-  horas_extras:       'numbers',
-  aprobador:          'person',
-  estado_aprobacion:  'color'
+/* IDs de columnas — hardcoded con los IDs reales del board */
+const COL = {
+  gerencia:           'color_mm7hc288',
+  time:               'color_mm7h4cdb',
+  soporte_time:       'file_mm7hg5fg',
+  sf:                 'color_mm7hdfqa',
+  soporte_sf:         'file_mm7hqp3m',
+  hp:                 'status',
+  soporte_hp:         'file_mm7h43r0',
+  comentarios:        'text_mm7h6n1c',
+  fecha_he:           'timerange_mm7m57ra',
+  horas_extras:       'numeric_mm7mrmr6',
+  aprobador:          'color_mm7mtfss',
+  estado_aprobacion:  'color_mm7mtv3w',
+  comentarios_he:     'text_mm7my82t'
 };
-let columnsDiscovered = false;
+let columnsDiscovered = true;  /* ya no necesitamos descubrir — IDs hardcoded */
 
 /* ── Token (localStorage) ── */
 function getToken()        { return localStorage.getItem('monday_token') || ''; }
@@ -601,33 +603,8 @@ async function mondayQuery(query, variables = {}) {
   return json.data;
 }
 
-/* ── Descubrir IDs de columnas del board ── */
-async function discoverColumns() {
-  if (columnsDiscovered || !getToken()) return;
-  setProgress(5, 'Descubriendo columnas del board…');
-  const data = await mondayQuery(`{ boards(ids: ${BOARD_ID}) { columns { id title type } } }`);
-  if (!data?.boards?.[0]?.columns) return;
-  const cols = data.boards[0].columns;
-  /* Mapeo por título (case-insensitive, sin tildes) */
-  const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-  const find = (keywords) => {
-    const kws = keywords.map(normalize);
-    return cols.find(c => kws.some(k => normalize(c.title).includes(k)))?.id || null;
-  };
-  COL.adcar             = find(['adcar'])                            || COL.adcar;
-  COL.correo            = find(['correo','email'])                   || COL.correo;
-  COL.gerencia          = find(['gerencia'])                         || COL.gerencia;
-  COL.time              = find(['time'])                             || COL.time;
-  COL.sf                = find(['success','factor'])                 || COL.sf;
-  COL.hp                = find(['hour plan','hourplan','hour_plan']) || COL.hp;
-  COL.comentarios       = find(['comentario'])                       || COL.comentarios;
-  COL.fecha_he          = find(['fecha','solicitud'])                || COL.fecha_he;
-  COL.horas_extras      = find(['horas extras','horas_extras'])      || COL.horas_extras;
-  COL.aprobador         = find(['aprobador'])                        || COL.aprobador;
-  COL.estado_aprobacion = find(['estado','aprobacion','aprobación']) || COL.estado_aprobacion;
-  columnsDiscovered = true;
-  console.info('[Monday] Columnas descubiertas:', COL);
-}
+/* ── discoverColumns — no-op: IDs ya hardcoded ── */
+async function discoverColumns() { /* IDs reales ya configurados */ }
 
 /* ── Crear ítem en Monday ── */
 async function createMondayItem(itemName, columnValues) {
@@ -888,22 +865,24 @@ async function syncToMonday(e) {
 
     /* 2. Construir column_values con IDs reales */
     const colVals = {};
-    if (c.adcar)    colVals[COL.adcar]       = c.adcar;
-    if (c.email)    colVals[COL.correo]       = c.email;
-    if (c.gerencia) colVals[COL.gerencia]     = c.gerencia;
 
-    /* Time */
+    /* Gerencia — status column, requiere { label } */
+    if (c.gerencia) colVals[COL.gerencia] = { label: c.gerencia };
+
+    /* Time — labels del board: Pendiente | Actualizado | Sin Actualizar (A mayúscula) */
     const timeStatus = document.getElementById('time-status').value;
     const timeNotes  = document.getElementById('time-notes').value.trim();
     if (confirmed.time && timeStatus) colVals[COL.time] = { label: timeStatus };
 
-    /* Success Factors */
+    /* Success Factors — label exacto del board: "Sin actualizar" (a minúscula) */
     const sfStatus = document.getElementById('sf-status').value;
-    if (confirmed.sf && sfStatus) colVals[COL.sf] = { label: sfStatus };
+    const sfStatusMapped = sfStatus === 'Sin Actualizar' ? 'Sin actualizar' : sfStatus;
+    if (confirmed.sf && sfStatus) colVals[COL.sf] = { label: sfStatusMapped };
 
-    /* My Hour Plan */
+    /* My Hour Plan — label exacto del board: "Sin actualizar" (a minúscula) */
     const hpStatus = document.getElementById('hp-status').value;
-    if (confirmed.hp && hpStatus) colVals[COL.hp] = { label: hpStatus };
+    const hpStatusMapped = hpStatus === 'Sin Actualizar' ? 'Sin actualizar' : hpStatus;
+    if (confirmed.hp && hpStatus) colVals[COL.hp] = { label: hpStatusMapped };
 
     /* Comentarios (une todos) */
     const parts = [];
@@ -916,8 +895,8 @@ async function syncToMonday(e) {
 
     setProgress(30, 'Creando ítem en Monday…');
 
-    /* 3. Crear ítem */
-    const itemName = `[Confirmación] ${c.adcar || c.email} · ${c.period || new Date().toLocaleDateString('es-CO')}`;
+    /* 3. Crear ítem — el ADCAR va en el nombre del ítem (columna Name) */
+    const itemName = `${c.adcar || c.email} · ${c.period || new Date().toLocaleDateString('es-CO')}`;
     const result   = await createMondayItem(itemName, colVals);
     const itemId   = result?.create_item?.id;
 
@@ -934,11 +913,16 @@ async function syncToMonday(e) {
     let done = 0;
 
     if (itemId && totalFiles > 0) {
-      for (const { files, label } of fileSets) {
+      const fileColMap = [
+        { files: uploaded.time, colId: COL.soporte_time },
+        { files: uploaded.sf,   colId: COL.soporte_sf   },
+        { files: uploaded.hp,   colId: COL.soporte_hp   }
+      ];
+      for (const { files, colId } of fileColMap) {
         for (const file of files) {
           try {
             setProgress(50 + Math.round((done/totalFiles)*45), `Subiendo: ${file.name}…`);
-            await uploadFileToMonday(itemId, 'files', file);
+            await uploadFileToMonday(itemId, colId, file);
             uploaded_count++; done++;
           } catch(fe) {
             console.warn(`[Monday] No se pudo subir ${file.name}:`, fe.message);
@@ -1116,23 +1100,28 @@ async function syncOT(e) {
     for (const r of otList) {
       setProgress(10 + Math.round((i/otList.length)*85), `Enviando solicitud #${r.id}…`);
       const colVals = {};
-      colVals[COL.adcar]             = r.adcar;
-      colVals[COL.correo]            = r.email;
-      colVals[COL.fecha_he]          = { date: r.date };
-      colVals[COL.horas_extras]      = r.total;
-      /* Aprobador: columna status — etiquetas exactas del board sin tildes */
+      /* Aprobador: status col · etiquetas exactas del board */
       const LEADER_LABELS = {
         PEREZ_JESUS:   'Jesus Alberto Perez',
         SUAREZ_VICTOR: 'Victor Suarez'
       };
-      colVals[COL.aprobador]         = { label: LEADER_LABELS[r.leader] || LEADERS[r.leader] || r.leader };
-      colVals[COL.estado_aprobacion] = {
-        label: r.status==='approved'?'Actualizado': r.status==='rejected'?'Sin Actualizar':'Pendiente'
+      /* Estado Aprobación: status col · etiquetas exactas del board */
+      const ESTADO_LABELS = {
+        approved: 'Aprobación',
+        rejected: 'Rechazadas',
+        pending:  'En revisión'
       };
-      colVals[COL.comentarios] = `${r.start}–${r.end} | ${r.reason}`;
 
+      colVals[COL.aprobador]         = { label: LEADER_LABELS[r.leader] };
+      colVals[COL.estado_aprobacion] = { label: ESTADO_LABELS[r.status] || 'En revisión' };
+      colVals[COL.horas_extras]      = r.total;
+      /* Fecha HE: timeline requiere from/to en formato YYYY-MM-DD */
+      colVals[COL.fecha_he]          = { from: r.date, to: r.date };
+      colVals[COL.comentarios_he]    = `${r.start}–${r.end} | ${r.reason}`;
+
+      /* Nombre del ítem: ADCAR va en la columna Name */
       await createMondayItem(
-        `[HE] ${r.adcar} · ${r.date} · ${r.total}h`,
+        `${r.adcar} · ${r.date} · ${r.total}h HE`,
         colVals
       );
       i++;
