@@ -221,8 +221,7 @@
         <span class="status-badge badge-pending" id="badge-time">Pendiente</span>
       </div>
       <div class="card-form">
-        <div class="form-row">
-          <div class="form-group"><label>Horas registradas</label><input type="number" id="time-hours" placeholder="Ej. 8" min="0" step="0.5" /></div>
+        <div class="form-row full">
           <div class="form-group"><label>Estado en Time</label>
             <select id="time-status">
               <option value="">— Seleccionar —</option>
@@ -259,18 +258,8 @@
         <span class="status-badge badge-pending" id="badge-sf">Pendiente</span>
       </div>
       <div class="card-form">
-        <div class="form-row">
-          <div class="form-group"><label>Módulo actualizado</label>
-            <select id="sf-module">
-              <option value="">— Seleccionar —</option>
-              <option>Time &amp; Attendance</option>
-              <option>Performance &amp; Goals</option>
-              <option>Learning</option>
-              <option>Recruiting</option>
-              <option>Compensation</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Estado en SF</label>
+        <div class="form-row full">
+          <div class="form-group"><label>Estado en Success Factors</label>
             <select id="sf-status">
               <option value="">— Seleccionar —</option>
               <option>Completado</option>
@@ -306,9 +295,8 @@
         <span class="status-badge badge-pending" id="badge-hp">Pendiente</span>
       </div>
       <div class="card-form">
-        <div class="form-row">
-          <div class="form-group"><label>Horas planificadas</label><input type="number" id="hp-hours" placeholder="Ej. 40" min="0" step="0.5" /></div>
-          <div class="form-group"><label>Estado en Hour Plan</label>
+        <div class="form-row full">
+          <div class="form-group"><label>Estado en My Hour Plan</label>
             <select id="hp-status">
               <option value="">— Seleccionar —</option>
               <option>Planificado</option>
@@ -430,15 +418,68 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ── Constants ── */
-const BOARD = '18432741374';
-const MONDAY_URL = `https://ibm.monday.com/boards/${BOARD}`;
-// NOTA DE SEGURIDAD: El token de Monday NUNCA debe ir en el cliente.
-// Usa un backend proxy con el token como variable de entorno.
+/* ══════════════════════════════════════════════════════════════════
+   MONDAY API CONFIG
+   • MONDAY_TOKEN: tu Personal Access Token de Monday.com
+     → Monday → Avatar → Developers → My Access Tokens → Copy
+   • BOARD_ID: ID del tablero (18432741374)
+   • GROUP_ID: ID del grupo destino en el board (obtenido via API o UI)
+   ⚠️  SEGURIDAD IBM: en producción mueve el token a un backend proxy.
+      Este campo es suficiente para uso interno en GitHub Pages privado.
+══════════════════════════════════════════════════════════════════ */
+const MONDAY_TOKEN = '';          // ← Pega aquí tu token personal de Monday
+const BOARD_ID     = '18432741374';
+const MONDAY_API   = 'https://api.monday.com/v2';
+const MONDAY_URL   = `https://ibm.monday.com/boards/${BOARD_ID}`;
 
-const uploaded = { time: [], sf: [], hp: [] };
+const uploaded  = { time: [], sf: [], hp: [] };
 const confirmed = { time: false, sf: false, hp: false };
 let otList = [], otId = 1;
+
+/* ── Monday GraphQL helper ── */
+async function mondayQuery(query, variables = {}) {
+  if (!MONDAY_TOKEN) {
+    console.warn('[Monday] Token no configurado — operación omitida.');
+    return null;
+  }
+  const res = await fetch(MONDAY_API, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': MONDAY_TOKEN,
+      'API-Version': '2024-01'
+    },
+    body: JSON.stringify({ query, variables })
+  });
+  if (!res.ok) throw new Error(`Monday API error: ${res.status}`);
+  const json = await res.json();
+  if (json.errors) throw new Error(json.errors.map(e => e.message).join(', '));
+  return json.data;
+}
+
+/* ── Crear ítem en Monday ── */
+async function createMondayItem(itemName, columnValues) {
+  const query = `
+    mutation ($board: ID!, $name: String!, $cols: JSON!) {
+      create_item(board_id: $board, item_name: $name, column_values: $cols) { id }
+    }`;
+  return mondayQuery(query, {
+    board: BOARD_ID,
+    name:  itemName,
+    cols:  JSON.stringify(columnValues)
+  });
+}
+
+/* ── Actualizar columna de un ítem ── */
+async function updateMondayColumn(itemId, columnId, value) {
+  const query = `
+    mutation ($board: ID!, $item: ID!, $col: String!, $val: String!) {
+      change_simple_column_value(board_id: $board, item_id: $item, column_id: $col, value: $val) { id }
+    }`;
+  return mondayQuery(query, {
+    board: BOARD_ID, item: String(itemId), col: columnId, val: value
+  });
+}
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
@@ -567,32 +608,68 @@ function renderFiles(cat) {
 
 function removeFile(cat, i) { uploaded[cat].splice(i,1); renderFiles(cat); updateSummary(); }
 
-/* ── Sync Slide 1 ── */
-function syncToMonday() {
-  const conf = Object.values(confirmed).filter(Boolean).length;
+/* ── Sync Slide 1 → Monday ── */
+async function syncToMonday() {
+  const conf  = Object.values(confirmed).filter(Boolean).length;
   const total = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
-  if (conf === 0 && total === 0) { showToast('⚠️ Confirma al menos un sistema o adjunta archivos.','error'); return; }
+  if (conf === 0 && total === 0) {
+    showToast('⚠️ Confirma al menos un sistema o adjunta archivos.','error'); return;
+  }
+
+  const btn = event.currentTarget;
+  const orig = btn.innerHTML;
+  btn.disabled = true; btn.textContent = '⏳ Sincronizando con Monday…';
 
   const collab = getCollab();
-  const payload = ['time','sf','hp'].map(id => ({
-    system: sysName(id),
-    confirmed: confirmed[id],
-    collaborator: collab.name || '—',
-    email: collab.email || '—',
-    period: collab.period || '—',
-    date: collab.date || '—',
-    notes: document.getElementById(`${id}-notes`)?.value || '',
-    files: uploaded[id].map(f=>f.name)
-  }));
+  const ts     = new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'});
+  const systems = ['time','sf','hp'];
 
-  console.info('[IBM Dashboard] Monday sync payload:', { board: BOARD, data: payload });
+  try {
+    if (MONDAY_TOKEN) {
+      // Crear un ítem por cada sistema confirmado
+      for (const id of systems) {
+        if (!confirmed[id]) continue;
+        const status = document.getElementById(`${id}-status`)?.value || '—';
+        const notes  = document.getElementById(`${id}-notes`)?.value  || '';
+        const files  = uploaded[id].map(f => f.name).join(', ') || '—';
 
-  simulateSync(btn => {
+        await createMondayItem(
+          `[${sysName(id)}] ${collab.name} · ${collab.period}`,
+          {
+            // Ajusta estos IDs de columna a los de tu board real
+            text:   `${collab.email} | Estado: ${status} | Archivos: ${files} | Notas: ${notes}`,
+            status: { label: status || 'Completado' },
+            date:   { date: collab.date }
+          }
+        );
+      }
+      showToast(`✅ Confirmaciones enviadas a Monday Board ${BOARD_ID}`, 'success');
+    } else {
+      // Sin token: log local + indicación visual
+      console.info('[IBM Dashboard] Payload para Monday:', {
+        board: BOARD_ID,
+        collaborator: collab,
+        systems: systems.map(id => ({
+          system:    sysName(id),
+          confirmed: confirmed[id],
+          status:    document.getElementById(`${id}-status`)?.value || '—',
+          notes:     document.getElementById(`${id}-notes`)?.value  || '',
+          files:     uploaded[id].map(f => f.name)
+        }))
+      });
+      showToast('⚠️ Token no configurado — datos guardados localmente.', 'info');
+    }
+
     const ok = document.getElementById('syncOk');
-    document.getElementById('syncTs').textContent = new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'});
+    document.getElementById('syncTs').textContent = ts;
     ok.classList.add('visible');
-    showToast('✅ Datos sincronizados con Monday Board ' + BOARD, 'success');
-  });
+
+  } catch (err) {
+    console.error('[Monday sync error]', err);
+    showToast('❌ Error al conectar con Monday: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = orig;
+  }
 }
 
 /* ── OT Slide 2 ── */
@@ -681,19 +758,37 @@ function updateOTStats() {
   document.getElementById('ot-hrs').textContent  = otList.filter(r=>r.status==='approved').reduce((s,r)=>s+r.total,0).toFixed(1);
 }
 
-function syncOT() {
+/* ── Sync OT Slide 2 → Monday ── */
+async function syncOT() {
   if (otList.length === 0) { showToast('⚠️ No hay solicitudes para sincronizar.','error'); return; }
-  const payload = otList.map(r=>({id:r.id,name:r.name,hours:r.total,status:r.status,leader:r.leader,date:r.date}));
-  console.info('[IBM Dashboard] OT sync payload:', payload);
-  simulateSync(() => showToast('✅ Horas extras sincronizadas con Monday','success'));
-}
 
-/* ── Helpers ── */
-function simulateSync(cb) {
-  const btn = event.currentTarget;
+  const btn  = event.currentTarget;
   const orig = btn.innerHTML;
   btn.disabled = true; btn.textContent = '⏳ Sincronizando…';
-  setTimeout(() => { btn.disabled = false; btn.innerHTML = orig; cb(btn); }, 1600);
+
+  try {
+    if (MONDAY_TOKEN) {
+      for (const r of otList) {
+        await createMondayItem(
+          `[OT] ${r.name} · ${r.date} · ${r.total}h`,
+          {
+            text:   `${r.email} | Líder: ${LEADERS[r.leader]||r.leader} | Estado: ${r.status} | ${r.start}–${r.end} | Motivo: ${r.reason}`,
+            status: { label: r.status === 'approved' ? 'Aprobado' : r.status === 'rejected' ? 'Rechazado' : 'Pendiente' },
+            date:   { date: r.date }
+          }
+        );
+      }
+      showToast(`✅ Horas extras sincronizadas con Monday Board ${BOARD_ID}`, 'success');
+    } else {
+      console.info('[IBM Dashboard] OT payload para Monday:', otList);
+      showToast('⚠️ Token no configurado — datos guardados localmente.', 'info');
+    }
+  } catch (err) {
+    console.error('[Monday OT sync error]', err);
+    showToast('❌ Error al conectar con Monday: ' + err.message, 'error');
+  } finally {
+    btn.disabled = false; btn.innerHTML = orig;
+  }
 }
 
 let toastTimer;
