@@ -1120,7 +1120,12 @@ async function syncOT(e) {
       colVals[COL.correo]            = r.email;
       colVals[COL.fecha_he]          = { date: r.date };
       colVals[COL.horas_extras]      = r.total;
-      colVals[COL.aprobador]         = LEADERS[r.leader] || r.leader;
+      /* Aprobador: columna status — etiquetas exactas del board sin tildes */
+      const LEADER_LABELS = {
+        PEREZ_JESUS:   'Jesus Alberto Perez',
+        SUAREZ_VICTOR: 'Victor Suarez'
+      };
+      colVals[COL.aprobador]         = { label: LEADER_LABELS[r.leader] || LEADERS[r.leader] || r.leader };
       colVals[COL.estado_aprobacion] = {
         label: r.status==='approved'?'Actualizado': r.status==='rejected'?'Sin Actualizar':'Pendiente'
       };
