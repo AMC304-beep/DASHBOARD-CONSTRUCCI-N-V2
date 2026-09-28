@@ -198,8 +198,18 @@
         <input type="email" id="collab-email" placeholder="usuario@ibm.com" oninput="propagateCollab()" />
       </div>
       <div class="form-group">
-        <label>Gerencia</label>
-        <input type="text" id="collab-gerencia" placeholder="Ej. GTS Colombia" oninput="propagateCollab()" />
+        <label>
+          Gerencia <span style="color:#0f62fe;font-size:10px;">→ col: Gerencia · Monday</span>
+          <span id="gerencia-loading" style="display:none;font-size:10px;color:#57606a;font-weight:400;margin-left:6px;">⏳ Cargando…</span>
+          <span id="gerencia-error"  style="display:none;font-size:10px;color:#ef4444;font-weight:400;margin-left:6px;"></span>
+        </label>
+        <select id="collab-gerencia" onchange="propagateCollab()">
+          <option value="">— Conecta Monday para cargar —</option>
+        </select>
+        <div style="font-size:10px;color:#9ca3af;margin-top:3px;" id="gerencia-hint">
+          Los valores se obtienen en vivo del tablero Monday 18432741374.
+          <a href="#" onclick="loadGerencias();return false;" style="color:#0f62fe;">Recargar</a>
+        </div>
       </div>
       <div class="form-group">
         <label>Período / Semana</label>
@@ -396,10 +406,23 @@
     <span class="col-tag">Comentarios</span>
   </div>
 
+  <!-- Selector de vista: colaborador vs aprobador -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:14px 18px;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);">
+    <span style="font-size:13px;font-weight:600;color:#374151;">Vista:</span>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+      <input type="radio" name="ot-role" value="colaborador" checked onchange="setOTRole(this.value)" />
+      👤 Colaborador — ver mi solicitud
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;">
+      <input type="radio" name="ot-role" value="aprobador" onchange="setOTRole(this.value)" />
+      ✅ Aprobador — gestionar solicitudes
+    </label>
+  </div>
+
   <div class="ot-wrap">
 
-    <!-- Formulario -->
-    <div class="panel">
+    <!-- Formulario colaborador -->
+    <div class="panel" id="ot-form-panel">
       <h3>➕ Nueva Solicitud de Horas Extras</h3>
       <div class="notice">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -439,11 +462,17 @@
         <textarea id="ot-reason" placeholder="Describe el motivo de las horas extras…"></textarea>
       </div>
       <button class="btn-send" onclick="submitOT()">📤 Enviar solicitud al líder</button>
+
+      <!-- Estado de MI solicitud (solo visible para colaborador) -->
+      <div id="my-request-status" style="display:none;margin-top:18px;border:1px solid #e5e7eb;border-radius:8px;padding:16px;background:#fafafa;">
+        <div style="font-size:12px;font-weight:700;color:#374151;margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px;">📋 Estado de mi última solicitud</div>
+        <div id="my-request-detail"></div>
+      </div>
     </div>
 
-    <!-- Cola de aprobaciones -->
-    <div class="panel">
-      <h3>📋 Cola de Aprobaciones</h3>
+    <!-- Panel de aprobaciones (aprobador) -->
+    <div class="panel" id="ot-approval-panel">
+      <h3>📋 Cola de Aprobaciones — Solo Aprobador</h3>
       <div style="font-size:12px;color:#57606a;margin-bottom:14px;">
         El estado de aprobación se sincroniza con la columna <strong>Estado de Aprobación</strong> de Monday.
       </div>
@@ -549,6 +578,7 @@ function saveToken() {
   localStorage.setItem('monday_token', t);
   closeTokenModal(); updateTokenStatus(); columnsDiscovered = false;
   showToast('✅ Token guardado. Dashboard conectado a Monday.','success');
+  loadGerencias(); /* Recargar gerencias con el nuevo token */
 }
 function updateTokenStatus() {
   const btn = document.getElementById('tokenStatusBtn');
@@ -661,11 +691,89 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateSummary();
   updateTokenStatus();
+
+  /* Cargar gerencias desde Monday si ya hay token */
+  if (getToken()) loadGerencias();
 });
 
 function getWeek(d) {
   const j = new Date(d.getFullYear(),0,1);
   return Math.ceil((((d-j)/86400000)+j.getDay()+1)/7);
+}
+
+/* ── Cargar valores únicos de la columna Gerencia desde Monday ── */
+async function loadGerencias() {
+  const token = getToken();
+  if (!token) return;
+
+  const sel     = document.getElementById('collab-gerencia');
+  const loading = document.getElementById('gerencia-loading');
+  const errEl   = document.getElementById('gerencia-error');
+
+  loading.style.display = 'inline'; errEl.style.display = 'none';
+
+  try {
+    /* 1. Obtener el ID de la columna "Gerencia" */
+    const metaData = await mondayQuery(
+      `{ boards(ids: ${BOARD_ID}) { columns { id title type } } }`
+    );
+    const cols   = metaData?.boards?.[0]?.columns || [];
+    const norm   = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    const gerCol = cols.find(c => norm(c.title).includes('gerencia'));
+    if (!gerCol) { throw new Error('Columna "Gerencia" no encontrada en el board.'); }
+    const gerColId = gerCol.id;
+
+    /* 2. Obtener todos los ítems del board con el valor de la columna Gerencia
+          Monday pagina de a 500 ítems; iteramos hasta agotar el cursor */
+    let cursor  = null;
+    const vals  = new Set();
+    do {
+      const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
+      const page = await mondayQuery(`{
+        boards(ids: ${BOARD_ID}) {
+          items_page(limit: 500${cursorArg}) {
+            cursor
+            items {
+              column_values(ids: ["${gerColId}"]) { text }
+            }
+          }
+        }
+      }`);
+      const pageData = page?.boards?.[0]?.items_page;
+      cursor = pageData?.cursor || null;
+      (pageData?.items || []).forEach(item => {
+        const txt = item.column_values?.[0]?.text?.trim();
+        if (txt) vals.add(txt);
+      });
+    } while (cursor);
+
+    /* 3. Poblar el <select> con los valores únicos ordenados */
+    const current = sel.value; /* conservar selección actual si existe */
+    sel.innerHTML = '<option value="">— Seleccionar gerencia —</option>';
+    [...vals].sort((a, b) => a.localeCompare(b, 'es')).forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      if (v === current) opt.selected = true;
+      sel.appendChild(opt);
+    });
+
+    if (!vals.size) {
+      sel.innerHTML = '<option value="">— Sin datos en Monday —</option>';
+      errEl.textContent = 'La columna Gerencia no tiene valores registrados.';
+      errEl.style.display = 'inline';
+    }
+
+  } catch (err) {
+    console.error('[Gerencia] Error:', err);
+    errEl.textContent = '⚠️ ' + err.message;
+    errEl.style.display = 'inline';
+    /* Fallback: si falla, dejar el select vacío con aviso */
+    if (sel.options.length <= 1) {
+      sel.innerHTML = '<option value="">— Error al cargar · reintenta —</option>';
+    }
+  } finally {
+    loading.style.display = 'none';
+  }
 }
 
 /* ── Slide nav ── */
@@ -893,12 +1001,57 @@ function submitOT() {
 
   const req = { id: otId++, adcar, email, date, start, end, total, leader, reason, status:'pending', at: new Date().toLocaleString('es-CO') };
   otList.unshift(req);
+  lastSubmittedId = req.id;
   renderQueue();
+  updateMyRequestStatus();
   /* Limpiar solo campos variables */
   ['ot-start','ot-end','ot-total','ot-reason'].forEach(id => document.getElementById(id).value='');
   document.getElementById('ot-leader').value = '';
   document.getElementById('ot-date').valueAsDate = new Date();
   showToast(`📤 Solicitud #${req.id} enviada a ${LEADERS[leader]}.`,'info');
+}
+
+/* ── Vista colaborador / aprobador ── */
+let currentRole = 'colaborador';
+let lastSubmittedId = null;
+
+function setOTRole(role) {
+  currentRole = role;
+  const formPanel     = document.getElementById('ot-form-panel');
+  const approvalPanel = document.getElementById('ot-approval-panel');
+  if (role === 'aprobador') {
+    /* Aprobador: oculta formulario, muestra cola completa con botones */
+    formPanel.style.display     = 'none';
+    approvalPanel.style.display = 'block';
+  } else {
+    /* Colaborador: muestra formulario y su propia solicitud (sin botones) */
+    formPanel.style.display     = 'block';
+    approvalPanel.style.display = 'none';
+    updateMyRequestStatus();
+  }
+  renderQueue();
+}
+
+function updateMyRequestStatus() {
+  const box    = document.getElementById('my-request-status');
+  const detail = document.getElementById('my-request-detail');
+  if (lastSubmittedId === null) { box.style.display = 'none'; return; }
+  const r = otList.find(x => x.id === lastSubmittedId);
+  if (!r) { box.style.display = 'none'; return; }
+  const sc = {pending:'s-pend',approved:'s-appr',rejected:'s-rej'}[r.status];
+  const sl = {pending:'⏳ Pendiente de aprobación',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
+  detail.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+      <div>
+        <div style="font-size:13px;font-weight:700;">#${r.id} · ${r.adcar}</div>
+        <div style="font-size:11px;color:#57606a;margin-top:2px;">${r.date} · ${r.start}–${r.end} · <strong>${r.total}h</strong></div>
+        <div style="font-size:11px;color:#57606a;">Aprobador: ${LEADERS[r.leader]||r.leader}</div>
+        <div style="font-size:11px;color:#9ca3af;">Enviado: ${r.at}</div>
+      </div>
+      <span class="sbadge ${sc}">${sl}</span>
+    </div>
+    <div style="font-size:12px;color:#374151;font-style:italic;">"${r.reason}"</div>`;
+  box.style.display = 'block';
 }
 
 function renderQueue() {
@@ -910,6 +1063,8 @@ function renderQueue() {
     const sc = {pending:'s-pend',approved:'s-appr',rejected:'s-rej'}[r.status];
     const sl = {pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
     const d  = document.createElement('div'); d.className='req-item'; d.id=`req-${r.id}`;
+    /* Botones Aprobar/Rechazar SOLO si el rol activo es aprobador */
+    const showButtons = currentRole === 'aprobador' && r.status === 'pending';
     d.innerHTML=`
       <div class="req-head">
         <div>
@@ -921,19 +1076,22 @@ function renderQueue() {
         <span class="sbadge ${sc}">${sl}</span>
       </div>
       <div class="req-reason">"${r.reason}"</div>
-      ${r.status==='pending'?`<div class="req-actions">
+      ${showButtons ? `<div class="req-actions">
         <button class="btn-apr" onclick="resolveOT(${r.id},'approved')">✅ Aprobar</button>
         <button class="btn-rej" onclick="resolveOT(${r.id},'rejected')">❌ Rechazar</button>
-      </div>`:''}`;
+      </div>` : ''}`;
     c.appendChild(d);
   });
   updateOTStats();
 }
 
 function resolveOT(id, status) {
+  if (currentRole !== 'aprobador') return; /* Solo aprobador puede resolver */
   const r = otList.find(x=>x.id===id);
   if (!r||r.status!=='pending') return;
-  r.status = status; renderQueue();
+  r.status = status;
+  renderQueue();
+  updateMyRequestStatus(); /* Actualiza el estado visible para el colaborador */
   showToast(status==='approved'?`✅ Solicitud #${id} aprobada.`:`❌ Solicitud #${id} rechazada.`, status==='approved'?'success':'error');
 }
 
