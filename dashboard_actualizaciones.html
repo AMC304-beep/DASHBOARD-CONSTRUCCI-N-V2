@@ -259,9 +259,9 @@
             <label>Estado en Time <span style="color:#0f62fe;font-size:10px;">→ col: Time</span></label>
             <select id="time-status">
               <option value="">— Seleccionar —</option>
-              <option value="Completado">Completado</option>
-              <option value="En proceso">En proceso</option>
-              <option value="Pendiente de aprobación">Pendiente de aprobación</option>
+              <option value="Actualizado">Actualizado</option>
+              <option value="Sin Actualizar">Sin Actualizar</option>
+              <option value="Pendiente">Pendiente</option>
             </select>
           </div>
         </div>
@@ -300,9 +300,9 @@
             <label>Estado en Success Factors <span style="color:#0f62fe;font-size:10px;">→ col: Success Factors</span></label>
             <select id="sf-status">
               <option value="">— Seleccionar —</option>
-              <option value="Completado">Completado</option>
-              <option value="En proceso">En proceso</option>
-              <option value="Pendiente de aprobación">Pendiente de aprobación</option>
+              <option value="Actualizado">Actualizado</option>
+              <option value="Sin Actualizar">Sin Actualizar</option>
+              <option value="Pendiente">Pendiente</option>
             </select>
           </div>
         </div>
@@ -341,10 +341,9 @@
             <label>Estado en My Hour Plan <span style="color:#0f62fe;font-size:10px;">→ col: My Hour Plan</span></label>
             <select id="hp-status">
               <option value="">— Seleccionar —</option>
-              <option value="Planificado">Planificado</option>
-              <option value="En ejecución">En ejecución</option>
-              <option value="Cerrado">Cerrado</option>
-              <option value="Con desviación">Con desviación</option>
+              <option value="Actualizado">Actualizado</option>
+              <option value="Sin Actualizar">Sin Actualizar</option>
+              <option value="Pendiente">Pendiente</option>
             </select>
           </div>
         </div>
@@ -1123,7 +1122,7 @@ async function syncOT(e) {
       colVals[COL.horas_extras]      = r.total;
       colVals[COL.aprobador]         = LEADERS[r.leader] || r.leader;
       colVals[COL.estado_aprobacion] = {
-        label: r.status==='approved'?'Aprobado': r.status==='rejected'?'Rechazado':'Pendiente'
+        label: r.status==='approved'?'Actualizado': r.status==='rejected'?'Sin Actualizar':'Pendiente'
       };
       colVals[COL.comentarios] = `${r.start}–${r.end} | ${r.reason}`;
 
