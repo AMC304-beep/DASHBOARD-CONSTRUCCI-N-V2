@@ -670,6 +670,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* Cargar gerencias desde Monday si ya hay token */
   if (getToken()) loadGerencias();
+
+  /* ── Deep-link por hash: #slide1 | #slide2 ── */
+  const hash = window.location.hash;
+  if (hash === '#slide2') {
+    const tab = document.querySelectorAll('.slide-tab')[1];
+    if (tab) showSlide(2, tab);
+  }
 });
 
 function getWeek(d) {
