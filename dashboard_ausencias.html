@@ -4,19 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>IBM — Gestión de Ausencias & Cronograma</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+    :root {
+      --bg: #050a14; --surface: rgba(8,18,38,0.88); --border: rgba(0,120,255,0.18);
+      --accent: #0f62fe; --text: #e2eaf6; --muted: #6b84aa;
+    }
     *, *::before, *::after { box-sizing: border-box; }
-    body { font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', system-ui, sans-serif; }
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      background: var(--bg) !important;
+      color: var(--text) !important;
+    }
+    /* star-field */
+    body::before {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        radial-gradient(1px 1px at 15% 20%, rgba(15,98,254,.6) 0%, transparent 100%),
+        radial-gradient(1px 1px at 40% 55%, rgba(6,182,212,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 15%, rgba(15,98,254,.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 70%, rgba(124,92,216,.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 25% 85%, rgba(15,98,254,.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 45%, rgba(6,182,212,.4) 0%, transparent 100%);
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,120,255,0.015) 3px, rgba(0,120,255,0.015) 4px);
+    }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #f1f5f9; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: #030810; }
+    ::-webkit-scrollbar-thumb { background: rgba(15,98,254,.5); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(15,98,254,.8); }
 
     /* ── IBM Logo stripes ── */
     .ibm-logo-svg rect { transition: opacity .3s; }
@@ -69,53 +93,29 @@
     input:focus, select:focus, textarea:focus { outline: none; border-color: #0f62fe !important; box-shadow: 0 0 0 3px rgba(15,98,254,.12) !important; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col" style="background:var(--bg);color:var(--text);position:relative;z-index:1;">
 
 <!-- ═══════════════════════════════════════ TOAST ═══════════════════════════════════════ -->
 <div id="toast" class="fixed bottom-6 right-6 z-[999] flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold text-white max-w-sm
      transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
-     style="background:#161616; border-left:4px solid #0f62fe;">
+     style="background:rgba(3,8,16,.96); border-left:3px solid #0f62fe; backdrop-filter:blur(16px);">
   <svg id="toastIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
   <span id="toastMsg">Mensaje</span>
 </div>
 
 <!-- ═══════════════════════════════════════ HEADER ══════════════════════════════════════ -->
-<header class="bg-[#161616] sticky top-0 z-40 shadow-lg" style="height:56px;">
+<header style="background:rgba(3,8,16,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,120,255,0.18);height:60px;position:sticky;top:0;z-index:40;box-shadow:0 1px 30px rgba(15,98,254,.08);">
   <div class="max-w-7xl mx-auto px-5 h-full flex items-center justify-between gap-4">
 
     <!-- Logo + título -->
     <div class="flex items-center gap-4">
-      <!-- IBM Logo — 8-stripe official mark -->
-      <svg width="52" height="21" viewBox="0 0 52 21" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="IBM">
-        <!-- I -->
-        <rect x="0"  y="0"  width="9" height="3" fill="#fff"/>
-        <rect x="0"  y="4"  width="9" height="3" fill="#fff"/>
-        <rect x="2"  y="8"  width="5" height="3" fill="#fff"/>
-        <rect x="2"  y="12" width="5" height="3" fill="#fff"/>
-        <rect x="0"  y="16" width="9" height="3" fill="#fff"/>
-        <rect x="0"  y="20" width="9" height="3" fill="#fff"/>
-        <!-- B -->
-        <rect x="12" y="0"  width="12" height="3" fill="#fff"/>
-        <rect x="12" y="4"  width="6"  height="3" fill="#fff"/>
-        <rect x="18" y="4"  width="4"  height="3" fill="#fff"/>
-        <rect x="12" y="8"  width="12" height="3" fill="#fff"/>
-        <rect x="12" y="12" width="6"  height="3" fill="#fff"/>
-        <rect x="18" y="12" width="4"  height="3" fill="#fff"/>
-        <rect x="12" y="16" width="12" height="3" fill="#fff"/>
-        <rect x="12" y="20" width="12" height="3" fill="#fff"/>
-        <!-- M -->
-        <rect x="27" y="0"  width="12" height="3" fill="#fff"/>
-        <rect x="27" y="4"  width="5"  height="3" fill="#fff"/>
-        <rect x="34" y="4"  width="5"  height="3" fill="#fff"/>
-        <rect x="27" y="8"  width="12" height="3" fill="#fff"/>
-        <rect x="27" y="12" width="4"  height="3" fill="#fff"/>
-        <rect x="35" y="12" width="4"  height="3" fill="#fff"/>
-        <rect x="27" y="16" width="4"  height="3" fill="#fff"/>
-        <rect x="35" y="16" width="4"  height="3" fill="#fff"/>
-        <rect x="27" y="20" width="4"  height="3" fill="#fff"/>
-        <rect x="35" y="20" width="4"  height="3" fill="#fff"/>
+      <!-- IBM Logo — blue stripes on dark, marca oficial -->
+      <svg width="64" height="26" viewBox="0 0 84 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="IBM">
+        <!-- I --> <rect x="0" y="0" width="16" height="4" fill="#0f62fe"/><rect x="0" y="6" width="16" height="4" fill="#0f62fe"/><rect x="3" y="12" width="10" height="4" fill="#0f62fe"/><rect x="3" y="18" width="10" height="4" fill="#0f62fe"/><rect x="3" y="24" width="10" height="4" fill="#0f62fe"/><rect x="3" y="30" width="10" height="4" fill="#0f62fe"/><rect x="0" y="34" width="16" height="4" fill="#0f62fe"/>
+        <!-- B --> <rect x="22" y="0" width="20" height="4" fill="#0f62fe"/><rect x="22" y="6" width="12" height="4" fill="#0f62fe"/><rect x="36" y="6" width="4" height="4" fill="#0f62fe"/><rect x="22" y="12" width="12" height="4" fill="#0f62fe"/><rect x="36" y="12" width="6" height="4" fill="#0f62fe"/><rect x="22" y="18" width="20" height="4" fill="#0f62fe"/><rect x="22" y="24" width="12" height="4" fill="#0f62fe"/><rect x="36" y="24" width="6" height="4" fill="#0f62fe"/><rect x="22" y="30" width="12" height="4" fill="#0f62fe"/><rect x="36" y="30" width="4" height="4" fill="#0f62fe"/><rect x="22" y="34" width="20" height="4" fill="#0f62fe"/>
+        <!-- M --> <rect x="46" y="0" width="20" height="4" fill="#0f62fe"/><rect x="46" y="6" width="8" height="4" fill="#0f62fe"/><rect x="58" y="6" width="8" height="4" fill="#0f62fe"/><rect x="46" y="12" width="8" height="4" fill="#0f62fe"/><rect x="58" y="12" width="8" height="4" fill="#0f62fe"/><rect x="46" y="18" width="20" height="4" fill="#0f62fe"/><rect x="46" y="24" width="7" height="4" fill="#0f62fe"/><rect x="59" y="24" width="7" height="4" fill="#0f62fe"/><rect x="46" y="30" width="7" height="4" fill="#0f62fe"/><rect x="59" y="30" width="7" height="4" fill="#0f62fe"/><rect x="46" y="34" width="7" height="4" fill="#0f62fe"/><rect x="59" y="34" width="7" height="4" fill="#0f62fe"/>
       </svg>
-      <div class="w-px h-6 bg-[#393939]"></div>
+      <div class="w-px h-6" style="background:rgba(255,255,255,.1);"></div>
       <div>
         <div id="boardNameHeader" class="text-white text-sm font-semibold leading-tight">Gestión de Ausencias</div>
         <div class="flex items-center gap-2 mt-0.5">
