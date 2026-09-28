@@ -8,89 +8,80 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; background: #f0f2f5; color: #1f2328; min-height: 100vh; }
 
-    /* Header */
+    /* ── Header ── */
     .ibm-header { background: #161616; padding: 0 28px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
     .ibm-logo svg { width: 56px; height: auto; }
     .ibm-header-title { color: #f4f4f4; font-size: 13px; font-weight: 500; }
     .monday-btn { background: #0f62fe; color: #fff; border: none; padding: 7px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background .2s; }
     .monday-btn:hover { background: #0353e9; }
 
-    /* Slide nav */
+    /* ── Slide nav ── */
     .slide-nav { background: #fff; border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; padding: 0 28px; }
     .slide-tab { padding: 14px 24px; font-size: 13px; font-weight: 600; color: #57606a; border-bottom: 3px solid transparent; cursor: pointer; transition: all .2s; white-space: nowrap; }
     .slide-tab:hover { color: #0f62fe; }
     .slide-tab.active { color: #0f62fe; border-bottom-color: #0f62fe; }
 
-    /* Slides */
+    /* ── Slides ── */
     .slide { display: none; padding: 28px; max-width: 1200px; margin: 0 auto; }
     .slide.active { display: block; }
-
-    /* Titles */
     .section-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
     .section-sub { font-size: 13px; color: #57606a; margin-bottom: 24px; }
 
-    /* Summary bar */
-    .summary-bar { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 24px; display: flex; gap: 28px; flex-wrap: wrap; align-items: center; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    /* ── Summary bar ── */
+    .summary-bar { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 24px; display: flex; gap: 28px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
     .summary-item { text-align: center; }
     .summary-num { font-size: 24px; font-weight: 800; color: #0f62fe; }
     .summary-lbl { font-size: 11px; color: #57606a; font-weight: 500; text-transform: uppercase; }
 
-    /* Cards grid */
-    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; margin-bottom: 28px; }
-    .status-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    /* ── Collab box ── */
+    .collab-box { background: #fff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+    .collab-title { font-size: 13px; font-weight: 700; color: #1d4ed8; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .collab-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+    .collab-info { margin-top: 12px; padding: 8px 12px; background: #d1fae5; border-radius: 6px; font-size: 12px; color: #065f46; }
+
+    /* ── Form elements ── */
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 700; color: #57606a; text-transform: uppercase; letter-spacing: .4px; }
+    .form-group input, .form-group select, .form-group textarea { padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 5px; font-size: 13px; color: #1f2328; background: #fff; font-family: inherit; transition: border-color .2s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #0f62fe; box-shadow: 0 0 0 3px rgba(15,98,254,.1); }
+    .form-group textarea { resize: vertical; min-height: 60px; }
+
+    /* ── Cards grid ── */
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 20px; margin-bottom: 24px; }
+    .status-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); display: flex; flex-direction: column; }
     .card-header { padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f2f5; }
     .card-title { font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
     .card-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-    .icon-time     { background: #dbeafe; }
-    .icon-sf       { background: #dcfce7; }
-    .icon-hourplan { background: #fef9c3; }
+    .icon-time { background: #dbeafe; } .icon-sf { background: #dcfce7; } .icon-hourplan { background: #fef9c3; }
     .status-badge { font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; }
     .badge-pending   { background: #fff3cd; color: #856404; }
     .badge-confirmed { background: #d1fae5; color: #065f46; }
-
-    /* Editable form inside card */
-    .card-form { padding: 16px 18px; }
+    .card-form { padding: 14px 18px; flex: 1; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
     .form-row.full { grid-template-columns: 1fr; }
-    .form-group { display: flex; flex-direction: column; gap: 4px; }
-    .form-group label { font-size: 11px; font-weight: 700; color: #57606a; text-transform: uppercase; letter-spacing: .4px; }
-    .form-group input,
-    .form-group select,
-    .form-group textarea { padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 5px; font-size: 13px; color: #1f2328; background: #fff; font-family: inherit; transition: border-color .2s; }
-    .form-group input:focus,
-    .form-group select:focus,
-    .form-group textarea:focus { outline: none; border-color: #0f62fe; box-shadow: 0 0 0 3px rgba(15,98,254,.1); }
-    .form-group textarea { resize: vertical; min-height: 60px; }
 
-    /* Upload inside card */
-    .card-upload { margin: 10px 18px 0; }
+    /* ── Upload ── */
+    .card-upload { margin: 4px 18px 0; }
     .upload-label-row { font-size: 11px; font-weight: 700; color: #57606a; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 6px; }
-    .upload-drop { border: 2px dashed #d1d5db; border-radius: 8px; padding: 16px; text-align: center; background: #fafafa; transition: border-color .2s, background .2s; cursor: pointer; position: relative; }
-    .upload-drop:hover { border-color: #0f62fe; background: #eff6ff; }
-    .upload-drop.drag-over { border-color: #0f62fe; background: #dbeafe; }
+    .upload-drop { border: 2px dashed #d1d5db; border-radius: 8px; padding: 14px; text-align: center; background: #fafafa; transition: border-color .2s, background .2s; cursor: pointer; position: relative; }
+    .upload-drop:hover, .upload-drop.drag-over { border-color: #0f62fe; background: #eff6ff; }
     .upload-drop input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-    .upload-drop-icon { font-size: 22px; margin-bottom: 4px; }
+    .upload-drop-icon { font-size: 20px; margin-bottom: 3px; }
     .upload-drop-text { font-size: 12px; font-weight: 600; color: #374151; }
     .upload-drop-hint { font-size: 11px; color: #9ca3af; margin-top: 2px; }
     .file-list { margin-top: 8px; text-align: left; }
     .file-item { display: flex; align-items: center; gap: 6px; padding: 4px 8px; background: #eff6ff; border-radius: 4px; margin-top: 4px; font-size: 11px; }
     .file-item .rm { margin-left: auto; color: #ef4444; cursor: pointer; font-weight: 700; }
 
-    /* Confirm row */
-    .confirm-row { padding: 14px 18px; border-top: 1px solid #f0f2f5; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    /* ── Confirm row ── */
+    .confirm-row { padding: 12px 18px; border-top: 1px solid #f0f2f5; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: auto; }
     .btn-confirm { background: #0f62fe; color: #fff; border: none; padding: 9px 20px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
     .btn-confirm:hover { background: #0353e9; }
     .btn-confirm.confirmed { background: #10b981; cursor: default; }
     .confirm-ts { font-size: 11px; color: #57606a; display: none; }
     .confirm-ts.visible { display: inline; }
 
-    /* Collab box */
-    .collab-box { background: #fff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
-    .collab-title { font-size: 13px; font-weight: 700; color: #1d4ed8; display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
-    .collab-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .collab-info { margin-top: 12px; padding: 8px 12px; background: #d1fae5; border-radius: 6px; font-size: 12px; color: #065f46; }
-
-    /* Sync bar */
+    /* ── Sync bar ── */
     .sync-bar { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 18px 24px; margin-bottom: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
     .sync-bar p { font-size: 13px; color: #57606a; }
     .btn-sync { background: #7c5cd8; color: #fff; border: none; padding: 10px 22px; border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: background .2s; }
@@ -98,62 +89,68 @@
     .sync-ok { font-size: 12px; color: #10b981; font-weight: 600; display: none; margin-top: 6px; }
     .sync-ok.visible { display: block; }
 
+    /* ── Column map notice ── */
+    .col-map { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #15803d; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .col-tag { background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+
     /* ── Slide 2 ── */
     .ot-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .ot-wrap { grid-template-columns: 1fr; } }
-
     .panel { background: #fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
-    .panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 18px; }
-
+    .panel h3 { font-size: 15px; font-weight: 700; margin-bottom: 16px; }
     .fg { margin-bottom: 12px; }
     .fg label { display: block; font-size: 11px; font-weight: 700; color: #57606a; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
     .fg input, .fg select, .fg textarea { width: 100%; padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 5px; font-size: 13px; color: #1f2328; background: #fff; font-family: inherit; transition: border-color .2s; }
     .fg input:focus, .fg select:focus, .fg textarea:focus { outline: none; border-color: #0f62fe; box-shadow: 0 0 0 3px rgba(15,98,254,.1); }
     .fg textarea { resize: vertical; min-height: 80px; }
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
     .btn-send { width: 100%; background: #0f62fe; color: #fff; border: none; padding: 11px; border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer; margin-top: 6px; transition: background .2s; }
     .btn-send:hover { background: #0353e9; }
+    .notice { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #1d4ed8; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
 
-    .notice { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px 16px; font-size: 12px; color: #1d4ed8; margin-bottom: 18px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
-    .notice strong { display: block; margin-bottom: 2px; }
-
-    /* Queue */
+    /* ── Queue ── */
     .req-item { border: 1px solid #e5e7eb; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; background: #fafafa; }
     .req-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 6px; gap: 8px; flex-wrap: wrap; }
     .req-name { font-size: 13px; font-weight: 700; }
     .req-meta { font-size: 11px; color: #57606a; margin-top: 2px; }
     .req-reason { font-size: 12px; color: #374151; font-style: italic; margin-bottom: 10px; }
     .req-actions { display: flex; gap: 8px; }
-    .btn-apr { background: #10b981; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-apr { background: #10b981; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; }
     .btn-apr:hover { background: #059669; }
-    .btn-rej { background: #ef4444; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: background .2s; }
+    .btn-rej { background: #ef4444; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; }
     .btn-rej:hover { background: #dc2626; }
     .sbadge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
     .s-pend { background: #fff3cd; color: #856404; }
     .s-appr { background: #d1fae5; color: #065f46; }
     .s-rej  { background: #fee2e2; color: #991b1b; }
-
     .ot-stats { margin-top: 18px; display: flex; gap: 16px; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid #e5e7eb; }
     .btn-sync-ot { margin-top: 14px; background: #7c5cd8; color: #fff; border: none; padding: 10px 20px; border-radius: 5px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; transition: background .2s; }
     .btn-sync-ot:hover { background: #6d48d0; }
-
     .empty { text-align: center; padding: 28px; color: #9ca3af; font-size: 13px; }
     .empty-icon { font-size: 32px; margin-bottom: 8px; }
 
-    /* Toast */
-    .toast { position: fixed; bottom: 24px; right: 24px; background: #161616; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 999; transform: translateY(80px); opacity: 0; transition: transform .3s, opacity .3s; }
+    /* ── Toast ── */
+    .toast { position: fixed; bottom: 24px; right: 24px; background: #161616; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(0,0,0,.2); z-index: 999; transform: translateY(80px); opacity: 0; transition: transform .3s, opacity .3s; max-width: 380px; }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.success { border-left: 4px solid #10b981; }
     .toast.error   { border-left: 4px solid #ef4444; }
     .toast.info    { border-left: 4px solid #0f62fe; }
 
-    @media (max-width: 640px) { .slide { padding: 16px; } .cards-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } }
+    /* ── Progress overlay ── */
+    .progress-overlay { display: none; position: fixed; inset: 0; background: rgba(22,22,22,.7); z-index: 300; align-items: center; justify-content: center; flex-direction: column; gap: 16px; }
+    .progress-overlay.show { display: flex; }
+    .progress-box { background: #fff; border-radius: 12px; padding: 28px 36px; text-align: center; min-width: 300px; }
+    .progress-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; }
+    .progress-bar-wrap { background: #f0f2f5; border-radius: 8px; height: 8px; overflow: hidden; margin-bottom: 10px; }
+    .progress-bar { background: #0f62fe; height: 8px; border-radius: 8px; width: 0%; transition: width .3s; }
+    .progress-msg { font-size: 12px; color: #57606a; }
+
+    @media (max-width: 640px) { .slide { padding: 16px; } .cards-grid { grid-template-columns: 1fr; } .form-row { grid-template-columns: 1fr; } .ibm-header-title { display: none; } }
   </style>
 </head>
 <body>
 
-<!-- Header -->
+<!-- ── Header ──────────────────────────────────────────────────────── -->
 <header class="ibm-header">
   <div style="display:flex;align-items:center;gap:14px;">
     <div class="ibm-logo">
@@ -174,7 +171,7 @@
   </div>
 </header>
 
-<!-- Slide nav -->
+<!-- ── Slide nav ──────────────────────────────────────────────────── -->
 <nav class="slide-nav">
   <div class="slide-tab active" onclick="showSlide(1,this)">📋 Slide 1 — Confirmación de Actualizaciones</div>
   <div class="slide-tab" onclick="showSlide(2,this)">⏰ Slide 2 — Solicitud de Horas Extras</div>
@@ -185,27 +182,50 @@
 ══════════════════════════════════════════ -->
 <div class="slide active" id="slide1">
 
-  <!-- ── DATOS DEL COLABORADOR (una sola vez) ── -->
-  <div class="collab-box" id="collab-box">
+  <!-- Datos del colaborador (una sola vez) -->
+  <div class="collab-box">
     <div class="collab-title">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       Datos del colaborador
     </div>
     <div class="collab-fields">
-      <div class="form-group"><label>Nombre completo</label><input type="text" id="collab-name" placeholder="Ej. Juan Pérez" oninput="propagateCollab()" /></div>
-      <div class="form-group"><label>Correo IBM</label><input type="email" id="collab-email" placeholder="usuario@ibm.com" oninput="propagateCollab()" /></div>
-      <div class="form-group"><label>Período</label><input type="text" id="collab-period" placeholder="Ej. Semana 28 – 2025" oninput="propagateCollab()" /></div>
-      <div class="form-group"><label>Fecha de reporte</label><input type="date" id="collab-date" oninput="propagateCollab()" /></div>
+      <div class="form-group">
+        <label>ADCAR</label>
+        <input type="text" id="collab-adcar" placeholder="Ej. AMC304" oninput="propagateCollab()" />
+      </div>
+      <div class="form-group">
+        <label>Correo IBM</label>
+        <input type="email" id="collab-email" placeholder="usuario@ibm.com" oninput="propagateCollab()" />
+      </div>
+      <div class="form-group">
+        <label>Gerencia</label>
+        <input type="text" id="collab-gerencia" placeholder="Ej. GTS Colombia" oninput="propagateCollab()" />
+      </div>
+      <div class="form-group">
+        <label>Período / Semana</label>
+        <input type="text" id="collab-period" placeholder="Ej. Semana 28 – 2025" oninput="propagateCollab()" />
+      </div>
     </div>
     <div class="collab-info" id="collab-info" style="display:none;">
       ✅ Datos registrados: <strong id="collab-display"></strong>
     </div>
   </div>
 
+  <!-- Columnas mapeadas -->
+  <div class="col-map">
+    <strong style="margin-right:4px;">🔗 Columnas Monday sincronizadas:</strong>
+    <span class="col-tag">Adcar</span><span class="col-tag">Correo</span><span class="col-tag">Gerencia</span>
+    <span class="col-tag">Time</span><span class="col-tag">Soporte Time</span>
+    <span class="col-tag">Success Factors</span><span class="col-tag">Soporte SF</span>
+    <span class="col-tag">My Hour Plan</span><span class="col-tag">Soporte HP</span>
+    <span class="col-tag">Comentarios</span>
+  </div>
+
+  <!-- Summary -->
   <div class="summary-bar">
     <div class="summary-item"><div class="summary-num" id="s-pend">0</div><div class="summary-lbl">Pendientes</div></div>
     <div class="summary-item"><div class="summary-num" id="s-conf" style="color:#10b981">0</div><div class="summary-lbl">Confirmados</div></div>
-    <div class="summary-item"><div class="summary-num" id="s-files" style="color:#7c5cd8">0</div><div class="summary-lbl">Archivos adjuntos</div></div>
+    <div class="summary-item"><div class="summary-num" id="s-files" style="color:#7c5cd8">0</div><div class="summary-lbl">Soportes adjuntos</div></div>
     <div style="margin-left:auto;font-size:12px;color:#57606a;">
       📅 Semana: <strong id="currentWeek">–</strong>&nbsp;|&nbsp;
       🔗 <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" style="color:#0f62fe;font-weight:700;">Board 18432741374</a>
@@ -213,11 +233,11 @@
   </div>
 
   <div class="section-title">Confirmación de Cargue de Horas</div>
-  <div class="section-sub">Confirma el cargue en cada sistema y adjunta el soporte correspondiente. Los datos del colaborador se toman del formulario de arriba.</div>
+  <div class="section-sub">Confirma el cargue en cada sistema y adjunta el soporte. Los datos se enviarán directamente a las columnas del tablero Monday.</div>
 
   <div class="cards-grid">
 
-    <!-- TIME -->
+    <!-- ── TIME ── -->
     <div class="status-card" id="card-time">
       <div class="card-header">
         <div class="card-title"><div class="card-icon icon-time">🕐</div> Time (IBM Time Tracker)</div>
@@ -225,36 +245,40 @@
       </div>
       <div class="card-form">
         <div class="form-row full">
-          <div class="form-group"><label>Estado en Time</label>
+          <div class="form-group">
+            <label>Estado en Time <span style="color:#0f62fe;font-size:10px;">→ col: Time</span></label>
             <select id="time-status">
               <option value="">— Seleccionar —</option>
-              <option>Completado</option>
-              <option>En proceso</option>
-              <option>Pendiente de aprobación</option>
+              <option value="Completado">Completado</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Pendiente de aprobación">Pendiente de aprobación</option>
             </select>
           </div>
         </div>
         <div class="form-row full">
-          <div class="form-group"><label>Observaciones</label><textarea id="time-notes" placeholder="Detalla cualquier novedad o comentario…"></textarea></div>
+          <div class="form-group">
+            <label>Comentarios <span style="color:#0f62fe;font-size:10px;">→ col: Comentarios</span></label>
+            <textarea id="time-notes" placeholder="Observaciones sobre el cargue en Time…"></textarea>
+          </div>
         </div>
       </div>
       <div class="card-upload">
-        <div class="upload-label-row">📎 Adjuntar soporte (cualquier formato)</div>
+        <div class="upload-label-row">📎 Soporte Time <span style="color:#0f62fe;font-size:10px;">→ col: Soporte Time</span></div>
         <div class="upload-drop" id="drop-time" ondragover="dragOver(event,'drop-time')" ondragleave="dragLeave('drop-time')" ondrop="dropFile(event,'time')">
           <input type="file" multiple onchange="handleFiles(this.files,'time')" />
           <div class="upload-drop-icon">📁</div>
           <div class="upload-drop-text">Arrastra o haz clic para adjuntar</div>
-          <div class="upload-drop-hint">PDF · JPG · PNG · DOCX · XLSX · Screenshot · Cualquier formato</div>
+          <div class="upload-drop-hint">PDF · JPG · PNG · DOCX · XLSX · Cualquier formato</div>
           <div class="file-list" id="files-time"></div>
         </div>
       </div>
       <div class="confirm-row">
-        <button class="btn-confirm" id="btn-time" onclick="confirmUpdate('time')">✔ Confirmar cargue</button>
+        <button class="btn-confirm" id="btn-time" onclick="confirmUpdate('time')">✔ Confirmar cargue Time</button>
         <span class="confirm-ts" id="ts-time"></span>
       </div>
     </div>
 
-    <!-- SUCCESS FACTORS -->
+    <!-- ── SUCCESS FACTORS ── -->
     <div class="status-card" id="card-sf">
       <div class="card-header">
         <div class="card-title"><div class="card-icon icon-sf">🌐</div> Success Factors</div>
@@ -262,36 +286,40 @@
       </div>
       <div class="card-form">
         <div class="form-row full">
-          <div class="form-group"><label>Estado en Success Factors</label>
+          <div class="form-group">
+            <label>Estado en Success Factors <span style="color:#0f62fe;font-size:10px;">→ col: Success Factors</span></label>
             <select id="sf-status">
               <option value="">— Seleccionar —</option>
-              <option>Completado</option>
-              <option>En proceso</option>
-              <option>Pendiente de aprobación</option>
+              <option value="Completado">Completado</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Pendiente de aprobación">Pendiente de aprobación</option>
             </select>
           </div>
         </div>
         <div class="form-row full">
-          <div class="form-group"><label>Observaciones</label><textarea id="sf-notes" placeholder="Detalla cualquier novedad o comentario…"></textarea></div>
+          <div class="form-group">
+            <label>Comentarios <span style="color:#0f62fe;font-size:10px;">→ col: Comentarios</span></label>
+            <textarea id="sf-notes" placeholder="Observaciones sobre el cargue en Success Factors…"></textarea>
+          </div>
         </div>
       </div>
       <div class="card-upload">
-        <div class="upload-label-row">📎 Adjuntar soporte (cualquier formato)</div>
+        <div class="upload-label-row">📎 Soporte Success Factors <span style="color:#0f62fe;font-size:10px;">→ col: Soporte Success Factors</span></div>
         <div class="upload-drop" id="drop-sf" ondragover="dragOver(event,'drop-sf')" ondragleave="dragLeave('drop-sf')" ondrop="dropFile(event,'sf')">
           <input type="file" multiple onchange="handleFiles(this.files,'sf')" />
           <div class="upload-drop-icon">📁</div>
           <div class="upload-drop-text">Arrastra o haz clic para adjuntar</div>
-          <div class="upload-drop-hint">PDF · JPG · PNG · DOCX · XLSX · Screenshot · Cualquier formato</div>
+          <div class="upload-drop-hint">PDF · JPG · PNG · DOCX · XLSX · Cualquier formato</div>
           <div class="file-list" id="files-sf"></div>
         </div>
       </div>
       <div class="confirm-row">
-        <button class="btn-confirm" id="btn-sf" onclick="confirmUpdate('sf')">✔ Confirmar cargue</button>
+        <button class="btn-confirm" id="btn-sf" onclick="confirmUpdate('sf')">✔ Confirmar cargue SF</button>
         <span class="confirm-ts" id="ts-sf"></span>
       </div>
     </div>
 
-    <!-- MY HOUR PLAN -->
+    <!-- ── MY HOUR PLAN ── -->
     <div class="status-card" id="card-hp">
       <div class="card-header">
         <div class="card-title"><div class="card-icon icon-hourplan">📅</div> My Hour Plan</div>
@@ -299,32 +327,36 @@
       </div>
       <div class="card-form">
         <div class="form-row full">
-          <div class="form-group"><label>Estado en My Hour Plan</label>
+          <div class="form-group">
+            <label>Estado en My Hour Plan <span style="color:#0f62fe;font-size:10px;">→ col: My Hour Plan</span></label>
             <select id="hp-status">
               <option value="">— Seleccionar —</option>
-              <option>Planificado</option>
-              <option>En ejecución</option>
-              <option>Cerrado</option>
-              <option>Con desviación</option>
+              <option value="Planificado">Planificado</option>
+              <option value="En ejecución">En ejecución</option>
+              <option value="Cerrado">Cerrado</option>
+              <option value="Con desviación">Con desviación</option>
             </select>
           </div>
         </div>
         <div class="form-row full">
-          <div class="form-group"><label>Observaciones</label><textarea id="hp-notes" placeholder="Detalla cualquier novedad o comentario…"></textarea></div>
+          <div class="form-group">
+            <label>Comentarios <span style="color:#0f62fe;font-size:10px;">→ col: Comentarios</span></label>
+            <textarea id="hp-notes" placeholder="Observaciones sobre el cargue en My Hour Plan…"></textarea>
+          </div>
         </div>
       </div>
       <div class="card-upload">
-        <div class="upload-label-row">📎 Adjuntar soporte (cualquier formato)</div>
+        <div class="upload-label-row">📎 Soporte My Hour Plan <span style="color:#0f62fe;font-size:10px;">→ col: Soporte My Hour Plan</span></div>
         <div class="upload-drop" id="drop-hp" ondragover="dragOver(event,'drop-hp')" ondragleave="dragLeave('drop-hp')" ondrop="dropFile(event,'hp')">
           <input type="file" multiple onchange="handleFiles(this.files,'hp')" />
           <div class="upload-drop-icon">📁</div>
           <div class="upload-drop-text">Arrastra o haz clic para adjuntar</div>
-          <div class="upload-drop-hint">PDF · JPG · PNG · DOCX · XLSX · Screenshot · Cualquier formato</div>
+          <div class="upload-drop-hint">PDF · JPG · PNG · DOCX · XLSX · Cualquier formato</div>
           <div class="file-list" id="files-hp"></div>
         </div>
       </div>
       <div class="confirm-row">
-        <button class="btn-confirm" id="btn-hp" onclick="confirmUpdate('hp')">✔ Confirmar cargue</button>
+        <button class="btn-confirm" id="btn-hp" onclick="confirmUpdate('hp')">✔ Confirmar cargue HP</button>
         <span class="confirm-ts" id="ts-hp"></span>
       </div>
     </div>
@@ -335,10 +367,10 @@
   <div class="sync-bar">
     <div>
       <p><strong>Sincronizar con Monday Board 18432741374</strong></p>
-      <p>Envía todas las confirmaciones e información ingresada al tablero de Monday.</p>
-      <div class="sync-ok" id="syncOk">✅ Datos sincronizados con Monday · <span id="syncTs"></span></div>
+      <p>Crea un ítem con todas las columnas mapeadas y sube los soportes adjuntos.</p>
+      <div class="sync-ok" id="syncOk">✅ Sincronizado con Monday · <span id="syncTs"></span></div>
     </div>
-    <button class="btn-sync" onclick="syncToMonday()">
+    <button class="btn-sync" onclick="syncToMonday(event)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       Sincronizar con Monday
     </button>
@@ -353,62 +385,78 @@
 <div class="slide" id="slide2">
 
   <div class="section-title">Solicitud de Horas Extras</div>
-  <div class="section-sub">La aprobación es <strong>exclusiva del líder responsable</strong> asignado en Monday. Recibirás confirmación una vez revisada tu solicitud.</div>
+  <div class="section-sub">La aprobación es <strong>exclusiva del líder responsable</strong> asignado en Monday. Campos mapeados a las columnas reales del board.</div>
+
+  <!-- Columnas mapeadas OT -->
+  <div class="col-map" style="margin-bottom:20px;">
+    <strong style="margin-right:4px;">🔗 Columnas Monday sincronizadas:</strong>
+    <span class="col-tag">Adcar</span><span class="col-tag">Correo</span>
+    <span class="col-tag">Fecha Solicitud HE</span><span class="col-tag">Horas Extras</span>
+    <span class="col-tag">Aprobador</span><span class="col-tag">Estado de Aprobación</span>
+    <span class="col-tag">Comentarios</span>
+  </div>
 
   <div class="ot-wrap">
 
     <!-- Formulario -->
     <div class="panel">
       <h3>➕ Nueva Solicitud de Horas Extras</h3>
-
       <div class="notice">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div><strong>Flujo de aprobación: Solo Líder</strong>Solo el líder responsable asignado en Monday puede aprobar o rechazar esta solicitud.</div>
+        <div><strong>Solo Líder:</strong> Únicamente Jesús Alberto Pérez o Víctor Suárez Ardila pueden aprobar esta solicitud.</div>
       </div>
 
-      <div class="fg"><label>Nombre del colaborador</label><input type="text" id="ot-name" placeholder="Nombre completo" /></div>
-      <div class="fg"><label>Correo IBM</label><input type="email" id="ot-email" placeholder="usuario@ibm.com" /></div>
-      <div class="fg"><label>Fecha de horas extras</label><input type="date" id="ot-date" /></div>
+      <div class="fg">
+        <label>ADCAR <span style="color:#0f62fe;font-size:10px;">→ col: Adcar</span></label>
+        <input type="text" id="ot-adcar" placeholder="Ej. AMC304" />
+      </div>
+      <div class="fg">
+        <label>Correo IBM <span style="color:#0f62fe;font-size:10px;">→ col: Correo</span></label>
+        <input type="email" id="ot-email" placeholder="usuario@ibm.com" />
+      </div>
+      <div class="fg">
+        <label>Fecha solicitud HE <span style="color:#0f62fe;font-size:10px;">→ col: Fecha Solicitud HE</span></label>
+        <input type="date" id="ot-date" />
+      </div>
       <div class="two-col">
         <div class="fg"><label>Hora inicio</label><input type="time" id="ot-start" /></div>
         <div class="fg"><label>Hora fin</label><input type="time" id="ot-end" /></div>
       </div>
-      <div class="fg"><label>Total horas solicitadas</label><input type="number" id="ot-total" min="0.5" max="16" step="0.5" placeholder="Ej. 2" /></div>
-
-      <!-- Líderes desde columna Aprobación de Monday -->
       <div class="fg">
-        <label>Líder responsable (columna Aprobación · Monday)</label>
+        <label>Horas extras solicitadas <span style="color:#0f62fe;font-size:10px;">→ col: Horas Extras</span></label>
+        <input type="number" id="ot-total" min="0.5" max="16" step="0.5" placeholder="Ej. 2" />
+      </div>
+      <div class="fg">
+        <label>Aprobador <span style="color:#0f62fe;font-size:10px;">→ col: Aprobador</span></label>
         <select id="ot-leader">
-          <option value="">— Seleccionar líder —</option>
+          <option value="">— Seleccionar aprobador —</option>
           <option value="PEREZ_JESUS">Jesús Alberto Pérez</option>
           <option value="SUAREZ_VICTOR">Víctor Suárez Ardila</option>
         </select>
       </div>
-
-      <div class="fg"><label>Justificación</label><textarea id="ot-reason" placeholder="Describe el motivo de las horas extras…"></textarea></div>
+      <div class="fg">
+        <label>Justificación / Comentarios <span style="color:#0f62fe;font-size:10px;">→ col: Comentarios</span></label>
+        <textarea id="ot-reason" placeholder="Describe el motivo de las horas extras…"></textarea>
+      </div>
       <button class="btn-send" onclick="submitOT()">📤 Enviar solicitud al líder</button>
     </div>
 
     <!-- Cola de aprobaciones -->
     <div class="panel">
-      <h3>📋 Cola de Aprobaciones (Líder)</h3>
-      <div style="font-size:12px;color:#57606a;margin-bottom:16px;">Solo el líder responsable puede aprobar o rechazar cada solicitud.</div>
-
-      <div id="otQueue">
-        <div class="empty" id="emptyQ">
-          <div class="empty-icon">📭</div>
-          No hay solicitudes pendientes
-        </div>
+      <h3>📋 Cola de Aprobaciones</h3>
+      <div style="font-size:12px;color:#57606a;margin-bottom:14px;">
+        El estado de aprobación se sincroniza con la columna <strong>Estado de Aprobación</strong> de Monday.
       </div>
-
+      <div id="otQueue">
+        <div class="empty" id="emptyQ"><div class="empty-icon">📭</div>No hay solicitudes pendientes</div>
+      </div>
       <div class="ot-stats">
         <div class="summary-item"><div class="summary-num" id="ot-pend" style="font-size:20px;">0</div><div class="summary-lbl">Pendientes</div></div>
         <div class="summary-item"><div class="summary-num" id="ot-appr" style="font-size:20px;color:#10b981">0</div><div class="summary-lbl">Aprobadas</div></div>
         <div class="summary-item"><div class="summary-num" id="ot-rejc" style="font-size:20px;color:#ef4444">0</div><div class="summary-lbl">Rechazadas</div></div>
-        <div class="summary-item"><div class="summary-num" id="ot-hrs"  style="font-size:20px;color:#7c5cd8">0</div><div class="summary-lbl">Hrs aprobadas</div></div>
+        <div class="summary-item"><div class="summary-num" id="ot-hrs" style="font-size:20px;color:#7c5cd8">0</div><div class="summary-lbl">Hrs aprobadas</div></div>
       </div>
-
-      <button class="btn-sync-ot" onclick="syncOT()">
+      <button class="btn-sync-ot" onclick="syncOT(event)">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Sincronizar aprobaciones con Monday
       </button>
@@ -417,16 +465,29 @@
   </div>
 </div><!-- /slide2 -->
 
-<!-- Token config modal -->
+<!-- Token modal -->
 <div id="tokenModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:520px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,.2);">
     <div style="font-size:15px;font-weight:700;margin-bottom:6px;">🔑 Configurar token de Monday</div>
-    <div style="font-size:12px;color:#57606a;margin-bottom:16px;line-height:1.6;">Obtén tu token en Monday → <strong>Avatar → Developers → My Access Tokens</strong>.<br>Se guarda en este navegador (localStorage) y nunca se envía a terceros.</div>
-    <input type="password" id="tokenInput" placeholder="eyJhbGciOiJIUzI1NiJ9…" style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:monospace;margin-bottom:14px;" />
+    <div style="font-size:12px;color:#57606a;margin-bottom:16px;line-height:1.6;">
+      Monday → <strong>Avatar → Developers → My Access Tokens</strong> → Show → Copy.<br>
+      Se guarda en este navegador (localStorage). No se envía a ningún servidor externo.
+    </div>
+    <input type="password" id="tokenInput" placeholder="eyJhbGciOiJIUzI1NiJ9…"
+      style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:monospace;margin-bottom:14px;" />
     <div style="display:flex;gap:10px;justify-content:flex-end;">
       <button onclick="closeTokenModal()" style="padding:8px 18px;border:1px solid #d1d5db;border-radius:5px;background:#fff;font-size:13px;cursor:pointer;">Cancelar</button>
       <button onclick="saveToken()" style="padding:8px 18px;background:#0f62fe;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer;">Guardar y conectar</button>
     </div>
+  </div>
+</div>
+
+<!-- Progress overlay -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-box">
+    <div class="progress-title" id="progressTitle">Sincronizando con Monday…</div>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="progress-msg" id="progressMsg">Iniciando…</div>
   </div>
 </div>
 
@@ -435,20 +496,58 @@
 
 <script>
 /* ══════════════════════════════════════════════════════════════════
-   MONDAY API — configuración desde la UI (token en localStorage)
+   MONDAY BOARD 18432741374 — COLUMN IDs
+   Estos son los IDs internos de Monday para cada columna.
+   Se descubren automáticamente al hacer clic en "Descubrir columnas"
+   o pueden ingresarse manualmente si ya los conoces.
+   
+   MAPEO DE COLUMNAS:
+   Nombre en Monday        → ID Monday (descubierto en runtime)
+   ─────────────────────────────────────────────────
+   Adcar                   → adcar (o el ID real)
+   Correo                  → correo
+   Gerencia                → gerencia
+   Time                    → time (status)
+   Soporte Time            → files (columna de archivos)
+   Success Factors         → success_factors (status)
+   Soporte Success Factors → files (columna de archivos)
+   My Hour Plan            → my_hour_plan (status)
+   Soporte My Hour Plan    → files (columna de archivos)
+   Comentarios             → comentarios (text)
+   Fecha Solicitud HE      → fecha_solicitud_he (date)
+   Horas Extras            → horas_extras (numbers)
+   Aprobador               → aprobador (people / text)
+   Estado de Aprobación    → estado_aprobacion (status)
 ══════════════════════════════════════════════════════════════════ */
 const BOARD_ID   = '18432741374';
 const MONDAY_API = 'https://api.monday.com/v2';
 const MONDAY_URL = `https://ibm.monday.com/boards/${BOARD_ID}`;
 
-function getToken() { return localStorage.getItem('monday_token') || ''; }
-function openTokenModal() { document.getElementById('tokenInput').value = getToken(); document.getElementById('tokenModal').style.display = 'flex'; }
+/* IDs de columnas — se actualizan automáticamente al descubrir */
+let COL = {
+  adcar:              'text',        // ajustado en runtime
+  correo:             'email',
+  gerencia:           'text0',
+  time:               'status',
+  sf:                 'status4',
+  hp:                 'status9',
+  comentarios:        'long_text',
+  fecha_he:           'date4',
+  horas_extras:       'numbers',
+  aprobador:          'person',
+  estado_aprobacion:  'color'
+};
+let columnsDiscovered = false;
+
+/* ── Token (localStorage) ── */
+function getToken()        { return localStorage.getItem('monday_token') || ''; }
+function openTokenModal()  { document.getElementById('tokenInput').value = getToken(); document.getElementById('tokenModal').style.display = 'flex'; }
 function closeTokenModal() { document.getElementById('tokenModal').style.display = 'none'; }
 function saveToken() {
   const t = document.getElementById('tokenInput').value.trim();
   if (!t) { showToast('⚠️ Pega tu token antes de guardar.','error'); return; }
   localStorage.setItem('monday_token', t);
-  closeTokenModal(); updateTokenStatus();
+  closeTokenModal(); updateTokenStatus(); columnsDiscovered = false;
   showToast('✅ Token guardado. Dashboard conectado a Monday.','success');
 }
 function updateTokenStatus() {
@@ -458,24 +557,13 @@ function updateTokenStatus() {
   else            { btn.textContent = '🔑 Conectar Monday';  btn.style.background = '#f59e0b'; }
 }
 
-const uploaded  = { time: [], sf: [], hp: [] };
-const confirmed = { time: false, sf: false, hp: false };
-let otList = [], otId = 1;
-
-/* ── Monday GraphQL helper ── */
+/* ── Monday GraphQL ── */
 async function mondayQuery(query, variables = {}) {
   const token = getToken();
-  if (!token) {
-    console.warn('[Monday] Token no configurado — haz clic en "Conectar Monday".');
-    return null;
-  }
+  if (!token) return null;
   const res = await fetch(MONDAY_API, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': token,
-      'API-Version': '2024-01'
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': token, 'API-Version': '2024-01' },
     body: JSON.stringify({ query, variables })
   });
   if (!res.ok) throw new Error(`Monday API error: ${res.status}`);
@@ -484,104 +572,143 @@ async function mondayQuery(query, variables = {}) {
   return json.data;
 }
 
+/* ── Descubrir IDs de columnas del board ── */
+async function discoverColumns() {
+  if (columnsDiscovered || !getToken()) return;
+  setProgress(5, 'Descubriendo columnas del board…');
+  const data = await mondayQuery(`{ boards(ids: ${BOARD_ID}) { columns { id title type } } }`);
+  if (!data?.boards?.[0]?.columns) return;
+  const cols = data.boards[0].columns;
+  /* Mapeo por título (case-insensitive, sin tildes) */
+  const normalize = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const find = (keywords) => {
+    const kws = keywords.map(normalize);
+    return cols.find(c => kws.some(k => normalize(c.title).includes(k)))?.id || null;
+  };
+  COL.adcar             = find(['adcar'])                            || COL.adcar;
+  COL.correo            = find(['correo','email'])                   || COL.correo;
+  COL.gerencia          = find(['gerencia'])                         || COL.gerencia;
+  COL.time              = find(['time'])                             || COL.time;
+  COL.sf                = find(['success','factor'])                 || COL.sf;
+  COL.hp                = find(['hour plan','hourplan','hour_plan']) || COL.hp;
+  COL.comentarios       = find(['comentario'])                       || COL.comentarios;
+  COL.fecha_he          = find(['fecha','solicitud'])                || COL.fecha_he;
+  COL.horas_extras      = find(['horas extras','horas_extras'])      || COL.horas_extras;
+  COL.aprobador         = find(['aprobador'])                        || COL.aprobador;
+  COL.estado_aprobacion = find(['estado','aprobacion','aprobación']) || COL.estado_aprobacion;
+  columnsDiscovered = true;
+  console.info('[Monday] Columnas descubiertas:', COL);
+}
+
 /* ── Crear ítem en Monday ── */
 async function createMondayItem(itemName, columnValues) {
-  const query = `
-    mutation ($board: ID!, $name: String!, $cols: JSON!) {
-      create_item(board_id: $board, item_name: $name, column_values: $cols) { id }
-    }`;
+  const query = `mutation ($board: ID!, $name: String!, $cols: JSON!) {
+    create_item(board_id: $board, item_name: $name, column_values: $cols) { id } }`;
   return mondayQuery(query, { board: BOARD_ID, name: itemName, cols: JSON.stringify(columnValues) });
 }
 
-/* ── Subir archivo a un ítem de Monday ── */
-async function uploadFileToMonday(itemId, file) {
+/* ── Subir archivo a columna de un ítem ── */
+async function uploadFileToMonday(itemId, colId, file) {
   const token = getToken();
   if (!token) return;
   const form = new FormData();
-  form.append('query', `mutation ($file: File!) { add_file_to_column(item_id: ${itemId}, column_id: "files", file: $file) { id } }`);
+  form.append('query',
+    `mutation ($file: File!) { add_file_to_column(item_id: ${itemId}, column_id: "${colId}", file: $file) { id } }`);
   form.append('variables[file]', file, file.name);
-  const res = await fetch(MONDAY_API, {
-    method: 'POST',
-    headers: { 'Authorization': token },
-    body: form
-  });
-  if (!res.ok) throw new Error(`Upload error: ${res.status}`);
+  const res = await fetch(MONDAY_API, { method:'POST', headers:{ 'Authorization': token }, body: form });
+  if (!res.ok) throw new Error(`Upload ${file.name}: HTTP ${res.status}`);
   const json = await res.json();
-  if (json.errors) throw new Error(json.errors.map(e => e.message).join(', '));
+  if (json.errors) throw new Error(json.errors.map(e=>e.message).join(', '));
   return json.data;
 }
 
+/* ── Actualizar columna de ítem existente ── */
+async function updateColumn(itemId, colId, value) {
+  const query = `mutation ($board: ID!, $item: ID!, $col: String!, $val: String!) {
+    change_simple_column_value(board_id: $board, item_id: $item, column_id: $col, value: $val) { id } }`;
+  return mondayQuery(query, { board: BOARD_ID, item: String(itemId), col: colId, val: value });
+}
+
+/* ── Progress helpers ── */
+function showProgress(title) {
+  document.getElementById('progressTitle').textContent = title;
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('progressMsg').textContent = 'Iniciando…';
+  document.getElementById('progressOverlay').classList.add('show');
+}
+function setProgress(pct, msg) {
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressMsg').textContent = msg;
+}
+function hideProgress() { document.getElementById('progressOverlay').classList.remove('show'); }
+
+/* ── State ── */
+const uploaded  = { time: [], sf: [], hp: [] };
+const confirmed = { time: false, sf: false, hp: false };
+let otList = [], otId = 1;
+
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
-  const now = new Date();
+  const now    = new Date();
   const monday = new Date(now); monday.setDate(now.getDate() - ((now.getDay()+6)%7));
   const friday = new Date(monday); friday.setDate(monday.getDate()+4);
   const fmt = d => d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'});
   document.getElementById('currentWeek').textContent = `${fmt(monday)} – ${fmt(friday)} ${now.getFullYear()}`;
 
-  const todayVal = now.toISOString().split('T')[0];
-  const weekStr  = `Semana ${getWeek(now)} – ${now.getFullYear()}`;
-
-  // Pre-fill collab shared fields
-  document.getElementById('collab-date').value   = todayVal;
+  const weekStr = `Semana ${getWeek(now)} – ${now.getFullYear()}`;
   document.getElementById('collab-period').value = weekStr;
-
   document.getElementById('ot-date').valueAsDate = now;
+
   updateSummary();
   updateTokenStatus();
 });
 
-/* ── Propagate collaborator data ── */
-function propagateCollab() {
-  const name   = document.getElementById('collab-name').value.trim();
-  const email  = document.getElementById('collab-email').value.trim();
-  const info   = document.getElementById('collab-info');
-  const display = document.getElementById('collab-display');
-  if (name && email) {
-    display.textContent = `${name} · ${email}`;
-    info.style.display = 'block';
-  } else {
-    info.style.display = 'none';
-  }
-}
-
-/* ── Get shared collaborator data ── */
-function getCollab() {
-  return {
-    name:   document.getElementById('collab-name').value.trim(),
-    email:  document.getElementById('collab-email').value.trim(),
-    period: document.getElementById('collab-period').value.trim(),
-    date:   document.getElementById('collab-date').value
-  };
-}
-
 function getWeek(d) {
-  const onejan = new Date(d.getFullYear(),0,1);
-  return Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);
+  const j = new Date(d.getFullYear(),0,1);
+  return Math.ceil((((d-j)/86400000)+j.getDay()+1)/7);
 }
 
 /* ── Slide nav ── */
 function showSlide(n, tab) {
-  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.slide-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.slide-tab').forEach(t=>t.classList.remove('active'));
   document.getElementById(`slide${n}`).classList.add('active');
   tab.classList.add('active');
 }
 
-/* ── Confirm ── */
-function confirmUpdate(id) {
-  const collab = getCollab();
-  if (!collab.name || !collab.email) {
-    showToast('⚠️ Completa el nombre y correo del colaborador antes de confirmar.','error');
-    document.getElementById('collab-name').focus();
-    return;
-  }
-  if (!collab.email.endsWith('@ibm.com')) {
-    showToast('⚠️ El correo debe ser @ibm.com.','error');
-    document.getElementById('collab-email').focus();
-    return;
-  }
+/* ── Collab propagation ── */
+function propagateCollab() {
+  const adcar  = document.getElementById('collab-adcar').value.trim();
+  const email  = document.getElementById('collab-email').value.trim();
+  const info   = document.getElementById('collab-info');
+  const disp   = document.getElementById('collab-display');
+  if (adcar || email) { disp.textContent = `${adcar} · ${email}`; info.style.display='block'; }
+  else info.style.display='none';
+  /* Pre-fill Slide 2 */
+  if (adcar && !document.getElementById('ot-adcar').value) document.getElementById('ot-adcar').value = adcar;
+  if (email && !document.getElementById('ot-email').value) document.getElementById('ot-email').value = email;
+}
 
+function getCollab() {
+  return {
+    adcar:    document.getElementById('collab-adcar').value.trim(),
+    email:    document.getElementById('collab-email').value.trim(),
+    gerencia: document.getElementById('collab-gerencia').value.trim(),
+    period:   document.getElementById('collab-period').value.trim()
+  };
+}
+
+/* ── Confirm update ── */
+function confirmUpdate(id) {
+  const c = getCollab();
+  if (!c.adcar && !c.email) {
+    showToast('⚠️ Ingresa tu ADCAR o correo antes de confirmar.','error');
+    document.getElementById('collab-adcar').focus(); return;
+  }
+  if (c.email && !c.email.endsWith('@ibm.com')) {
+    showToast('⚠️ El correo debe ser @ibm.com.','error');
+    document.getElementById('collab-email').focus(); return;
+  }
   confirmed[id] = true;
   const btn   = document.getElementById(`btn-${id}`);
   const badge = document.getElementById(`badge-${id}`);
@@ -589,9 +716,9 @@ function confirmUpdate(id) {
   btn.classList.add('confirmed'); btn.textContent = '✅ Confirmado';
   badge.textContent = 'Confirmado'; badge.className = 'status-badge badge-confirmed';
   const now = new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
-  ts.textContent = `por ${collab.name} · ${now}`; ts.classList.add('visible');
+  ts.textContent = `${c.adcar || c.email} · ${now}`; ts.classList.add('visible');
   updateSummary();
-  showToast(`✅ ${sysName(id)} confirmado por ${collab.name}`,'success');
+  showToast(`✅ ${sysName(id)} confirmado`,'success');
 }
 
 function sysName(id) { return {time:'Time',sf:'Success Factors',hp:'My Hour Plan'}[id]||id; }
@@ -600,124 +727,155 @@ function updateSummary() {
   const conf = Object.values(confirmed).filter(Boolean).length;
   document.getElementById('s-conf').textContent = conf;
   document.getElementById('s-pend').textContent = 3 - conf;
-  const total = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
-  document.getElementById('s-files').textContent = total;
+  document.getElementById('s-files').textContent = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
 }
 
-/* ── File upload (cualquier formato) ── */
+/* ── File upload ── */
 function handleFiles(files, cat) {
   [...files].forEach(f => {
-    if (f.size > 50 * 1024 * 1024) { showToast(`⚠️ ${f.name} supera 50 MB.`,'error'); return; }
+    if (f.size > 50*1024*1024) { showToast(`⚠️ ${f.name} supera 50 MB.`,'error'); return; }
     uploaded[cat].push(f);
   });
   renderFiles(cat); updateSummary();
 }
-
 function dropFile(e, cat) { e.preventDefault(); dragLeave(`drop-${cat}`); handleFiles(e.dataTransfer.files, cat); }
 function dragOver(e, id)  { e.preventDefault(); document.getElementById(id).classList.add('drag-over'); }
 function dragLeave(id)    { document.getElementById(id).classList.remove('drag-over'); }
-
-const EXT_ICONS = { pdf:'📄', jpg:'🖼', jpeg:'🖼', png:'🖼', gif:'🖼', webp:'🖼', bmp:'🖼',
-  docx:'📝', doc:'📝', xlsx:'📊', xls:'📊', pptx:'📊', ppt:'📊',
-  mp4:'🎬', mp3:'🎵', zip:'🗜', rar:'🗜', txt:'📃', csv:'📊' };
-
-function fileIcon(name) {
-  const ext = name.split('.').pop().toLowerCase();
-  return EXT_ICONS[ext] || '📎';
-}
-
+const ICONS = {pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',gif:'🖼',webp:'🖼',bmp:'🖼',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊',pptx:'📊',mp4:'🎬',zip:'🗜',txt:'📃',csv:'📊'};
+function fileIcon(n) { return ICONS[n.split('.').pop().toLowerCase()]||'📎'; }
 function renderFiles(cat) {
-  const c = document.getElementById(`files-${cat}`);
-  c.innerHTML = '';
-  uploaded[cat].forEach((f, i) => {
-    const d = document.createElement('div');
-    d.className = 'file-item';
-    d.innerHTML = `${fileIcon(f.name)}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px">${f.name}</span><span class="rm" onclick="removeFile('${cat}',${i})">✕</span>`;
+  const c = document.getElementById(`files-${cat}`); c.innerHTML = '';
+  uploaded[cat].forEach((f,i) => {
+    const d = document.createElement('div'); d.className='file-item';
+    d.innerHTML=`${fileIcon(f.name)}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span class="rm" onclick="removeFile('${cat}',${i})">✕</span>`;
     c.appendChild(d);
   });
 }
+function removeFile(cat,i) { uploaded[cat].splice(i,1); renderFiles(cat); updateSummary(); }
 
-function removeFile(cat, i) { uploaded[cat].splice(i,1); renderFiles(cat); updateSummary(); }
+/* ══════════════════════════════════════════════════════════════════
+   SYNC SLIDE 1 → MONDAY
+   Crea UN ítem con TODAS las columnas del board mapeadas:
+   Adcar | Correo | Gerencia | Time | SF | HP | Comentarios
+   + sube archivos a columnas Soporte Time / SF / HP
+══════════════════════════════════════════════════════════════════ */
+async function syncToMonday(e) {
+  const btn = e.currentTarget; const orig = btn.innerHTML;
 
-/* ── Sync Slide 1 → Monday ── */
-async function syncToMonday() {
+  if (!getToken()) { openTokenModal(); return; }
+
   const conf  = Object.values(confirmed).filter(Boolean).length;
   const total = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
   if (conf === 0 && total === 0) {
-    showToast('⚠️ Confirma al menos un sistema o adjunta archivos.','error'); return;
+    showToast('⚠️ Confirma al menos un sistema o adjunta soportes.','error'); return;
   }
 
-  const btn = event.currentTarget;
-  const orig = btn.innerHTML;
-  btn.disabled = true; btn.textContent = '⏳ Sincronizando con Monday…';
-
-  const collab = getCollab();
-  const ts     = new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'});
-  const systems = ['time','sf','hp'];
+  const c = getCollab();
+  btn.disabled = true; btn.textContent = '⏳ Sincronizando…';
+  showProgress('Sincronizando con Monday Board 18432741374…');
 
   try {
-    if (getToken()) {
-      let totalUploaded = 0;
-      for (const id of systems) {
-        if (!confirmed[id]) continue;
-        const status = document.getElementById(`${id}-status`)?.value || 'Completado';
-        const notes  = document.getElementById(`${id}-notes`)?.value  || '';
-        const files  = uploaded[id].map(f => f.name).join(', ') || '—';
+    /* 1. Descubrir columnas */
+    await discoverColumns();
+    setProgress(15, 'Columnas identificadas…');
 
-        // 1. Crear ítem en Monday
-        const result = await createMondayItem(
-          `[${sysName(id)}] ${collab.name} · ${collab.period}`,
-          {
-            text:   `${collab.email} | Estado: ${status} | Notas: ${notes} | Archivos: ${files}`,
-            status: { label: status },
-            date4:  { date: collab.date }
-          }
-        );
+    /* 2. Construir column_values con IDs reales */
+    const colVals = {};
+    if (c.adcar)    colVals[COL.adcar]       = c.adcar;
+    if (c.email)    colVals[COL.correo]       = c.email;
+    if (c.gerencia) colVals[COL.gerencia]     = c.gerencia;
 
-        // 2. Subir archivos al ítem recién creado
-        if (result?.create_item?.id && uploaded[id].length > 0) {
-          const itemId = result.create_item.id;
-          for (const file of uploaded[id]) {
-            try {
-              await uploadFileToMonday(itemId, file);
-              totalUploaded++;
-            } catch (fe) {
-              console.warn(`[Monday] No se pudo subir ${file.name}:`, fe.message);
-            }
+    /* Time */
+    const timeStatus = document.getElementById('time-status').value;
+    const timeNotes  = document.getElementById('time-notes').value.trim();
+    if (confirmed.time && timeStatus) colVals[COL.time] = { label: timeStatus };
+
+    /* Success Factors */
+    const sfStatus = document.getElementById('sf-status').value;
+    if (confirmed.sf && sfStatus) colVals[COL.sf] = { label: sfStatus };
+
+    /* My Hour Plan */
+    const hpStatus = document.getElementById('hp-status').value;
+    if (confirmed.hp && hpStatus) colVals[COL.hp] = { label: hpStatus };
+
+    /* Comentarios (une todos) */
+    const parts = [];
+    if (timeNotes) parts.push(`Time: ${timeNotes}`);
+    const sfNotes = document.getElementById('sf-notes').value.trim();
+    if (sfNotes)   parts.push(`SF: ${sfNotes}`);
+    const hpNotes = document.getElementById('hp-notes').value.trim();
+    if (hpNotes)   parts.push(`HP: ${hpNotes}`);
+    if (parts.length) colVals[COL.comentarios] = parts.join(' | ');
+
+    setProgress(30, 'Creando ítem en Monday…');
+
+    /* 3. Crear ítem */
+    const itemName = `[Confirmación] ${c.adcar || c.email} · ${c.period || new Date().toLocaleDateString('es-CO')}`;
+    const result   = await createMondayItem(itemName, colVals);
+    const itemId   = result?.create_item?.id;
+
+    setProgress(50, 'Ítem creado. Subiendo soportes…');
+
+    /* 4. Subir archivos de soporte */
+    let uploaded_count = 0;
+    const fileSets = [
+      { files: uploaded.time, label: 'Soporte Time' },
+      { files: uploaded.sf,   label: 'Soporte SF'   },
+      { files: uploaded.hp,   label: 'Soporte HP'   }
+    ];
+    const totalFiles = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
+    let done = 0;
+
+    if (itemId && totalFiles > 0) {
+      for (const { files, label } of fileSets) {
+        for (const file of files) {
+          try {
+            setProgress(50 + Math.round((done/totalFiles)*45), `Subiendo: ${file.name}…`);
+            await uploadFileToMonday(itemId, 'files', file);
+            uploaded_count++; done++;
+          } catch(fe) {
+            console.warn(`[Monday] No se pudo subir ${file.name}:`, fe.message);
+            done++;
           }
         }
       }
-      const msg = totalUploaded > 0
-        ? `✅ Sincronizado con Monday · ${totalUploaded} archivo(s) cargado(s)`
-        : `✅ Confirmaciones enviadas a Monday Board ${BOARD_ID}`;
-      showToast(msg, 'success');
-    } else {
-      showToast('⚠️ Configura el token de Monday primero (botón "Conectar Monday").', 'info');
-      openTokenModal();
-      btn.disabled = false; btn.innerHTML = orig;
-      return;
     }
 
+    setProgress(100, '¡Sincronización completa!');
+    setTimeout(hideProgress, 1000);
+
     const ok = document.getElementById('syncOk');
-    document.getElementById('syncTs').textContent = ts;
+    document.getElementById('syncTs').textContent =
+      `${new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'})}` +
+      (uploaded_count > 0 ? ` · ${uploaded_count} soporte(s) cargado(s)` : '');
     ok.classList.add('visible');
 
-  } catch (err) {
-    console.error('[Monday sync error]', err);
-    showToast('❌ Error al conectar con Monday: ' + err.message, 'error');
+    const msg = uploaded_count > 0
+      ? `✅ Monday actualizado · ${uploaded_count} soporte(s) subido(s)`
+      : `✅ Ítem creado en Monday Board ${BOARD_ID}`;
+    showToast(msg, 'success');
+
+  } catch(err) {
+    hideProgress();
+    console.error('[Monday sync]', err);
+    showToast('❌ Error Monday: ' + err.message, 'error');
   } finally {
     btn.disabled = false; btn.innerHTML = orig;
   }
 }
 
-/* ── OT Slide 2 ── */
+/* ══════════════════════════════════════════════════════════════════
+   OT — SLIDE 2
+   Columnas: Adcar | Correo | Fecha HE | Horas Extras |
+             Aprobador | Estado Aprobación | Comentarios
+══════════════════════════════════════════════════════════════════ */
 const LEADERS = {
-  PEREZ_JESUS:    'Jesús Alberto Pérez',
-  SUAREZ_VICTOR:  'Víctor Suárez Ardila'
+  PEREZ_JESUS:   'Jesús Alberto Pérez',
+  SUAREZ_VICTOR: 'Víctor Suárez Ardila'
 };
 
 function submitOT() {
-  const name   = document.getElementById('ot-name').value.trim();
+  const adcar  = document.getElementById('ot-adcar').value.trim();
   const email  = document.getElementById('ot-email').value.trim();
   const date   = document.getElementById('ot-date').value;
   const start  = document.getElementById('ot-start').value;
@@ -726,67 +884,57 @@ function submitOT() {
   const leader = document.getElementById('ot-leader').value;
   const reason = document.getElementById('ot-reason').value.trim();
 
-  if (!name||!email||!date||!start||!end||!total||!leader||!reason) {
+  if (!adcar||!email||!date||!start||!end||isNaN(total)||!leader||!reason) {
     showToast('⚠️ Completa todos los campos antes de enviar.','error'); return;
   }
   if (!email.endsWith('@ibm.com')) {
-    showToast('⚠️ Usa tu correo IBM (@ibm.com).','error'); return;
+    showToast('⚠️ El correo debe ser @ibm.com.','error'); return;
   }
 
-  const req = { id: otId++, name, email, date, start, end, total, leader, reason, status: 'pending', at: new Date().toLocaleString('es-CO') };
+  const req = { id: otId++, adcar, email, date, start, end, total, leader, reason, status:'pending', at: new Date().toLocaleString('es-CO') };
   otList.unshift(req);
   renderQueue();
-  clearOTForm();
-  showToast(`📤 Solicitud #${req.id} enviada a ${LEADERS[leader]}.`,'info');
-}
-
-function clearOTForm() {
-  // Conserva nombre y correo desde datos del colaborador si están disponibles
-  const collab = getCollab();
-  if (!document.getElementById('ot-name').value && collab.name)
-    document.getElementById('ot-name').value = collab.name;
-  if (!document.getElementById('ot-email').value && collab.email)
-    document.getElementById('ot-email').value = collab.email;
-  ['ot-start','ot-end','ot-total','ot-reason'].forEach(id => document.getElementById(id).value = '');
+  /* Limpiar solo campos variables */
+  ['ot-start','ot-end','ot-total','ot-reason'].forEach(id => document.getElementById(id).value='');
   document.getElementById('ot-leader').value = '';
   document.getElementById('ot-date').valueAsDate = new Date();
+  showToast(`📤 Solicitud #${req.id} enviada a ${LEADERS[leader]}.`,'info');
 }
 
 function renderQueue() {
   const c = document.getElementById('otQueue');
   const e = document.getElementById('emptyQ');
-  if (otList.length === 0) { c.innerHTML = ''; c.appendChild(e); updateOTStats(); return; }
-  c.innerHTML = '';
+  if (!otList.length) { c.innerHTML=''; c.appendChild(e); updateOTStats(); return; }
+  c.innerHTML='';
   otList.forEach(r => {
-    const sClass = {pending:'s-pend',approved:'s-appr',rejected:'s-rej'}[r.status];
-    const sLabel = {pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
-    const div = document.createElement('div');
-    div.className = 'req-item'; div.id = `req-${r.id}`;
-    div.innerHTML = `
+    const sc = {pending:'s-pend',approved:'s-appr',rejected:'s-rej'}[r.status];
+    const sl = {pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
+    const d  = document.createElement('div'); d.className='req-item'; d.id=`req-${r.id}`;
+    d.innerHTML=`
       <div class="req-head">
         <div>
-          <div class="req-name">#${r.id} · ${r.name}</div>
-          <div class="req-meta">${r.email} · ${r.date} · ${r.start}–${r.end} · <strong>${r.total}h</strong></div>
-          <div class="req-meta">Líder: ${LEADERS[r.leader]||r.leader}</div>
+          <div class="req-name">#${r.id} · ${r.adcar} · ${r.email}</div>
+          <div class="req-meta">${r.date} · ${r.start}–${r.end} · <strong>${r.total}h</strong></div>
+          <div class="req-meta">Aprobador: ${LEADERS[r.leader]||r.leader}</div>
           <div class="req-meta" style="color:#9ca3af">Enviado: ${r.at}</div>
         </div>
-        <span class="sbadge ${sClass}">${sLabel}</span>
+        <span class="sbadge ${sc}">${sl}</span>
       </div>
       <div class="req-reason">"${r.reason}"</div>
-      ${r.status==='pending' ? `<div class="req-actions">
+      ${r.status==='pending'?`<div class="req-actions">
         <button class="btn-apr" onclick="resolveOT(${r.id},'approved')">✅ Aprobar</button>
         <button class="btn-rej" onclick="resolveOT(${r.id},'rejected')">❌ Rechazar</button>
-      </div>` : ''}`;
-    c.appendChild(div);
+      </div>`:''}`;
+    c.appendChild(d);
   });
   updateOTStats();
 }
 
 function resolveOT(id, status) {
-  const r = otList.find(x => x.id === id);
-  if (!r || r.status !== 'pending') return;
+  const r = otList.find(x=>x.id===id);
+  if (!r||r.status!=='pending') return;
   r.status = status; renderQueue();
-  showToast(status==='approved' ? `✅ Solicitud #${id} aprobada.` : `❌ Solicitud #${id} rechazada.`, status==='approved'?'success':'error');
+  showToast(status==='approved'?`✅ Solicitud #${id} aprobada.`:`❌ Solicitud #${id} rechazada.`, status==='approved'?'success':'error');
 }
 
 function updateOTStats() {
@@ -796,45 +944,56 @@ function updateOTStats() {
   document.getElementById('ot-hrs').textContent  = otList.filter(r=>r.status==='approved').reduce((s,r)=>s+r.total,0).toFixed(1);
 }
 
-/* ── Sync OT Slide 2 → Monday ── */
-async function syncOT() {
-  if (otList.length === 0) { showToast('⚠️ No hay solicitudes para sincronizar.','error'); return; }
+/* ── Sync OT → Monday ── */
+async function syncOT(e) {
+  const btn = e.currentTarget; const orig = btn.innerHTML;
+  if (!getToken()) { openTokenModal(); return; }
+  if (!otList.length) { showToast('⚠️ No hay solicitudes para sincronizar.','error'); return; }
 
-  const btn  = event.currentTarget;
-  const orig = btn.innerHTML;
-  btn.disabled = true; btn.textContent = '⏳ Sincronizando…';
+  btn.disabled=true; btn.textContent='⏳ Sincronizando…';
+  showProgress('Sincronizando horas extras con Monday…');
 
   try {
-    if (getToken()) {
-      for (const r of otList) {
-        await createMondayItem(
-          `[OT] ${r.name} · ${r.date} · ${r.total}h`,
-          {
-            text:   `${r.email} | Líder: ${LEADERS[r.leader]||r.leader} | Estado: ${r.status} | ${r.start}–${r.end} | Motivo: ${r.reason}`,
-            status: { label: r.status === 'approved' ? 'Aprobado' : r.status === 'rejected' ? 'Rechazado' : 'Pendiente' },
-            date4:  { date: r.date }
-          }
-        );
-      }
-      showToast(`✅ Horas extras sincronizadas con Monday Board ${BOARD_ID}`, 'success');
-    } else {
-      showToast('⚠️ Configura el token de Monday primero.', 'info');
-      openTokenModal();
+    await discoverColumns();
+    let i=0;
+    for (const r of otList) {
+      setProgress(10 + Math.round((i/otList.length)*85), `Enviando solicitud #${r.id}…`);
+      const colVals = {};
+      colVals[COL.adcar]             = r.adcar;
+      colVals[COL.correo]            = r.email;
+      colVals[COL.fecha_he]          = { date: r.date };
+      colVals[COL.horas_extras]      = r.total;
+      colVals[COL.aprobador]         = LEADERS[r.leader] || r.leader;
+      colVals[COL.estado_aprobacion] = {
+        label: r.status==='approved'?'Aprobado': r.status==='rejected'?'Rechazado':'Pendiente'
+      };
+      colVals[COL.comentarios] = `${r.start}–${r.end} | ${r.reason}`;
+
+      await createMondayItem(
+        `[HE] ${r.adcar} · ${r.date} · ${r.total}h`,
+        colVals
+      );
+      i++;
     }
-  } catch (err) {
-    console.error('[Monday OT sync error]', err);
-    showToast('❌ Error al conectar con Monday: ' + err.message, 'error');
+    setProgress(100,'¡Sincronización completa!');
+    setTimeout(hideProgress,1000);
+    showToast(`✅ ${otList.length} solicitud(es) sincronizada(s) con Monday`, 'success');
+  } catch(err) {
+    hideProgress();
+    console.error('[Monday OT]', err);
+    showToast('❌ Error Monday: ' + err.message, 'error');
   } finally {
-    btn.disabled = false; btn.innerHTML = orig;
+    btn.disabled=false; btn.innerHTML=orig;
   }
 }
 
+/* ── Toast ── */
 let toastTimer;
 function showToast(msg, type='info') {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.className = `toast ${type} show`;
+  t.textContent=msg; t.className=`toast ${type} show`;
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3800);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 4000);
 }
 </script>
 </body>
