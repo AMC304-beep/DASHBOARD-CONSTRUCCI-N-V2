@@ -165,10 +165,13 @@
     </div>
     <span class="ibm-header-title">Portal de Gestión · Board <strong style="color:#fff;">18432741374</strong></span>
   </div>
-  <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="monday-btn">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    Abrir en Monday
-  </a>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <button id="tokenStatusBtn" onclick="openTokenModal()" style="padding:7px 14px;border:none;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;color:#fff;background:#f59e0b;transition:background .2s;">🔑 Conectar Monday</button>
+    <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="monday-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Abrir en Monday
+    </a>
+  </div>
 </header>
 
 <!-- Slide nav -->
@@ -414,23 +417,46 @@
   </div>
 </div><!-- /slide2 -->
 
+<!-- Token config modal -->
+<div id="tokenModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:28px 32px;max-width:520px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,.2);">
+    <div style="font-size:15px;font-weight:700;margin-bottom:6px;">🔑 Configurar token de Monday</div>
+    <div style="font-size:12px;color:#57606a;margin-bottom:16px;line-height:1.6;">Obtén tu token en Monday → <strong>Avatar → Developers → My Access Tokens</strong>.<br>Se guarda en este navegador (localStorage) y nunca se envía a terceros.</div>
+    <input type="password" id="tokenInput" placeholder="eyJhbGciOiJIUzI1NiJ9…" style="width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:6px;font-size:13px;font-family:monospace;margin-bottom:14px;" />
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeTokenModal()" style="padding:8px 18px;border:1px solid #d1d5db;border-radius:5px;background:#fff;font-size:13px;cursor:pointer;">Cancelar</button>
+      <button onclick="saveToken()" style="padding:8px 18px;background:#0f62fe;color:#fff;border:none;border-radius:5px;font-size:13px;font-weight:700;cursor:pointer;">Guardar y conectar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
-const MONDAY_TOKEN = 'eyJhbGciOi...eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjcwNzc5NzQ4MywiYWFpIjoxMSwidWlkIjo2MjgxODA1NCwiaWFkIjoiMjAyNi0wOS0yNVQxNTozODoxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTM1MzY5ODEsInJnbiI6InVzZTEifQ.v01DEhx1p_QQOsBfEURKEhgJsGQVoD7qt7Drz9qAOno';
+
 <script>
 /* ══════════════════════════════════════════════════════════════════
-   MONDAY API CONFIG
-   • MONDAY_TOKEN: tu Personal Access Token de Monday.com
-     → Monday → Avatar → Developers → My Access Tokens → Copy
-   • BOARD_ID: ID del tablero (18432741374)
-   • GROUP_ID: ID del grupo destino en el board (obtenido via API o UI)
-   ⚠️  SEGURIDAD IBM: en producción mueve el token a un backend proxy.
-      Este campo es suficiente para uso interno en GitHub Pages privado.
+   MONDAY API — configuración desde la UI (token en localStorage)
 ══════════════════════════════════════════════════════════════════ */
-const MONDAY_TOKEN =eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjcwNzc5NzQ4MywiYWFpIjoxMSwidWlkIjo2MjgxODA1NCwiaWFkIjoiMjAyNi0wOS0yNVQxNTozODoxNC4wMDBaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MTM1MzY5ODEsInJnbiI6InVzZTEifQ.v01DEhx1p_QQOsBfEURKEhgJsGQVoD7qt7Drz9qAOno '';          // ← Pega aquí tu token personal de Monday
-const BOARD_ID     = '18432741374';
-const MONDAY_API   = 'https://api.monday.com/v2';
-const MONDAY_URL   = `https://ibm.monday.com/boards/${BOARD_ID}`;
+const BOARD_ID   = '18432741374';
+const MONDAY_API = 'https://api.monday.com/v2';
+const MONDAY_URL = `https://ibm.monday.com/boards/${BOARD_ID}`;
+
+function getToken() { return localStorage.getItem('monday_token') || ''; }
+function openTokenModal() { document.getElementById('tokenInput').value = getToken(); document.getElementById('tokenModal').style.display = 'flex'; }
+function closeTokenModal() { document.getElementById('tokenModal').style.display = 'none'; }
+function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (!t) { showToast('⚠️ Pega tu token antes de guardar.','error'); return; }
+  localStorage.setItem('monday_token', t);
+  closeTokenModal(); updateTokenStatus();
+  showToast('✅ Token guardado. Dashboard conectado a Monday.','success');
+}
+function updateTokenStatus() {
+  const btn = document.getElementById('tokenStatusBtn');
+  if (!btn) return;
+  if (getToken()) { btn.textContent = '🟢 Monday conectado'; btn.style.background = '#10b981'; }
+  else            { btn.textContent = '🔑 Conectar Monday';  btn.style.background = '#f59e0b'; }
+}
 
 const uploaded  = { time: [], sf: [], hp: [] };
 const confirmed = { time: false, sf: false, hp: false };
@@ -438,15 +464,16 @@ let otList = [], otId = 1;
 
 /* ── Monday GraphQL helper ── */
 async function mondayQuery(query, variables = {}) {
-  if (!MONDAY_TOKEN) {
-    console.warn('[Monday] Token no configurado — operación omitida.');
+  const token = getToken();
+  if (!token) {
+    console.warn('[Monday] Token no configurado — haz clic en "Conectar Monday".');
     return null;
   }
   const res = await fetch(MONDAY_API, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': MONDAY_TOKEN,
+      'Authorization': token,
       'API-Version': '2024-01'
     },
     body: JSON.stringify({ query, variables })
@@ -463,22 +490,25 @@ async function createMondayItem(itemName, columnValues) {
     mutation ($board: ID!, $name: String!, $cols: JSON!) {
       create_item(board_id: $board, item_name: $name, column_values: $cols) { id }
     }`;
-  return mondayQuery(query, {
-    board: BOARD_ID,
-    name:  itemName,
-    cols:  JSON.stringify(columnValues)
-  });
+  return mondayQuery(query, { board: BOARD_ID, name: itemName, cols: JSON.stringify(columnValues) });
 }
 
-/* ── Actualizar columna de un ítem ── */
-async function updateMondayColumn(itemId, columnId, value) {
-  const query = `
-    mutation ($board: ID!, $item: ID!, $col: String!, $val: String!) {
-      change_simple_column_value(board_id: $board, item_id: $item, column_id: $col, value: $val) { id }
-    }`;
-  return mondayQuery(query, {
-    board: BOARD_ID, item: String(itemId), col: columnId, val: value
+/* ── Subir archivo a un ítem de Monday ── */
+async function uploadFileToMonday(itemId, file) {
+  const token = getToken();
+  if (!token) return;
+  const form = new FormData();
+  form.append('query', `mutation ($file: File!) { add_file_to_column(item_id: ${itemId}, column_id: "files", file: $file) { id } }`);
+  form.append('variables[file]', file, file.name);
+  const res = await fetch(MONDAY_API, {
+    method: 'POST',
+    headers: { 'Authorization': token },
+    body: form
   });
+  if (!res.ok) throw new Error(`Upload error: ${res.status}`);
+  const json = await res.json();
+  if (json.errors) throw new Error(json.errors.map(e => e.message).join(', '));
+  return json.data;
 }
 
 /* ── Init ── */
@@ -498,6 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('ot-date').valueAsDate = now;
   updateSummary();
+  updateTokenStatus();
 });
 
 /* ── Propagate collaborator data ── */
@@ -625,39 +656,46 @@ async function syncToMonday() {
   const systems = ['time','sf','hp'];
 
   try {
-    if (MONDAY_TOKEN) {
-      // Crear un ítem por cada sistema confirmado
+    if (getToken()) {
+      let totalUploaded = 0;
       for (const id of systems) {
         if (!confirmed[id]) continue;
-        const status = document.getElementById(`${id}-status`)?.value || '—';
+        const status = document.getElementById(`${id}-status`)?.value || 'Completado';
         const notes  = document.getElementById(`${id}-notes`)?.value  || '';
         const files  = uploaded[id].map(f => f.name).join(', ') || '—';
 
-        await createMondayItem(
+        // 1. Crear ítem en Monday
+        const result = await createMondayItem(
           `[${sysName(id)}] ${collab.name} · ${collab.period}`,
           {
-            // Ajusta estos IDs de columna a los de tu board real
-            text:   `${collab.email} | Estado: ${status} | Archivos: ${files} | Notas: ${notes}`,
-            status: { label: status || 'Completado' },
-            date:   { date: collab.date }
+            text:   `${collab.email} | Estado: ${status} | Notas: ${notes} | Archivos: ${files}`,
+            status: { label: status },
+            date4:  { date: collab.date }
           }
         );
+
+        // 2. Subir archivos al ítem recién creado
+        if (result?.create_item?.id && uploaded[id].length > 0) {
+          const itemId = result.create_item.id;
+          for (const file of uploaded[id]) {
+            try {
+              await uploadFileToMonday(itemId, file);
+              totalUploaded++;
+            } catch (fe) {
+              console.warn(`[Monday] No se pudo subir ${file.name}:`, fe.message);
+            }
+          }
+        }
       }
-      showToast(`✅ Confirmaciones enviadas a Monday Board ${BOARD_ID}`, 'success');
+      const msg = totalUploaded > 0
+        ? `✅ Sincronizado con Monday · ${totalUploaded} archivo(s) cargado(s)`
+        : `✅ Confirmaciones enviadas a Monday Board ${BOARD_ID}`;
+      showToast(msg, 'success');
     } else {
-      // Sin token: log local + indicación visual
-      console.info('[IBM Dashboard] Payload para Monday:', {
-        board: BOARD_ID,
-        collaborator: collab,
-        systems: systems.map(id => ({
-          system:    sysName(id),
-          confirmed: confirmed[id],
-          status:    document.getElementById(`${id}-status`)?.value || '—',
-          notes:     document.getElementById(`${id}-notes`)?.value  || '',
-          files:     uploaded[id].map(f => f.name)
-        }))
-      });
-      showToast('⚠️ Token no configurado — datos guardados localmente.', 'info');
+      showToast('⚠️ Configura el token de Monday primero (botón "Conectar Monday").', 'info');
+      openTokenModal();
+      btn.disabled = false; btn.innerHTML = orig;
+      return;
     }
 
     const ok = document.getElementById('syncOk');
@@ -767,21 +805,21 @@ async function syncOT() {
   btn.disabled = true; btn.textContent = '⏳ Sincronizando…';
 
   try {
-    if (MONDAY_TOKEN) {
+    if (getToken()) {
       for (const r of otList) {
         await createMondayItem(
           `[OT] ${r.name} · ${r.date} · ${r.total}h`,
           {
             text:   `${r.email} | Líder: ${LEADERS[r.leader]||r.leader} | Estado: ${r.status} | ${r.start}–${r.end} | Motivo: ${r.reason}`,
             status: { label: r.status === 'approved' ? 'Aprobado' : r.status === 'rejected' ? 'Rechazado' : 'Pendiente' },
-            date:   { date: r.date }
+            date4:  { date: r.date }
           }
         );
       }
       showToast(`✅ Horas extras sincronizadas con Monday Board ${BOARD_ID}`, 'success');
     } else {
-      console.info('[IBM Dashboard] OT payload para Monday:', otList);
-      showToast('⚠️ Token no configurado — datos guardados localmente.', 'info');
+      showToast('⚠️ Configura el token de Monday primero.', 'info');
+      openTokenModal();
     }
   } catch (err) {
     console.error('[Monday OT sync error]', err);
