@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IBM — Gestión de Ausencias & Cronograma</title>
+  <title>IBM — Portal de Gestión de Tiempo – Construcción 2026 · Ausencias</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
@@ -11,8 +11,23 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <style>
     :root {
-      --bg: #050a14; --surface: rgba(8,18,38,0.88); --border: rgba(0,120,255,0.18);
-      --accent: #0f62fe; --text: #e2eaf6; --muted: #6b84aa;
+      --bg:       #f4f7ff;
+      --surface:  #ffffff;
+      --border:   #dbe4f8;
+      --accent:   #0f62fe;
+      --accent2:  #7c5cd8;
+      --accent3:  #0891b2;
+      --text:     #1e2a45;
+      --muted:    #6b7fa3;
+      --success:  #059669;
+      --warn:     #d97706;
+      --danger:   #dc2626;
+      --p-blue:   #e8f0fe;
+      --p-green:  #d1fae5;
+      --p-yellow: #fef3c7;
+      --p-purple: #ede9fe;
+      --p-teal:   #e0f2fe;
+      --p-red:    #fee2e2;
     }
     *, *::before, *::after { box-sizing: border-box; }
     body {
@@ -20,27 +35,19 @@
       background: var(--bg) !important;
       color: var(--text) !important;
     }
-    /* star-field */
+    /* dot pattern */
     body::before {
       content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image:
-        radial-gradient(1px 1px at 15% 20%, rgba(15,98,254,.6) 0%, transparent 100%),
-        radial-gradient(1px 1px at 40% 55%, rgba(6,182,212,.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 70% 15%, rgba(15,98,254,.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 70%, rgba(124,92,216,.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 25% 85%, rgba(15,98,254,.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 45%, rgba(6,182,212,.4) 0%, transparent 100%);
+      background-image: radial-gradient(circle, rgba(15,98,254,.07) 1px, transparent 1px);
+      background-size: 28px 28px;
     }
-    body::after {
-      content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,120,255,0.015) 3px, rgba(0,120,255,0.015) 4px);
-    }
+    body::after { display: none; }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: #030810; }
-    ::-webkit-scrollbar-thumb { background: rgba(15,98,254,.5); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(15,98,254,.8); }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #f0f4ff; }
+    ::-webkit-scrollbar-thumb { background: rgba(15,98,254,.25); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(15,98,254,.5); }
 
     /* ── IBM Logo stripes ── */
     .ibm-logo-svg rect { transition: opacity .3s; }
@@ -70,7 +77,7 @@
 
     /* ── Table row pulse on hover ── */
     tbody tr { transition: background .15s; }
-    tbody tr:hover { background: #eff6ff !important; }
+    tbody tr:hover { background: var(--p-blue) !important; }
 
     /* ── FullCalendar overrides ── */
     .fc .fc-button { background: #0f62fe !important; border-color: #0353e9 !important; font-size: 12px !important; padding: 6px 14px !important; border-radius: 6px !important; font-family: 'IBM Plex Sans', sans-serif !important; font-weight: 600 !important; }
@@ -93,18 +100,18 @@
     input:focus, select:focus, textarea:focus { outline: none; border-color: #0f62fe !important; box-shadow: 0 0 0 3px rgba(15,98,254,.12) !important; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col" style="background:var(--bg);color:var(--text);position:relative;z-index:1;">
+<body class="min-h-screen flex flex-col" style="background:var(--bg);color:var(--text);position:relative;z-index:1;font-family:'IBM Plex Sans',system-ui,sans-serif;">
 
 <!-- ═══════════════════════════════════════ TOAST ═══════════════════════════════════════ -->
-<div id="toast" class="fixed bottom-6 right-6 z-[999] flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold text-white max-w-sm
+<div id="toast" class="fixed bottom-6 right-6 z-[999] flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold max-w-sm
      transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
-     style="background:rgba(3,8,16,.96); border-left:3px solid #0f62fe; backdrop-filter:blur(16px);">
+     style="background:#ffffff; color:#1e2a45; border-left:3px solid #0f62fe; border:1px solid #dbe4f8; box-shadow:0 8px 32px rgba(15,98,254,.12);">
   <svg id="toastIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
   <span id="toastMsg">Mensaje</span>
 </div>
 
 <!-- ═══════════════════════════════════════ HEADER ══════════════════════════════════════ -->
-<header style="background:rgba(3,8,16,0.96);backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,120,255,0.18);height:60px;position:sticky;top:0;z-index:40;box-shadow:0 1px 30px rgba(15,98,254,.08);">
+<header style="background:#ffffff;border-bottom:2px solid #dbe4f8;height:60px;position:sticky;top:0;z-index:40;box-shadow:0 2px 16px rgba(15,98,254,.07);">
   <div class="max-w-7xl mx-auto px-5 h-full flex items-center justify-between gap-4">
 
     <!-- Logo + título -->
@@ -120,26 +127,28 @@
         <g clip-path="url(#aus-B)"><rect x="40" y="0" width="40" height="7" fill="#0f62fe"/><rect x="40" y="8" width="40" height="7" fill="#0f62fe"/><rect x="40" y="16" width="40" height="7" fill="#0f62fe"/><rect x="40" y="24" width="40" height="7" fill="#0f62fe"/><rect x="40" y="32" width="40" height="7" fill="#0f62fe"/><rect x="40" y="40" width="40" height="7" fill="#0f62fe"/><rect x="40" y="48" width="40" height="7" fill="#0f62fe"/><rect x="40" y="56" width="40" height="7" fill="#0f62fe"/></g>
         <g clip-path="url(#aus-M)"><rect x="88" y="0" width="84" height="7" fill="#0f62fe"/><rect x="88" y="8" width="84" height="7" fill="#0f62fe"/><rect x="88" y="16" width="84" height="7" fill="#0f62fe"/><rect x="88" y="24" width="84" height="7" fill="#0f62fe"/><rect x="88" y="32" width="84" height="7" fill="#0f62fe"/><rect x="88" y="40" width="84" height="7" fill="#0f62fe"/><rect x="88" y="48" width="84" height="7" fill="#0f62fe"/><rect x="88" y="56" width="84" height="7" fill="#0f62fe"/></g>
       </svg>
-      <div class="w-px h-6" style="background:rgba(255,255,255,.1);"></div>
+      <div class="w-px h-6" style="background:#dbe4f8;"></div>
       <div>
-        <div id="boardNameHeader" class="text-white text-sm font-semibold leading-tight">Gestión de Ausencias</div>
+        <div id="boardNameHeader" style="color:#1e2a45;" class="text-sm font-semibold leading-tight">Portal de Gestión de Tiempo – Construcción 2026</div>
         <div class="flex items-center gap-2 mt-0.5">
-          <span class="text-[11px] text-slate-400">Board <b class="text-slate-200">18432588237</b></span>
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse inline-block"></span>
-          <span id="connLabel" class="text-[11px] text-emerald-400 font-medium">En vivo</span>
+          <span class="text-[11px]" style="color:#6b7fa3;">Board <b style="color:#1e2a45;">18432588237</b></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
+          <span id="connLabel" class="text-[11px] font-medium" style="color:#059669;">En vivo</span>
         </div>
       </div>
     </div>
 
     <!-- Nav tabs -->
-    <div class="flex items-center bg-white/10 rounded-xl p-1 gap-1">
+    <div class="flex items-center rounded-xl p-1 gap-1" style="background:#f0f4ff;">
       <button id="tab1" onclick="switchSlide(1)"
-        class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 bg-white text-blue-600 shadow-sm">
+        class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
+        style="background:#ffffff;color:#0f62fe;box-shadow:0 1px 4px rgba(15,98,254,.12);">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         Gestión de Datos
       </button>
       <button id="tab2" onclick="switchSlide(2)"
-        class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-300 hover:text-white hover:bg-white/10">
+        class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200"
+        style="color:#6b7fa3;">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Cronograma
       </button>
@@ -148,19 +157,23 @@
     <!-- Acciones -->
     <div class="flex items-center gap-2">
       <button onclick="syncAllFromMonday(true)"
-        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-white bg-[#0f62fe] hover:bg-[#0353e9] rounded-lg transition"
+        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-white rounded-lg transition"
+        style="background:#0f62fe;"
+        onmouseover="this.style.background='#0353e9'" onmouseout="this.style.background='#0f62fe'"
         data-tip="Recargar desde Monday">
         <svg id="syncIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         <span class="hidden sm:inline">Sincronizar</span>
       </button>
       <a href="https://ibm.monday.com/boards/18432588237" target="_blank" rel="noopener"
-        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition"
+        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition"
+        style="color:#6b7fa3;background:#f0f4ff;border:1px solid #dbe4f8;"
         data-tip="Abrir tablero en Monday">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         <span class="hidden sm:inline">Monday</span>
       </a>
       <a href="index_v2.html"
-        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 rounded-lg transition"
+        class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg transition"
+        style="color:#6b7fa3;background:#f0f4ff;border:1px solid #dbe4f8;"
         data-tip="Volver al portal">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         <span class="hidden sm:inline">Portal</span>
@@ -202,6 +215,58 @@
               <input type="text" id="createItemName" required placeholder="Ej: Ana García — Vacaciones"
                 class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
             </div>
+
+            <!-- Plaza / Región live desde Monday -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">
+                Plaza / Región
+                <span id="plazaLoading" style="display:none;font-size:9px;color:#6b7fa3;margin-left:4px;">⏳ Cargando…</span>
+              </label>
+              <select id="createPlaza" name="plaza"
+                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition">
+                <option value="">— Sincroniza Monday para cargar —</option>
+              </select>
+            </div>
+
+            <!-- Modalidad de trabajo -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Modalidad de trabajo</label>
+              <select id="createModalidad" name="modalidad"
+                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition">
+                <option value="">— Seleccionar —</option>
+                <option value="Presencial">Presencial</option>
+                <option value="Remoto">Remoto</option>
+                <option value="Híbrido">Híbrido</option>
+                <option value="Home Office">Home Office</option>
+              </select>
+            </div>
+
+            <!-- Aprobante fijo -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Aprobante</label>
+              <input type="text" value="Anlli Liliana Varon" readonly
+                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"
+                style="background:#f0fdf4;color:#065f46;font-weight:600;"/>
+              <p class="text-[10px] text-slate-400 mt-1">Solo Anlli Liliana Varon puede aprobar solicitudes.</p>
+            </div>
+
+            <!-- Soporte (file upload) -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">
+                📎 Soporte
+                <span style="font-size:9px;color:#6b7fa3;font-weight:400;"> PDF · JPG · PNG · DOCX · XLSX</span>
+              </label>
+              <div id="aus-drop" onclick="document.getElementById('aus-file-input').click()"
+                ondragover="ausDragOver(event)" ondragleave="ausDragLeave()" ondrop="ausDrop(event)"
+                style="border:2px dashed #c7d7fc;border-radius:10px;padding:14px;text-align:center;background:#e8f0fe;cursor:pointer;transition:border-color .2s,background .2s;position:relative;">
+                <input type="file" id="aus-file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls"
+                  style="display:none;" onchange="ausHandleFiles(this.files)"/>
+                <div style="font-size:20px;margin-bottom:4px;">📁</div>
+                <div style="font-size:11px;font-weight:600;color:#0f62fe;">Arrastra o haz clic para adjuntar</div>
+              </div>
+              <div id="aus-file-list" style="margin-top:6px;"></div>
+            </div>
+
             <div id="dynamicFormFields" class="space-y-3"></div>
             <button type="submit"
               class="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition mt-2">
@@ -295,13 +360,13 @@
 </main>
 
 <!-- ═══════════════════════════════════════ FOOTER ══════════════════════════════════════ -->
-<footer class="bg-[#161616] border-t border-[#262626] py-4 px-6 mt-2">
+<footer style="background:#ffffff;border-top:1px solid #dbe4f8;" class="py-4 px-6 mt-2">
   <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-3">
-    <span class="text-xs text-slate-500">© <strong class="text-slate-400">IBM Corporation</strong> — Gestión de Ausencias · Board <b class="text-slate-300">18432588237</b></span>
+    <span class="text-xs" style="color:#6b7fa3;">© <strong style="color:#1e2a45;">IBM Corporation</strong> — Gestión de Ausencias · Board <b style="color:#1e2a45;">18432588237</b></span>
     <div class="flex gap-4">
-      <a href="https://ibm.monday.com/boards/18432588237" target="_blank" rel="noopener" class="text-xs text-slate-500 hover:text-slate-300 transition">Monday</a>
-      <a href="index_v2.html" class="text-xs text-slate-500 hover:text-slate-300 transition">Portal</a>
-      <a href="dashboard_actualizaciones.html" class="text-xs text-slate-500 hover:text-slate-300 transition">Actualizaciones</a>
+      <a href="https://ibm.monday.com/boards/18432588237" target="_blank" rel="noopener" class="text-xs transition" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Monday</a>
+      <a href="index_v2.html" class="text-xs transition" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Portal</a>
+      <a href="dashboard_actualizaciones.html" class="text-xs transition" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Actualizaciones</a>
     </div>
   </div>
 </footer>
@@ -365,9 +430,82 @@
 })();
 
 /* ── Constants ── */
-const BOARD_ID = '18432588237';
-const API_URL  = 'https://api.monday.com/v2';
-const PALETTE  = ['#0f62fe','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#64748b','#14b8a6','#f97316'];
+const BOARD_ID   = '18432588237';
+const API_URL    = 'https://api.monday.com/v2';
+const PALETTE    = ['#0f62fe','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#64748b','#14b8a6','#f97316'];
+const APPROVER   = 'Anlli Liliana Varon'; /* ÚNICA aprobante autorizada */
+
+/* ── File upload state ── */
+let ausFiles = [];
+
+function ausDragOver(e) { e.preventDefault(); document.getElementById('aus-drop').style.borderColor='#0f62fe'; }
+function ausDragLeave()  { document.getElementById('aus-drop').style.borderColor='#c7d7fc'; }
+function ausDrop(e)      { e.preventDefault(); ausDragLeave(); ausHandleFiles(e.dataTransfer.files); }
+
+function ausHandleFiles(files) {
+  const icons = {pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊'};
+  [...files].forEach(f => {
+    if (f.size > 50*1024*1024) { toast(`⚠️ ${f.name} supera 50 MB`, 'warn'); return; }
+    ausFiles.push(f);
+  });
+  const list = document.getElementById('aus-file-list');
+  list.innerHTML = ausFiles.map((f,i) => {
+    const ext = f.name.split('.').pop().toLowerCase();
+    return `<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:4px;font-size:10px;color:#0f62fe;">
+      ${icons[ext]||'📎'}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
+      <span onclick="ausRemoveFile(${i})" style="color:#dc2626;cursor:pointer;font-weight:700;">✕</span>
+    </div>`;
+  }).join('');
+}
+
+function ausRemoveFile(i) { ausFiles.splice(i,1); ausHandleFiles([]); }
+
+/* ── Load plazas from Monday ── */
+async function loadPlazas() {
+  const token = localStorage.getItem('monday_api_key');
+  if (!token) return;
+  const sel = document.getElementById('createPlaza');
+  const loading = document.getElementById('plazaLoading');
+  if (loading) loading.style.display = 'inline';
+  try {
+    /* Try to find a "Region", "Plaza" or "Location" column */
+    const metaData = await api(`{ boards(ids: [${BOARD_ID}]) { columns { id title type } } }`);
+    const cols = metaData.data?.boards?.[0]?.columns || [];
+    const norm  = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    const plazaCol = cols.find(c => norm(c.title).match(/plaza|region|sede|ubicacion|localidad/));
+    if (!plazaCol) return; /* column not found — keep default */
+    let cursor = null; const vals = new Set();
+    do {
+      const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
+      const page = await api(`{ boards(ids: [${BOARD_ID}]) { items_page(limit:500${cursorArg}) { cursor items { column_values(ids:["${plazaCol.id}"]) { text } } } } }`);
+      const pd = page.data?.boards?.[0]?.items_page;
+      cursor = pd?.cursor || null;
+      (pd?.items || []).forEach(it => { const t = it.column_values?.[0]?.text?.trim(); if (t) vals.add(t); });
+    } while (cursor);
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— Seleccionar plaza —</option>';
+    [...vals].sort((a,b)=>a.localeCompare(b,'es')).forEach(v => {
+      const o = document.createElement('option'); o.value=v; o.textContent=v;
+      if (v===current) o.selected=true; sel.appendChild(o);
+    });
+  } catch(err) { console.warn('[Plazas]', err); }
+  finally { if (loading) loading.style.display='none'; }
+}
+
+/* ── Approver guard: only APPROVER can approve items ── */
+function canApprove() {
+  /* In production you'd check the logged-in user identity.
+     Here we use a simple prompt-based check so any browser session can be guarded. */
+  const stored = sessionStorage.getItem('aus_approver_verified');
+  if (stored === APPROVER) return true;
+  const name = prompt(`Esta acción requiere autorización de "${APPROVER}".\nIngresa el nombre completo para continuar:`);
+  if (name && name.trim() === APPROVER) {
+    sessionStorage.setItem('aus_approver_verified', APPROVER);
+    return true;
+  }
+  toast('❌ No tienes permiso para aprobar. Solo ' + APPROVER + ' puede hacerlo.', 'error');
+  return false;
+}
 
 let boardMeta  = { name: 'Tablero', columns: [], groups: [] };
 let boardItems = [];
@@ -403,19 +541,26 @@ function switchSlide(n) {
   const s2 = document.getElementById('slide2');
   const t1 = document.getElementById('tab1');
   const t2 = document.getElementById('tab2');
-  const ACTIVE   = 'bg-white text-blue-600 shadow-sm';
-  const INACTIVE = 'text-slate-300 hover:text-white hover:bg-white/10';
+
+  const setActive = (btn) => {
+    btn.style.background = '#ffffff';
+    btn.style.color = '#0f62fe';
+    btn.style.boxShadow = '0 1px 4px rgba(15,98,254,.12)';
+  };
+  const setInactive = (btn) => {
+    btn.style.background = 'transparent';
+    btn.style.color = '#6b7fa3';
+    btn.style.boxShadow = 'none';
+  };
 
   if (n === 1) {
     s1.classList.remove('hidden'); s1.classList.add('slide-enter');
     s2.classList.add('hidden');
-    t1.className = t1.className.replace(INACTIVE, '') + ' ' + ACTIVE;
-    t2.className = t2.className.replace(ACTIVE, '') + ' ' + INACTIVE;
+    setActive(t1); setInactive(t2);
   } else {
     s2.classList.remove('hidden'); s2.classList.add('slide-enter');
     s1.classList.add('hidden');
-    t2.className = t2.className.replace(INACTIVE, '') + ' ' + ACTIVE;
-    t1.className = t1.className.replace(ACTIVE, '') + ' ' + INACTIVE;
+    setActive(t2); setInactive(t1);
     setTimeout(() => { if (calendar) calendar.render(); }, 120);
   }
 }
@@ -722,6 +867,10 @@ async function handleCreateItem(e) {
   const name = document.getElementById('createItemName').value.trim();
   const payload = {}; const localCols = [];
 
+  /* Extra fields from form header */
+  const plaza     = document.getElementById('createPlaza')?.value;
+  const modalidad = document.getElementById('createModalidad')?.value;
+
   boardMeta.columns.forEach(col => {
     if (col.type === 'status') {
       const v = form[col.id]?.value;
@@ -738,16 +887,43 @@ async function handleCreateItem(e) {
     }
   });
 
-  const newItem = { id: Date.now().toString(), name, group: { id:'g1', title: boardMeta.groups[0]?.title || 'General' }, column_values: localCols };
+  /* Embed plaza and modalidad in the item name if provided */
+  const suffix = [plaza, modalidad].filter(Boolean).join(' · ');
+  const fullName = suffix ? `${name} — ${suffix}` : name;
+
+  /* Always stamp approver */
+  const notesCol = boardMeta.columns.find(c => c.type==='text');
+  if (notesCol) {
+    const existing = payload[notesCol.id] || '';
+    payload[notesCol.id] = [existing, `Aprobante: ${APPROVER}`, modalidad ? `Modalidad: ${modalidad}` : ''].filter(Boolean).join(' | ');
+  }
+
+  const newItem = { id: Date.now().toString(), name: fullName, group: { id:'g1', title: boardMeta.groups[0]?.title || 'General' }, column_values: localCols };
   boardItems.unshift(newItem);
   renderAll();
   form.reset();
+  ausFiles = []; document.getElementById('aus-file-list').innerHTML = '';
   toast('⏳ Creando en Monday…', 'info');
 
   try {
-    const q = `mutation { create_item(board_id: ${BOARD_ID}, item_name: "${name.replace(/"/g,'\\"')}", column_values: ${JSON.stringify(JSON.stringify(payload))}) { id } }`;
+    const q = `mutation { create_item(board_id: ${BOARD_ID}, item_name: "${fullName.replace(/"/g,'\\"')}", column_values: ${JSON.stringify(JSON.stringify(payload))}) { id } }`;
     const res = await api(q);
-    if (res.data?.create_item?.id) { newItem.id = res.data.create_item.id; toast('✅ Elemento creado en Monday', 'success'); }
+    const createdId = res.data?.create_item?.id;
+    if (createdId) {
+      newItem.id = createdId;
+      toast('✅ Elemento creado en Monday', 'success');
+      /* Upload soporte files */
+      for (const f of ausFiles) {
+        try {
+          const token = localStorage.getItem('monday_api_key');
+          const fm = new FormData();
+          fm.append('query', `mutation ($file: File!) { add_file_to_column(item_id: ${createdId}, column_id: "files", file: $file) { id } }`);
+          fm.append('variables[file]', f, f.name);
+          await fetch(API_URL, { method:'POST', headers:{ 'Authorization': token }, body: fm });
+        } catch(fe) { console.warn('File upload failed', fe); }
+      }
+      ausFiles = []; document.getElementById('aus-file-list').innerHTML = '';
+    }
   } catch (err) { console.warn(err); toast('⚠️ Guardado localmente', 'warn'); }
 }
 
@@ -933,19 +1109,20 @@ document.addEventListener('DOMContentLoaded', () => {
     events: [],
     height: 560,
     eventClick: info => openEditModal(info.event.extendedProps.id),
-    eventDidMount: info => {
-      info.el.title = info.event.title;
-    }
+    eventDidMount: info => { info.el.title = info.event.title; }
   });
   calendar.render();
 
   /* Tab state init */
-  document.getElementById('tab1').className =
-    'flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 bg-white text-blue-600 shadow-sm';
-  document.getElementById('tab2').className =
-    'flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-200 text-slate-300 hover:text-white hover:bg-white/10';
+  const t1 = document.getElementById('tab1');
+  const t2 = document.getElementById('tab2');
+  if (t1) { t1.style.background='#ffffff'; t1.style.color='#0f62fe'; t1.style.boxShadow='0 1px 4px rgba(15,98,254,.12)'; }
+  if (t2) { t2.style.background='transparent'; t2.style.color='#6b7fa3'; t2.style.boxShadow='none'; }
 
-  syncAllFromMonday(false);
+  /* Live sync on load — Monday as source of truth */
+  syncAllFromMonday(false).then(() => {
+    loadPlazas();
+  }).catch(() => loadPlazas());
 });
 </script>
 </body>

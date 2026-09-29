@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IBM — Confirmación Actualizaciones & Horas Extras</title>
+  <title>IBM — Portal de Gestión de Tiempo – Construcción 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
@@ -308,7 +308,7 @@
       <g clip-path="url(#act-M)"><rect x="88" y="0" width="84" height="7" fill="#0f62fe"/><rect x="88" y="8" width="84" height="7" fill="#0f62fe"/><rect x="88" y="16" width="84" height="7" fill="#0f62fe"/><rect x="88" y="24" width="84" height="7" fill="#0f62fe"/><rect x="88" y="32" width="84" height="7" fill="#0f62fe"/><rect x="88" y="40" width="84" height="7" fill="#0f62fe"/><rect x="88" y="48" width="84" height="7" fill="#0f62fe"/><rect x="88" y="56" width="84" height="7" fill="#0f62fe"/></g>
     </svg>
     <div class="header-div"></div>
-    <span class="header-title"><strong>Portal de Gestión</strong> · Board 18432741374</span>
+    <span class="header-title"><strong>Portal de Gestión de Tiempo – Construcción 2026</strong> · Board 18432741374</span>
   </div>
   <div style="display:flex;gap:8px;align-items:center;">
     <button id="tokenStatusBtn" class="token-btn" onclick="openTokenModal()">🔑 Conectar Monday</button>
@@ -332,6 +332,10 @@
   <div class="slide-tab" id="tab2" onclick="showSlide(2,this)">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     Solicitud de Horas Extras
+  </div>
+  <div class="slide-tab" id="tab3" onclick="showSlide(3,this)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="16" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+    Semanas Cargadas
   </div>
 </nav>
 
@@ -585,7 +589,16 @@
         <div class="fg"><label>Hora inicio</label><input type="time" id="ot-start"/></div>
         <div class="fg"><label>Hora fin</label><input type="time" id="ot-end"/></div>
       </div>
-      <div class="fg"><label>Horas extras solicitadas</label><input type="number" id="ot-total" min="0.5" max="16" step="0.5" placeholder="Ej. 2"/></div>
+      <div class="two-col">
+        <div class="fg">
+          <label>Horas extras calculadas <span style="color:var(--success);font-size:9px;">(auto)</span></label>
+          <input type="number" id="ot-total" min="0" max="24" step="0.5" placeholder="0.0" readonly style="background:#f0fdf4;font-weight:700;color:var(--success);"/>
+        </div>
+        <div class="fg">
+          <label>Horas extras (ajuste manual)</label>
+          <input type="number" id="ot-total-manual" min="0.5" max="24" step="0.5" placeholder="Sobreescribir"/>
+        </div>
+      </div>
       <div class="fg">
         <label>Aprobador</label>
         <select id="ot-leader">
@@ -626,6 +639,94 @@
   </div>
 </div><!-- /slide2 -->
 
+<!-- ══════════ SLIDE 3: Semanas Cargadas ══════════ -->
+<div class="slide" id="slide3">
+
+  <div class="section-title">Historial de Semanas Cargadas</div>
+  <div class="section-sub">Registro de confirmaciones semanales desde Monday. Haz clic en una fila para corregir los estados.</div>
+
+  <div class="glass" style="padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <input type="text" id="weeksSearch" oninput="filterWeeks()" placeholder="🔍 Buscar semana o colaborador…"
+        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;min-width:220px;background:#fafbff;color:var(--text);font-family:inherit;"/>
+      <select id="weeksStatusFilter" onchange="filterWeeks()"
+        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;background:#fafbff;color:var(--text);font-family:inherit;">
+        <option value="">Todos los estados</option>
+        <option value="Actualizado">Actualizado</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="Sin Actualizar">Sin Actualizar</option>
+        <option value="Sin actualizar">Sin actualizar</option>
+      </select>
+    </div>
+    <button onclick="loadWeeksFromMonday()" style="background:var(--accent);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Sincronizar desde Monday
+    </button>
+  </div>
+
+  <div class="glass" style="padding:0;overflow:hidden;">
+    <div style="overflow-x:auto;max-height:600px;overflow-y:auto;">
+      <table style="width:100%;border-collapse:collapse;font-size:12px;" id="weeksTable">
+        <thead style="position:sticky;top:0;z-index:5;background:#fafbff;">
+          <tr style="border-bottom:2px solid var(--border);">
+            <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Colaborador</th>
+            <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Semana / Período</th>
+            <th style="padding:10px 14px;text-align:center;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Time</th>
+            <th style="padding:10px 14px;text-align:center;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Success Factors</th>
+            <th style="padding:10px 14px;text-align:center;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">My Hour Plan</th>
+            <th style="padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Gerencia</th>
+            <th style="padding:10px 14px;text-align:center;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="weeksBody"></tbody>
+      </table>
+    </div>
+    <div id="weeksPager" style="padding:10px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);"></div>
+  </div>
+
+</div><!-- /slide3 -->
+
+<!-- Edit-week modal -->
+<div id="editWeekModal" style="display:none;position:fixed;inset:0;background:rgba(30,42,69,.45);backdrop-filter:blur(6px);z-index:400;align-items:center;justify-content:center;">
+  <div style="background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;max-width:500px;width:90%;box-shadow:0 20px 50px rgba(15,98,254,.14);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text);">✏️ Corregir semana</h4>
+      <button onclick="closeEditWeek()" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;" id="editWeekMeta"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+      <div class="fg"><label>Time</label>
+        <select id="ewTime" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:#fafbff;font-family:inherit;">
+          <option value="Actualizado">Actualizado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Sin Actualizar">Sin Actualizar</option>
+        </select>
+      </div>
+      <div class="fg"><label>Success Factors</label>
+        <select id="ewSF" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:#fafbff;font-family:inherit;">
+          <option value="Actualizado">Actualizado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Sin actualizar">Sin actualizar</option>
+        </select>
+      </div>
+      <div class="fg"><label>My Hour Plan</label>
+        <select id="ewHP" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:#fafbff;font-family:inherit;">
+          <option value="Actualizado">Actualizado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="Sin actualizar">Sin actualizar</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg" style="margin-bottom:16px;"><label>Comentarios</label>
+      <textarea id="ewNotes" style="width:100%;padding:8px;border:1px solid var(--border);border-radius:7px;font-size:12px;background:#fafbff;font-family:inherit;resize:vertical;min-height:54px;" placeholder="Observaciones de corrección…"></textarea>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeEditWeek()" style="padding:8px 18px;border:1px solid var(--border);border-radius:8px;background:transparent;font-size:12px;cursor:pointer;color:var(--muted);">Cancelar</button>
+      <button onclick="saveEditWeek()" style="padding:8px 20px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(15,98,254,.3);">💾 Guardar en Monday</button>
+    </div>
+  </div>
+</div>
+
 <!-- Token modal -->
 <div id="tokenModal" class="token-modal-bg" style="display:none;">
   <div class="token-modal">
@@ -652,6 +753,131 @@
 <div class="toast" id="toast"></div>
 
 <script>
+/* ════ WEEKS TABLE state ════ */
+let weekItems = [];
+let editWeekItemId = null;
+
+async function loadWeeksFromMonday() {
+  if (!getToken()) { openTokenModal(); return; }
+  showProgress('Cargando semanas desde Monday…');
+  try {
+    setProgress(20,'Consultando tablero…');
+    const data = await mondayQuery(`{
+      boards(ids: [${BOARD_ID}]) {
+        items_page(limit: 500) {
+          items {
+            id name
+            column_values(ids: ["${COL.gerencia}","${COL.time}","${COL.sf}","${COL.hp}","${COL.comentarios}"]) {
+              id text
+            }
+          }
+        }
+      }
+    }`);
+    weekItems = (data?.boards?.[0]?.items_page?.items || []).map(it => {
+      const cv = {};
+      it.column_values.forEach(c => { cv[c.id] = c.text; });
+      return { id: it.id, name: it.name,
+        gerencia: cv[COL.gerencia] || '',
+        time:     cv[COL.time]     || '',
+        sf:       cv[COL.sf]       || '',
+        hp:       cv[COL.hp]       || '',
+        notes:    cv[COL.comentarios] || ''
+      };
+    });
+    setProgress(100,'¡Listo!'); setTimeout(hideProgress,700);
+    renderWeeksTable();
+    showToast(`✅ ${weekItems.length} registros cargados`, 'success');
+  } catch(err) {
+    hideProgress(); showToast('❌ Error: ' + err.message, 'error');
+  }
+}
+
+let weeksFilter = '', weeksStatusFilter = '';
+function filterWeeks() {
+  weeksFilter = document.getElementById('weeksSearch').value.toLowerCase();
+  weeksStatusFilter = document.getElementById('weeksStatusFilter').value;
+  renderWeeksTable();
+}
+
+function statusBadgeHtml(val) {
+  const v = (val||'').toLowerCase();
+  if (v.includes('actual')) return `<span style="background:#d1fae5;color:#065f46;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
+  if (v.includes('pendiente')) return `<span style="background:#fef3c7;color:#92400e;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
+  if (v.includes('sin')) return `<span style="background:#fee2e2;color:#991b1b;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
+  return `<span style="background:#f1f5f9;color:#475569;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
+}
+
+function renderWeeksTable() {
+  const tbody = document.getElementById('weeksBody');
+  const pager = document.getElementById('weeksPager');
+  if (!tbody) return;
+  const items = weekItems.filter(it => {
+    const matchTxt = !weeksFilter || it.name.toLowerCase().includes(weeksFilter) || it.gerencia.toLowerCase().includes(weeksFilter);
+    const matchSt  = !weeksStatusFilter || it.time === weeksStatusFilter || it.sf === weeksStatusFilter || it.hp === weeksStatusFilter;
+    return matchTxt && matchSt;
+  });
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday.</td></tr>`;
+    pager.textContent = ''; return;
+  }
+  tbody.innerHTML = items.map((it,i) => `
+    <tr style="border-bottom:1px solid var(--border);transition:background .15s;" onmouseover="this.style.background='#eff6ff'" onmouseout="this.style.background=''">
+      <td style="padding:10px 14px;font-weight:600;color:var(--text);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.name}</td>
+      <td style="padding:10px 14px;color:var(--muted);font-size:11px;">${it.notes ? `<span title="${it.notes}">${it.notes.substring(0,40)}${it.notes.length>40?'…':''}</span>` : '—'}</td>
+      <td style="padding:10px 14px;text-align:center;">${statusBadgeHtml(it.time)}</td>
+      <td style="padding:10px 14px;text-align:center;">${statusBadgeHtml(it.sf)}</td>
+      <td style="padding:10px 14px;text-align:center;">${statusBadgeHtml(it.hp)}</td>
+      <td style="padding:10px 14px;font-size:11px;color:var(--muted);">${it.gerencia||'—'}</td>
+      <td style="padding:10px 14px;text-align:center;">
+        <button onclick="openEditWeek('${it.id}')" style="background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:4px 12px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">✏️ Corregir</button>
+      </td>
+    </tr>`).join('');
+  pager.textContent = `${items.length} de ${weekItems.length} registros`;
+}
+
+function openEditWeek(id) {
+  const it = weekItems.find(x => x.id === id); if (!it) return;
+  editWeekItemId = id;
+  document.getElementById('editWeekMeta').textContent = `${it.name} · ID ${it.id}`;
+  document.getElementById('ewTime').value  = it.time  || 'Pendiente';
+  document.getElementById('ewSF').value    = it.sf    || 'Pendiente';
+  document.getElementById('ewHP').value    = it.hp    || 'Pendiente';
+  document.getElementById('ewNotes').value = it.notes || '';
+  document.getElementById('editWeekModal').style.display = 'flex';
+}
+
+function closeEditWeek() {
+  document.getElementById('editWeekModal').style.display = 'none';
+  editWeekItemId = null;
+}
+
+async function saveEditWeek() {
+  if (!editWeekItemId) return;
+  if (!getToken()) { openTokenModal(); return; }
+  const timeVal  = document.getElementById('ewTime').value;
+  const sfVal    = document.getElementById('ewSF').value;
+  const hpVal    = document.getElementById('ewHP').value;
+  const notes    = document.getElementById('ewNotes').value.trim();
+  const colVals  = {};
+  colVals[COL.time]        = { label: timeVal };
+  colVals[COL.sf]          = { label: sfVal };
+  colVals[COL.hp]          = { label: hpVal };
+  if (notes) colVals[COL.comentarios] = notes;
+  closeEditWeek();
+  showToast('⏳ Guardando en Monday…','info');
+  try {
+    await mondayQuery(`mutation {
+      change_multiple_column_values(item_id: ${editWeekItemId === null ? 0 : editWeekItemId}, board_id: ${BOARD_ID},
+        column_values: ${JSON.stringify(JSON.stringify(colVals))}) { id }
+    }`);
+    const it = weekItems.find(x => x.id === editWeekItemId);
+    if (it) { it.time=timeVal; it.sf=sfVal; it.hp=hpVal; if(notes) it.notes=notes; }
+    renderWeeksTable();
+    showToast('✅ Semana corregida en Monday','success');
+  } catch(err) { showToast('❌ Error: ' + err.message,'error'); }
+}
+
 /* ── Column IDs ── */
 const BOARD_ID   = '18432741374';
 const MONDAY_API = 'https://api.monday.com/v2';
@@ -751,7 +977,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('collab-period').value = `Semana ${getWeek(now)} – ${now.getFullYear()}`;
   document.getElementById('ot-date').valueAsDate = now;
   updateSummary(); updateTokenStatus();
-  if (getToken()) loadGerencias();
+
+  /* Wire auto-calc hours */
+  ['ot-start','ot-end'].forEach(id => document.getElementById(id).addEventListener('change', calcOTHours));
+  document.getElementById('ot-total-manual').addEventListener('input', calcOTHours);
+
+  /* Live sync from Monday on load */
+  if (getToken()) {
+    loadGerencias();
+    loadWeeksFromMonday().catch(() => {});
+  }
+
   const hash = window.location.hash;
   if (hash === '#slide2') {
     const tab = document.getElementById('tab2');
@@ -933,13 +1169,31 @@ async function syncToMonday(e) {
 /* ── OT Slide 2 ── */
 const LEADERS = { PEREZ_JESUS: 'Jesús Alberto Pérez', SUAREZ_VICTOR: 'Víctor Suárez Ardila' };
 
+/* Auto-calc hours from start/end time inputs */
+function calcOTHours() {
+  const startVal = document.getElementById('ot-start').value;
+  const endVal   = document.getElementById('ot-end').value;
+  const manualEl = document.getElementById('ot-total-manual');
+  const autoEl   = document.getElementById('ot-total');
+  if (manualEl && manualEl.value.trim()) { autoEl.value = manualEl.value; return; }
+  if (startVal && endVal) {
+    const [sh,sm] = startVal.split(':').map(Number);
+    const [eh,em] = endVal.split(':').map(Number);
+    const diff = (eh*60+em) - (sh*60+sm);
+    if (diff > 0) { autoEl.value = (diff/60).toFixed(1); return; }
+  }
+  autoEl.value = '';
+}
+
 function submitOT() {
   const adcar  = document.getElementById('ot-adcar').value.trim();
   const email  = document.getElementById('ot-email').value.trim();
   const date   = document.getElementById('ot-date').value;
   const start  = document.getElementById('ot-start').value;
   const end    = document.getElementById('ot-end').value;
-  const total  = parseFloat(document.getElementById('ot-total').value);
+  /* Prefer manual override, else auto-calculated value */
+  const manualVal = document.getElementById('ot-total-manual')?.value;
+  const total  = parseFloat(manualVal || document.getElementById('ot-total').value);
   const leader = document.getElementById('ot-leader').value;
   const reason = document.getElementById('ot-reason').value.trim();
   if (!adcar||!email||!date||!start||!end||isNaN(total)||!leader||!reason) { showToast('⚠️ Completa todos los campos.','error'); return; }
@@ -947,7 +1201,7 @@ function submitOT() {
   const req = { id: otId++, adcar, email, date, start, end, total, leader, reason, status:'pending', at: new Date().toLocaleString('es-CO') };
   otList.unshift(req); lastSubmittedId = req.id;
   renderQueue(); updateMyRequestStatus();
-  ['ot-start','ot-end','ot-total','ot-reason'].forEach(id => document.getElementById(id).value='');
+  ['ot-start','ot-end','ot-total','ot-total-manual','ot-reason'].forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
   document.getElementById('ot-leader').value = '';
   document.getElementById('ot-date').valueAsDate = new Date();
   showToast(`📤 Solicitud #${req.id} enviada a ${LEADERS[leader]}.`, 'info');
