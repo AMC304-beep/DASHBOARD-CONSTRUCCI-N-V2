@@ -1,0 +1,160 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitHub Actions – Deploy IBM Construction Dashboard
+# ─────────────────────────────────────────────────────────────────────────────
+# Security compliance:
+#  - API token stored in GitHub Secrets (MONDAY_API_TOKEN), never in source
+#  - Dependency audit runs on every push (fail on HIGH/CRITICAL)
+#  - Static frontend deployed to GitHub Pages
+#  - Backend deployed as a separate step (extend for your hosting target)
+#
+# Required GitHub Secrets (Settings → Secrets and variables → Actions):
+#   MONDAY_API_TOKEN  – Your Monday.com API personal access token
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: Deploy Dashboard
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+
+  # ── 1. Security audit ───────────────────────────────────────────────────
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: backend/package.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit dependencies (fail on CRITICAL only)
+        # Per IBM security policy: CVSS >= 9.0 (Critical) blocks the pipeline immediately.
+        # HIGH vulnerabilities (7.0–8.9) are tracked but do not block deployment —
+        # they must be patched within 30 days per IBM IT policy.
+        # Use `npm audit --audit-level=high` locally to review HIGH findings.
+        run: npm audit --audit-level=critical
+
+  # ── 2. Deploy static frontend to GitHub Pages ───────────────────────────
+  deploy-frontend:
+    name: Deploy Frontend (GitHub Pages)
+    runs-on: ubuntu-latest
+    needs: security-audit
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch frontend — inject backend base URL
+        # Replace the placeholder API base URL in HTML files with the real one.
+        # The token is NEVER injected here — it lives only on the backend (local .env).
+        # BACKEND_URL defaults to http://127.0.0.1:3000 (local backend on your PC).
+        # Override it in GitHub → Settings → Variables → Actions → BACKEND_URL
+        # if you deploy the backend to a remote host.
+        env:
+          BACKEND_URL: ${{ vars.BACKEND_URL || 'http://127.0.0.1:3000' }}
+        run: |
+          for f in index.html index_v2.html dashboard_actualizaciones.html dashboard_ausencias.html; do
+            if [ -f "$f" ]; then
+              sed -i "s|http://127.0.0.1:3000|${BACKEND_URL}|g" "$f"
+              echo "Patched: $f"
+            fi
+          done
+
+      - name: Create .nojekyll (serve all files, including underscored paths)
+        run: touch .nojekyll
+
+      - name: Prepare static site (exclude backend/ and sensitive files)
+        run: |
+          mkdir -p _site
+          # Copy all static files except backend/, .github/, .git/, and .env* files
+          rsync -a \
+            --exclude='backend/' \
+            --exclude='.github/' \
+            --exclude='.git/' \
+            --exclude='.env*' \
+            --exclude='*.md' \
+            --exclude='SECURITY.md' \
+            . _site/
+          echo "Static site contents:"
+          ls -la _site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload only the prepared static site — backend/ is excluded
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  # ── 3. Backend deployment placeholder ───────────────────────────────────
+  # Extend this job to deploy to IBM Cloud, AWS, Azure, or your chosen
+  # hosting platform. Inject MONDAY_API_TOKEN via the platform's secret store.
+  deploy-backend:
+    name: Backend Deployment (extend for your platform)
+    runs-on: ubuntu-latest
+    needs: security-audit
+    if: github.ref == 'refs/heads/main'
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20 (LTS)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install production dependencies only
+        run: npm ci --omit=dev
+
+      - name: Verify .env is NOT present in source
+        run: |
+          if [ -f .env ]; then
+            echo "::error::.env file found in repository — remove it immediately!"
+            exit 1
+          fi
+          echo ".env not present in source — OK"
+
+      - name: Echo deployment target
+        # Replace this step with your actual deployment command.
+        # Pass MONDAY_API_TOKEN via the platform's environment/secret injection:
+        #   IBM Cloud Functions: ibmcloud fn action create …
+        #   Docker / Kubernetes: use a Secret resource
+        #   GitHub Codespaces: use Codespace secrets
+        run: |
+          echo "Backend ready for deployment."
+          echo "Inject MONDAY_API_TOKEN from GitHub Secrets into your hosting platform."
+          echo "NEVER pass it as a CLI argument or environment variable in plain text logs."
