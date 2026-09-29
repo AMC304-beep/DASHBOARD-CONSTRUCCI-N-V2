@@ -3,1593 +3,1305 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IBM — Portal de Gestión de Tiempo – Construcción 2026</title>
+  <title>IBM — Gestión de Tiempo · Construcción 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <style>
-    :root {
-      --bg:#f4f7ff; --surface:#ffffff; --border:#dbe4f8;
-      --accent:#0f62fe; --accent2:#7c5cd8; --accent3:#0891b2;
-      --text:#1e2a45; --muted:#6b7fa3;
-      --success:#059669; --warn:#d97706; --danger:#dc2626;
-      --p-blue:#e8f0fe; --p-green:#d1fae5; --p-yellow:#fef3c7;
-      --p-purple:#ede9fe; --p-teal:#e0f2fe; --p-red:#fee2e2;
-    }
+    :root{--bg:#f4f7ff;--surface:#fff;--border:#dbe4f8;--accent:#0f62fe;--accent2:#7c5cd8;--accent3:#0891b2;--text:#1e2a45;--muted:#6b7fa3;--success:#059669;--warn:#d97706;--danger:#dc2626;--p-blue:#e8f0fe;--p-green:#d1fae5;--p-yellow:#fef3c7;--p-red:#fee2e2;--p-teal:#e0f2fe;}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     html{scroll-behavior:smooth;}
     body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
     body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle,rgba(15,98,254,.07) 1px,transparent 1px);background-size:28px 28px;}
-    ::-webkit-scrollbar{width:5px;height:5px;}
-    ::-webkit-scrollbar-track{background:#f0f4ff;}
-    ::-webkit-scrollbar-thumb{background:rgba(15,98,254,.3);border-radius:4px;}
+    ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:#f0f4ff;}::-webkit-scrollbar-thumb{background:rgba(15,98,254,.3);border-radius:4px;}
 
-    /* Header */
-    .ibm-header{background:#fff;border-bottom:2px solid var(--border);height:60px;padding:0 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(15,98,254,.08);}
-    .header-left{display:flex;align-items:center;gap:18px;}
-    .header-div{width:1px;height:24px;background:#dbe4f8;}
-    .header-title{font-size:12px;font-weight:500;color:var(--muted);letter-spacing:.3px;}
-    .header-title strong{color:var(--text);font-weight:700;}
+    /* ── Header ── */
+    .hdr{background:#fff;border-bottom:2px solid var(--border);height:60px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(15,98,254,.08);}
+    .hdr-l{display:flex;align-items:center;gap:16px;}
+    .hdr-div{width:1px;height:24px;background:var(--border);}
 
-    /* Slide nav */
-    .slide-nav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:4px;position:sticky;top:60px;z-index:90;box-shadow:0 1px 8px rgba(15,98,254,.04);overflow-x:auto;}
-    .slide-tab{padding:14px 20px;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;transition:all .2s;letter-spacing:.3px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
-    .slide-tab:hover{color:var(--accent);background:var(--p-blue);border-radius:6px 6px 0 0;}
-    .slide-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+    /* ── Nav ── */
+    .snav{background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:2px;position:sticky;top:60px;z-index:90;overflow-x:auto;white-space:nowrap;}
+    .stab{padding:13px 18px;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;white-space:nowrap;}
+    .stab:hover{color:var(--accent);background:var(--p-blue);border-radius:6px 6px 0 0;}
+    .stab.on{color:var(--accent);border-bottom-color:var(--accent);}
 
-    /* Slides */
-    .slide{display:none;padding:28px;max-width:1280px;margin:0 auto;position:relative;z-index:1;}
-    .slide.active{display:block;animation:fadeSlide .35s ease;}
-    @keyframes fadeSlide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    /* ── Slide ── */
+    .slide{display:none;padding:24px;max-width:1300px;margin:0 auto;position:relative;z-index:1;}
+    .slide.on{display:block;animation:fs .3s ease;}
+    @keyframes fs{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-    /* Glass card */
-    .glass{background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 12px rgba(15,98,254,.06),0 1px 3px rgba(0,0,0,.04);transition:border-color .25s,box-shadow .25s,transform .2s;}
-    .glass:hover{border-color:rgba(15,98,254,.3);box-shadow:0 6px 24px rgba(15,98,254,.10);}
+    /* ── Glass ── */
+    .g{background:#fff;border:1px solid var(--border);border-radius:14px;box-shadow:0 2px 12px rgba(15,98,254,.06);}
 
-    /* Form */
+    /* ── Buttons ── */
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;}
+    .btn-p{background:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(15,98,254,.3);}
+    .btn-p:hover{background:#0353e9;transform:translateY(-1px);box-shadow:0 4px 16px rgba(15,98,254,.4);}
+    .btn-s{background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;}
+    .btn-s:hover{background:#dbeafe;border-color:var(--accent);}
+    .btn-ok{background:var(--success);color:#fff;}
+    .btn-ok:hover{background:#047857;}
+    .btn-err{background:var(--danger);color:#fff;}
+    .btn-err:hover{background:#b91c1c;}
+
+    /* ── Form ── */
     .fg{margin-bottom:12px;}
     .fg label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
-    .fg input,.fg select,.fg textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:#fafbff;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
-    .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,98,254,.1);background:#fff;}
-    .fg textarea{resize:vertical;min-height:70px;}
+    .fi{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text);background:#fafbff;font-family:inherit;transition:border-color .2s,box-shadow .2s;}
+    .fi:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,98,254,.1);background:#fff;}
+    textarea.fi{resize:vertical;min-height:70px;}
 
-    /* Buttons */
-    .btn-primary{background:var(--accent);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s;box-shadow:0 2px 8px rgba(15,98,254,.3);}
-    .btn-primary:hover{background:#0353e9;transform:translateY(-1px);box-shadow:0 4px 16px rgba(15,98,254,.4);}
-    .btn-secondary{background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .2s;}
-    .btn-secondary:hover{background:#dbeafe;border-color:var(--accent);}
-    .btn-success{background:var(--success);color:#fff;border:none;padding:7px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
-    .btn-success:hover{background:#047857;}
-    .btn-danger{background:var(--danger);color:#fff;border:none;padding:7px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
-    .btn-danger:hover{background:#b91c1c;}
+    /* ── Badge ── */
+    .sb{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+    .sb-pend{background:var(--p-yellow);color:var(--warn);border:1px solid #fde68a;}
+    .sb-ok{background:var(--p-green);color:var(--success);border:1px solid #a7f3d0;}
+    .sb-err{background:var(--p-red);color:var(--danger);border:1px solid #fca5a5;}
+    .sb-info{background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;}
 
-    /* Badges */
-    .sbadge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.3px;white-space:nowrap;}
-    .s-pend{background:var(--p-yellow);color:var(--warn);border:1px solid #fde68a;}
-    .s-appr{background:var(--p-green);color:var(--success);border:1px solid #a7f3d0;}
-    .s-rej{background:var(--p-red);color:var(--danger);border:1px solid #fca5a5;}
-    .s-info{background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;}
+    /* ── Table ── */
+    .tbl{width:100%;border-collapse:collapse;font-size:12px;}
+    .tbl th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;background:#fafbff;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:2;}
+    .tbl td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
+    .tbl tbody tr:hover td{background:#eff6ff;}
+    .tbl tbody tr{cursor:pointer;}
 
-    /* Col tags */
-    .col-tag{background:#fff;color:var(--accent);padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #c7d7fc;}
-    .col-map{padding:10px 16px;font-size:11px;color:var(--accent);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;border-left:2px solid #c7d7fc;background:var(--p-blue);}
+    /* ── KPI ── */
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px;}
+    .kpi{padding:16px 18px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+    .kpi-n{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;}
+    .kpi-l{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
 
-    /* KPI */
-    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px;}
-    .kpi-card{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-    .kpi-num{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;}
-    .kpi-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:2px;}
+    /* ── Status card ── */
+    .sc{border-radius:14px;overflow:hidden;display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);box-shadow:0 2px 12px rgba(15,98,254,.06);transition:transform .2s,box-shadow .2s;}
+    .sc:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,98,254,.12);}
+    .sc-bar{height:4px;}
+    .ba-b{background:linear-gradient(90deg,#0f62fe,#93c5fd);}
+    .ba-g{background:linear-gradient(90deg,#059669,#6ee7b7);}
+    .ba-y{background:linear-gradient(90deg,#d97706,#fde68a);}
+    .sc-hd{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#fafbff;}
+    .sc-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+    .sc-body{padding:14px 16px;flex:1;}
+    .sc-foot{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fafbff;}
+    .btn-conf{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .btn-conf:hover{background:#0353e9;}
+    .btn-conf.done{background:var(--success);cursor:default;}
 
-    /* Section */
-    .section-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;letter-spacing:-.2px;}
-    .section-sub{font-size:12px;color:var(--muted);margin-bottom:22px;}
+    /* ── Upload ── */
+    .upl{border:2px dashed #c7d7fc;border-radius:10px;padding:12px;text-align:center;background:var(--p-blue);cursor:pointer;position:relative;transition:border-color .2s,background .2s;}
+    .upl:hover,.upl.over{border-color:var(--accent);background:#dbeafe;}
+    .upl input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+    .fi-item{display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:4px;font-size:10px;color:var(--accent);}
+    .fi-rm{margin-left:auto;color:var(--danger);cursor:pointer;font-weight:700;}
 
-    /* Upload */
-    .upload-drop{border:2px dashed #c7d7fc;border-radius:10px;padding:14px;text-align:center;background:var(--p-blue);transition:border-color .2s,background .2s;cursor:pointer;position:relative;}
-    .upload-drop:hover,.upload-drop.drag-over{border-color:var(--accent);background:#dbeafe;}
-    .upload-drop input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-    .file-item{display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:4px;font-size:10px;color:var(--accent);}
-    .file-item .rm{margin-left:auto;color:var(--danger);cursor:pointer;font-weight:700;}
-
-    /* Status card */
-    .status-card{border-radius:14px;overflow:hidden;display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);box-shadow:0 2px 12px rgba(15,98,254,.06);transition:border-color .25s,box-shadow .25s,transform .2s;}
-    .status-card:hover{transform:translateY(-3px);border-color:rgba(15,98,254,.35);box-shadow:0 8px 28px rgba(15,98,254,.12);}
-    .card-accent-bar{height:4px;}
-    .ca-blue{background:linear-gradient(90deg,#0f62fe,#93c5fd);}
-    .ca-green{background:linear-gradient(90deg,#059669,#6ee7b7);}
-    .ca-yellow{background:linear-gradient(90deg,#d97706,#fde68a);}
-    .card-hdr{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#fafbff;}
-    .card-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:9px;color:var(--text);}
-    .card-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;}
-    .ci-time{background:var(--p-blue);border:1px solid #c7d7fc;}
-    .ci-sf{background:var(--p-green);border:1px solid #a7f3d0;}
-    .ci-hp{background:var(--p-yellow);border:1px solid #fde68a;}
-    .card-body{padding:14px 18px;flex:1;}
-    .confirm-row{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fafbff;}
-    .btn-confirm{background:var(--accent);color:#fff;border:none;padding:8px 18px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 2px 8px rgba(15,98,254,.3);}
-    .btn-confirm:hover{background:#0353e9;transform:translateY(-1px);}
-    .btn-confirm.confirmed{background:var(--success);box-shadow:0 2px 8px rgba(5,150,105,.3);cursor:default;transform:none;}
-    .confirm-ts{font-size:10px;color:var(--muted);}
-
-    /* Weeks table */
-    .weeks-tbl{width:100%;border-collapse:collapse;font-size:12px;}
-    .weeks-tbl th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;background:#fafbff;border-bottom:2px solid var(--border);}
-    .weeks-tbl td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle;}
-    .weeks-tbl tr:hover td{background:#eff6ff;}
-
-    /* Forecast */
-    .forecast-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
-    .forecast-card{padding:20px;border-radius:14px;border:1px solid var(--border);background:#fff;box-shadow:0 2px 10px rgba(15,98,254,.06);transition:transform .2s,box-shadow .2s;}
-    .forecast-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,98,254,.12);}
-    .fc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
-    .fc-adcar{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.3px;}
-    .fc-status{margin-top:10px;}
-    .fc-bar-wrap{height:5px;background:#e8f0fe;border-radius:4px;overflow:hidden;margin-top:6px;}
-    .fc-bar{height:5px;border-radius:4px;background:linear-gradient(90deg,#0f62fe,#7c5cd8);}
-
-    /* OT */
-    .ot-wrap{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
-    @media(max-width:768px){.ot-wrap{grid-template-columns:1fr;}}
-    .req-item{border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;background:#fafbff;transition:border-color .2s;}
-    .req-item:hover{border-color:rgba(15,98,254,.4);}
-    .req-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:8px;flex-wrap:wrap;}
-    .req-name{font-size:12px;font-weight:700;color:var(--text);}
-    .req-meta{font-size:10px;color:var(--muted);margin-top:2px;}
-    .req-reason{font-size:11px;color:#1d4ed8;font-style:italic;margin-bottom:10px;}
-    .req-actions{display:flex;gap:8px;}
-
-    /* Modal */
-    .modal-bg{display:none;position:fixed;inset:0;background:rgba(30,42,69,.45);backdrop-filter:blur(6px);z-index:400;align-items:center;justify-content:center;padding:20px;}
-    .modal-bg.open{display:flex;}
-    .modal-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px;max-width:520px;width:100%;box-shadow:0 20px 50px rgba(15,98,254,.14);max-height:90vh;overflow-y:auto;}
-    .modal-box h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;}
-    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
-    .btn-cancel{padding:8px 18px;border:1px solid var(--border);border-radius:8px;background:transparent;font-size:12px;cursor:pointer;color:var(--muted);}
+    /* ── Modal ── */
+    .mbg{display:none;position:fixed;inset:0;background:rgba(30,42,69,.45);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;padding:16px;}
+    .mbg.open{display:flex;}
+    .mbox{background:#fff;border:1px solid var(--border);border-radius:16px;padding:26px;max-width:540px;width:100%;max-height:92vh;overflow-y:auto;box-shadow:0 24px 60px rgba(15,98,254,.15);}
+    .mbox h4{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;}
+    .m-act{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+    .btn-cancel{padding:8px 16px;border:1px solid var(--border);border-radius:8px;background:transparent;font-size:12px;cursor:pointer;color:var(--muted);}
     .btn-cancel:hover{border-color:var(--accent);color:var(--accent);}
 
-    /* Toast */
-    .toast{position:fixed;bottom:24px;right:24px;background:var(--text);color:#fff;padding:12px 20px;border-radius:10px;font-size:12px;font-weight:500;box-shadow:0 8px 24px rgba(30,42,69,.2);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;max-width:380px;}
+    /* ── Toast ── */
+    .toast{position:fixed;bottom:22px;right:22px;background:var(--text);color:#fff;padding:11px 18px;border-radius:10px;font-size:12px;font-weight:500;box-shadow:0 8px 24px rgba(30,42,69,.2);z-index:999;transform:translateY(80px);opacity:0;transition:transform .3s,opacity .3s;max-width:360px;}
     .toast.show{transform:translateY(0);opacity:1;}
-    .toast.success{border-left:3px solid #6ee7b7;}
-    .toast.error{border-left:3px solid #fca5a5;}
-    .toast.info{border-left:3px solid #93c5fd;}
+    .toast.ok{border-left:3px solid #6ee7b7;}
+    .toast.err{border-left:3px solid #fca5a5;}
+    .toast.inf{border-left:3px solid #93c5fd;}
 
-    /* Progress */
-    .progress-overlay{display:none;position:fixed;inset:0;background:rgba(30,42,69,.5);backdrop-filter:blur(6px);z-index:300;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
-    .progress-overlay.show{display:flex;}
-    .progress-box{background:#fff;border:1px solid var(--border);border-radius:16px;padding:32px 40px;text-align:center;min-width:320px;}
-    .progress-bar-wrap{background:var(--p-blue);border-radius:8px;height:6px;overflow:hidden;margin:12px 0 8px;}
-    .progress-bar-inner{background:linear-gradient(90deg,var(--accent),#93c5fd);height:6px;border-radius:8px;width:0%;transition:width .3s;}
+    /* ── Progress overlay ── */
+    .pov{display:none;position:fixed;inset:0;background:rgba(30,42,69,.5);backdrop-filter:blur(6px);z-index:400;align-items:center;justify-content:center;}
+    .pov.open{display:flex;}
+    .pbox{background:#fff;border:1px solid var(--border);border-radius:16px;padding:30px 40px;text-align:center;min-width:300px;}
+    .pbar-w{background:var(--p-blue);border-radius:8px;height:5px;overflow:hidden;margin:12px 0 8px;}
+    .pbar{background:linear-gradient(90deg,var(--accent),#93c5fd);height:5px;border-radius:8px;width:0%;transition:width .3s;}
 
-    /* Token btn */
-    .token-btn{padding:7px 16px;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;color:#fff;background:var(--warn);transition:all .2s;}
-    .token-btn.connected{background:var(--success);}
-    .monday-btn{background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:7px 14px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:all .2s;}
-    .monday-btn:hover{background:#dbeafe;border-color:var(--accent);}
-    .notice{background:var(--p-blue);border:1px solid #c7d7fc;border-radius:10px;padding:12px 16px;font-size:11px;color:#1d4ed8;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
-    .role-sw{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding:12px 18px;border-left:3px solid var(--accent3);background:var(--p-teal);border-radius:0 10px 10px 0;}
-    .role-sw label{display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px;}
-    .role-sw input[type="radio"]{accent-color:var(--accent);}
-    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-    .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-    @media(max-width:640px){.slide{padding:16px;}.two-col,.three-col{grid-template-columns:1fr;}.ot-wrap{grid-template-columns:1fr;}}
+    /* ── Col tag ── */
+    .ct{background:#fff;color:var(--accent);padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid #c7d7fc;}
+    .cmap{padding:9px 14px;margin-bottom:18px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;border-left:2px solid #c7d7fc;background:var(--p-blue);border-radius:0 10px 10px 0;}
+
+    /* ── OT ── */
+    .ot-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;}
+    @media(max-width:780px){.ot-grid{grid-template-columns:1fr;}}
+    .req{border:1px solid var(--border);border-radius:10px;padding:13px 15px;margin-bottom:9px;background:#fafbff;transition:border-color .2s;}
+    .req:hover{border-color:rgba(15,98,254,.35);}
+    .rh{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:5px;}
+    .rn{font-size:12px;font-weight:700;color:var(--text);}
+    .rm{font-size:10px;color:var(--muted);margin-top:2px;}
+    .rr{font-size:11px;color:#1d4ed8;font-style:italic;margin-bottom:8px;}
+
+    /* ── Misc ── */
+    .section-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:3px;}
+    .section-sub{font-size:12px;color:var(--muted);margin-bottom:20px;}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+    .notice{background:var(--p-blue);border:1px solid #c7d7fc;border-radius:10px;padding:11px 14px;font-size:11px;color:#1d4ed8;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+    .tok-btn{padding:7px 14px;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;color:#fff;background:var(--warn);transition:all .2s;}
+    .tok-btn.ok{background:var(--success);}
+    .mlink{background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:6px 12px;border-radius:7px;font-size:11px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all .2s;}
+    .mlink:hover{background:#dbeafe;}
+
+    /* Forecast card */
+    .fc-card{padding:18px;border-radius:14px;border:1px solid var(--border);background:#fff;transition:transform .2s,box-shadow .2s;}
+    .fc-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(15,98,254,.12);}
+    .fc-bar-w{height:5px;background:#e8f0fe;border-radius:4px;overflow:hidden;margin-top:6px;}
+    .fc-bar{height:5px;border-radius:4px;}
+
+    @media(max-width:640px){.slide{padding:14px;}.two,.three{grid-template-columns:1fr;}.ot-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
 
 <!-- HEADER -->
-<header class="ibm-header">
-  <div class="header-left">
-    <svg width="80" height="30" viewBox="0 0 176 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IBM">
+<header class="hdr">
+  <div class="hdr-l">
+    <svg width="76" height="28" viewBox="0 0 176 64" xmlns="http://www.w3.org/2000/svg" aria-label="IBM">
       <defs>
-        <clipPath id="aI"><rect x="0" y="0" width="32" height="10"/><rect x="8" y="10" width="16" height="44"/><rect x="0" y="54" width="32" height="10"/></clipPath>
-        <clipPath id="aB"><rect x="40" y="0" width="12" height="64"/><rect x="52" y="0" width="18" height="10"/><path d="M52 10 Q76 10 76 22 Q76 32 52 32 L52 10Z"/><rect x="52" y="32" width="18" height="10"/><path d="M52 42 Q78 42 78 54 Q78 64 52 64 L52 42Z"/><rect x="52" y="54" width="18" height="10"/></clipPath>
-        <clipPath id="aM"><rect x="88" y="0" width="14" height="64"/><rect x="158" y="0" width="14" height="64"/><polygon points="102,0 130,40 158,0"/><polygon points="102,64 130,40 158,64"/></clipPath>
+        <clipPath id="hI"><rect x="0" y="0" width="32" height="10"/><rect x="8" y="10" width="16" height="44"/><rect x="0" y="54" width="32" height="10"/></clipPath>
+        <clipPath id="hB"><rect x="40" y="0" width="12" height="64"/><rect x="52" y="0" width="18" height="10"/><path d="M52 10 Q76 10 76 22 Q76 32 52 32 L52 10Z"/><rect x="52" y="32" width="18" height="10"/><path d="M52 42 Q78 42 78 54 Q78 64 52 64 L52 42Z"/><rect x="52" y="54" width="18" height="10"/></clipPath>
+        <clipPath id="hM"><rect x="88" y="0" width="14" height="64"/><rect x="158" y="0" width="14" height="64"/><polygon points="102,0 130,40 158,0"/><polygon points="102,64 130,40 158,64"/></clipPath>
       </defs>
-      <g clip-path="url(#aI)"><rect x="0" y="0" width="32" height="7" fill="#0f62fe"/><rect x="0" y="8" width="32" height="7" fill="#0f62fe"/><rect x="0" y="16" width="32" height="7" fill="#0f62fe"/><rect x="0" y="24" width="32" height="7" fill="#0f62fe"/><rect x="0" y="32" width="32" height="7" fill="#0f62fe"/><rect x="0" y="40" width="32" height="7" fill="#0f62fe"/><rect x="0" y="48" width="32" height="7" fill="#0f62fe"/><rect x="0" y="56" width="32" height="7" fill="#0f62fe"/></g>
-      <g clip-path="url(#aB)"><rect x="40" y="0" width="40" height="7" fill="#0f62fe"/><rect x="40" y="8" width="40" height="7" fill="#0f62fe"/><rect x="40" y="16" width="40" height="7" fill="#0f62fe"/><rect x="40" y="24" width="40" height="7" fill="#0f62fe"/><rect x="40" y="32" width="40" height="7" fill="#0f62fe"/><rect x="40" y="40" width="40" height="7" fill="#0f62fe"/><rect x="40" y="48" width="40" height="7" fill="#0f62fe"/><rect x="40" y="56" width="40" height="7" fill="#0f62fe"/></g>
-      <g clip-path="url(#aM)"><rect x="88" y="0" width="84" height="7" fill="#0f62fe"/><rect x="88" y="8" width="84" height="7" fill="#0f62fe"/><rect x="88" y="16" width="84" height="7" fill="#0f62fe"/><rect x="88" y="24" width="84" height="7" fill="#0f62fe"/><rect x="88" y="32" width="84" height="7" fill="#0f62fe"/><rect x="88" y="40" width="84" height="7" fill="#0f62fe"/><rect x="88" y="48" width="84" height="7" fill="#0f62fe"/><rect x="88" y="56" width="84" height="7" fill="#0f62fe"/></g>
+      <g clip-path="url(#hI)"><rect width="32" height="64" fill="#0f62fe"/></g>
+      <g clip-path="url(#hB)"><rect x="40" width="40" height="64" fill="#0f62fe"/></g>
+      <g clip-path="url(#hM)"><rect x="88" width="84" height="64" fill="#0f62fe"/></g>
     </svg>
-    <div class="header-div"></div>
-    <span class="header-title"><strong>Portal Gestión de Tiempo – Construcción 2026</strong> · Boards 18432741374 · 18433232131</span>
+    <div class="hdr-div"></div>
+    <span style="font-size:12px;font-weight:500;color:var(--muted);"><strong style="color:var(--text);">Gestión de Tiempo – Construcción 2026</strong> · Boards 18432741374 · 18433232131</span>
   </div>
   <div style="display:flex;gap:8px;align-items:center;">
-    <button id="tokenStatusBtn" class="token-btn" onclick="checkBackend()">🔑 Conectar Backend</button>
-    <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="monday-btn">
+    <button id="backendBtn" class="tok-btn" onclick="checkBackend()">🔑 Backend</button>
+    <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="mlink">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-      Actualizaciones
+      Board
     </a>
-    <a href="index_v2.html" class="monday-btn">🏠 Portal</a>
+    <a href="index_v2.html" class="mlink">🏠 Portal</a>
   </div>
 </header>
 
-<!-- SLIDE NAV -->
-<nav class="slide-nav">
-  <div class="slide-tab active" id="tab1" onclick="showSlide(1,this)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+<!-- NAV -->
+<nav class="snav">
+  <div class="stab on" id="tab1" onclick="goSlide(1,this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
     Confirmación de Actualizaciones
   </div>
-  <div class="slide-tab" id="tab2" onclick="showSlide(2,this)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-    Solicitud de Horas Extras
+  <div class="stab" id="tab2" onclick="goSlide(2,this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Horas Extras
   </div>
-  <div class="slide-tab" id="tab3" onclick="showSlide(3,this)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="16" y2="21"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
-    Semanas Cargadas
+  <div class="stab" id="tab3" onclick="goSlide(3,this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    Modalidad de Trabajo
   </div>
-  <div class="slide-tab" id="tab4" onclick="showSlide(4,this)">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-    Forecast
+  <div class="stab" id="tab4" onclick="goSlide(4,this)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    Semanas / Personas
   </div>
 </nav>
 
-<!-- ══════════════════════════════════════════
-     SLIDE 1 — CONFIRMACIÓN DE ACTUALIZACIONES
-     ══════════════════════════════════════════ -->
-<div class="slide active" id="slide1">
-
+<!-- ══════════════════════════════
+     SLIDE 1 — CONFIRMACIÓN ACTUALIZACIONES
+     ══════════════════════════════ -->
+<div class="slide on" id="slide1">
   <div class="section-title">Confirmación de Actualizaciones</div>
-  <div class="section-sub">Registra y confirma el cargue de horas en cada sistema. Los datos se leen automáticamente del Board Monday <strong>18432741374</strong>.</div>
+  <div class="section-sub">Registra el cargue semanal en cada sistema. Adcar se lee en vivo del Board <strong>18432741374</strong>.</div>
 
-  <!-- Colaborador box -->
-  <div class="glass" style="padding:20px 24px;margin-bottom:20px;border-left:3px solid var(--accent);">
-    <div style="font-size:11px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:8px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px;">
+  <!-- Colaborador -->
+  <div class="g" style="padding:18px 22px;margin-bottom:20px;border-left:3px solid var(--accent);">
+    <div style="font-size:11px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:7px;margin-bottom:13px;text-transform:uppercase;letter-spacing:.4px;">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       Datos del colaborador
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:11px;">
       <div class="fg">
-        <label>ADCAR
-          <span id="adcarLoading" style="display:none;font-size:9px;color:var(--muted);margin-left:5px;">⏳ Cargando…</span>
-        </label>
-        <select id="collab-adcar" onchange="propagateCollab()">
+        <label>ADCAR <span id="adcarSpin" style="display:none;font-size:9px;color:var(--muted);">⏳ cargando…</span></label>
+        <select id="s1adcar" class="fi" onchange="propagate()">
           <option value="">— Sincroniza para cargar —</option>
         </select>
-        <div style="font-size:10px;color:var(--muted);margin-top:3px;">
-          Valores en vivo del board. <a href="#" onclick="loadAdcars();return false;" style="color:var(--accent);">Recargar</a>
-        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;">Valores en vivo · <a href="#" onclick="loadAdcars();return false;" style="color:var(--accent);">Recargar</a></div>
       </div>
       <div class="fg">
         <label>Correo IBM</label>
-        <input type="email" id="collab-email" placeholder="usuario@ibm.com" oninput="propagateCollab()"/>
+        <input type="email" id="s1email" class="fi" placeholder="usuario@ibm.com" oninput="propagate()"/>
       </div>
       <div class="fg">
-        <label>Gerencia</label>
-        <select id="collab-gerencia" onchange="propagateCollab()">
+        <label>Región <span id="gerSpin" style="display:none;font-size:9px;color:var(--muted);">⏳</span></label>
+        <select id="s1ger" class="fi" onchange="propagate()">
           <option value="">— Seleccionar —</option>
         </select>
       </div>
       <div class="fg">
-        <label>Período / Semana</label>
-        <input type="text" id="collab-period" placeholder="Semana 28 – 2025" oninput="propagateCollab()"/>
+        <label>Semana / Período</label>
+        <input type="text" id="s1period" class="fi" placeholder="Semana 28 – 2025" oninput="propagate()"/>
       </div>
     </div>
-    <div id="collab-info" style="display:none;margin-top:12px;padding:8px 14px;background:var(--p-green);border:1px solid #a7f3d0;border-radius:8px;font-size:11px;color:var(--success);">
-      ✅ Colaborador: <strong id="collab-display"></strong>
+    <div id="s1info" style="display:none;margin-top:10px;padding:7px 12px;background:var(--p-green);border:1px solid #a7f3d0;border-radius:8px;font-size:11px;color:var(--success);">
+      ✅ Colaborador: <strong id="s1disp"></strong>
     </div>
   </div>
 
   <!-- KPIs -->
   <div class="kpi-grid">
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="s-pend" style="color:var(--warn);">3</div><div class="kpi-lbl">Pendientes</div></div>
-      <div style="font-size:28px;">⏳</div>
-    </div>
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="s-conf" style="color:var(--success);">0</div><div class="kpi-lbl">Confirmados</div></div>
-      <div style="font-size:28px;">✅</div>
-    </div>
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="s-files" style="color:var(--accent2);">0</div><div class="kpi-lbl">Soportes</div></div>
-      <div style="font-size:28px;">📎</div>
-    </div>
-    <div class="glass kpi-card" style="border-left:3px solid var(--accent);">
-      <div><div style="font-size:13px;font-weight:700;color:var(--text);" id="currentWeek">–</div><div class="kpi-lbl">Semana actual</div></div>
-      <div style="font-size:24px;">📅</div>
-    </div>
+    <div class="g kpi"><div><div class="kpi-n" id="k-pend" style="color:var(--warn);">3</div><div class="kpi-l">Pendientes</div></div><div style="font-size:26px;">⏳</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="k-conf" style="color:var(--success);">0</div><div class="kpi-l">Confirmados</div></div><div style="font-size:26px;">✅</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="k-files" style="color:var(--accent2);">0</div><div class="kpi-l">Soportes</div></div><div style="font-size:26px;">📎</div></div>
+    <div class="g kpi" style="border-left:3px solid var(--accent);"><div><div id="k-week" style="font-size:13px;font-weight:700;color:var(--text);">–</div><div class="kpi-l">Semana actual</div></div><div style="font-size:22px;">📅</div></div>
   </div>
 
   <!-- Col map -->
-  <div class="col-map glass">
-    <strong style="color:#93c5fd;margin-right:6px;">🔗 Board 18432741374:</strong>
-    <span class="col-tag">Adcar</span><span class="col-tag">Gerencia</span>
-    <span class="col-tag">Time</span><span class="col-tag">Soporte Time</span>
-    <span class="col-tag">Success Factors</span><span class="col-tag">Soporte SF</span>
-    <span class="col-tag">My Hour Plan</span><span class="col-tag">Soporte HP</span>
-    <span class="col-tag">Comentarios</span>
+  <div class="cmap" style="margin-bottom:18px;">
+    <strong style="color:#93c5fd;margin-right:5px;font-size:11px;">🔗 Board 18432741374:</strong>
+    <span class="ct">Adcar</span><span class="ct">Región</span><span class="ct">Time</span><span class="ct">Soporte Time</span>
+    <span class="ct">Success Factors</span><span class="ct">Soporte SF</span><span class="ct">My Hour Plan</span><span class="ct">Soporte HP</span><span class="ct">Comentarios</span>
   </div>
 
-  <!-- Confirmation cards -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-bottom:24px;">
-
+  <!-- Cards -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-bottom:22px;">
     <!-- TIME -->
-    <div class="status-card" id="card-time">
-      <div class="card-accent-bar ca-blue"></div>
-      <div class="card-hdr">
-        <div class="card-title"><div class="card-icon ci-time">🕐</div>Time (IBM Time Tracker)</div>
-        <span id="badge-time" class="sbadge s-pend">Pendiente</span>
+    <div class="sc">
+      <div class="sc-bar ba-b"></div>
+      <div class="sc-hd">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);">
+          <div class="sc-ico" style="background:var(--p-blue);border:1px solid #c7d7fc;">🕐</div>Time (IBM Time Tracker)
+        </div>
+        <span id="bdg-time" class="sb sb-pend">Pendiente</span>
       </div>
-      <div class="card-body">
+      <div class="sc-body">
         <div class="fg"><label>Estado en Time</label>
-          <select id="time-status">
+          <select id="sel-time" class="fi">
             <option value="">— Seleccionar —</option>
-            <option value="Actualizado">Actualizado</option>
-            <option value="Sin Actualizar">Sin Actualizar</option>
-            <option value="Pendiente">Pendiente</option>
+            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
           </select>
         </div>
-        <div class="fg"><label>Comentarios</label><textarea id="time-notes" placeholder="Observaciones…"></textarea></div>
+        <div class="fg"><label>Comentarios</label><textarea id="txt-time" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte Time</div>
-        <div class="upload-drop" ondragover="dragOver(event,'drop-time')" ondragleave="dragLeave('drop-time')" ondrop="dropFile(event,'time')" id="drop-time">
-          <input type="file" multiple onchange="handleFiles(this.files,'time')"/>
-          <div style="font-size:18px;margin-bottom:3px;">📁</div>
-          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic para adjuntar</div>
+        <div class="upl" id="upl-time" ondragover="dov(event,'upl-time')" ondragleave="dlv('upl-time')" ondrop="ddr(event,'time')">
+          <input type="file" multiple onchange="hf(this.files,'time')"/>
+          <div style="font-size:16px;margin-bottom:3px;">📁</div>
+          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic</div>
           <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
         </div>
-        <div id="files-time"></div>
+        <div id="fl-time"></div>
       </div>
-      <div class="confirm-row">
-        <button class="btn-confirm" id="btn-time" onclick="confirmUpdate('time')">✔ Confirmar Time</button>
-        <span class="confirm-ts" id="ts-time"></span>
+      <div class="sc-foot">
+        <button class="btn-conf" id="btn-time" onclick="confirm1('time')">✔ Confirmar Time</button>
+        <span id="ts-time" style="font-size:10px;color:var(--muted);"></span>
       </div>
     </div>
-
-    <!-- SUCCESS FACTORS -->
-    <div class="status-card" id="card-sf">
-      <div class="card-accent-bar ca-green"></div>
-      <div class="card-hdr">
-        <div class="card-title"><div class="card-icon ci-sf">🌐</div>Success Factors</div>
-        <span id="badge-sf" class="sbadge s-pend">Pendiente</span>
+    <!-- SF -->
+    <div class="sc">
+      <div class="sc-bar ba-g"></div>
+      <div class="sc-hd">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);">
+          <div class="sc-ico" style="background:var(--p-green);border:1px solid #a7f3d0;">🌐</div>Success Factors
+        </div>
+        <span id="bdg-sf" class="sb sb-pend">Pendiente</span>
       </div>
-      <div class="card-body">
+      <div class="sc-body">
         <div class="fg"><label>Estado en SF</label>
-          <select id="sf-status">
+          <select id="sel-sf" class="fi">
             <option value="">— Seleccionar —</option>
-            <option value="Actualizado">Actualizado</option>
-            <option value="Sin Actualizar">Sin Actualizar</option>
-            <option value="Pendiente">Pendiente</option>
+            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
           </select>
         </div>
-        <div class="fg"><label>Comentarios</label><textarea id="sf-notes" placeholder="Observaciones…"></textarea></div>
+        <div class="fg"><label>Comentarios</label><textarea id="txt-sf" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte SF</div>
-        <div class="upload-drop" ondragover="dragOver(event,'drop-sf')" ondragleave="dragLeave('drop-sf')" ondrop="dropFile(event,'sf')" id="drop-sf">
-          <input type="file" multiple onchange="handleFiles(this.files,'sf')"/>
-          <div style="font-size:18px;margin-bottom:3px;">📁</div>
-          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic para adjuntar</div>
+        <div class="upl" id="upl-sf" ondragover="dov(event,'upl-sf')" ondragleave="dlv('upl-sf')" ondrop="ddr(event,'sf')">
+          <input type="file" multiple onchange="hf(this.files,'sf')"/>
+          <div style="font-size:16px;margin-bottom:3px;">📁</div>
+          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic</div>
           <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
         </div>
-        <div id="files-sf"></div>
+        <div id="fl-sf"></div>
       </div>
-      <div class="confirm-row">
-        <button class="btn-confirm" id="btn-sf" onclick="confirmUpdate('sf')">✔ Confirmar SF</button>
-        <span class="confirm-ts" id="ts-sf"></span>
+      <div class="sc-foot">
+        <button class="btn-conf" id="btn-sf" onclick="confirm1('sf')">✔ Confirmar SF</button>
+        <span id="ts-sf" style="font-size:10px;color:var(--muted);"></span>
       </div>
     </div>
-
-    <!-- MY HOUR PLAN -->
-    <div class="status-card" id="card-hp">
-      <div class="card-accent-bar ca-yellow"></div>
-      <div class="card-hdr">
-        <div class="card-title"><div class="card-icon ci-hp">📅</div>My Hour Plan</div>
-        <span id="badge-hp" class="sbadge s-pend">Pendiente</span>
+    <!-- HP -->
+    <div class="sc">
+      <div class="sc-bar ba-y"></div>
+      <div class="sc-hd">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);">
+          <div class="sc-ico" style="background:var(--p-yellow);border:1px solid #fde68a;">📅</div>My Hour Plan
+        </div>
+        <span id="bdg-hp" class="sb sb-pend">Pendiente</span>
       </div>
-      <div class="card-body">
+      <div class="sc-body">
         <div class="fg"><label>Estado en HP</label>
-          <select id="hp-status">
+          <select id="sel-hp" class="fi">
             <option value="">— Seleccionar —</option>
-            <option value="Actualizado">Actualizado</option>
-            <option value="Sin Actualizar">Sin Actualizar</option>
-            <option value="Pendiente">Pendiente</option>
+            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
           </select>
         </div>
-        <div class="fg"><label>Comentarios</label><textarea id="hp-notes" placeholder="Observaciones…"></textarea></div>
+        <div class="fg"><label>Comentarios</label><textarea id="txt-hp" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte HP</div>
-        <div class="upload-drop" ondragover="dragOver(event,'drop-hp')" ondragleave="dragLeave('drop-hp')" ondrop="dropFile(event,'hp')" id="drop-hp">
-          <input type="file" multiple onchange="handleFiles(this.files,'hp')"/>
-          <div style="font-size:18px;margin-bottom:3px;">📁</div>
-          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic para adjuntar</div>
+        <div class="upl" id="upl-hp" ondragover="dov(event,'upl-hp')" ondragleave="dlv('upl-hp')" ondrop="ddr(event,'hp')">
+          <input type="file" multiple onchange="hf(this.files,'hp')"/>
+          <div style="font-size:16px;margin-bottom:3px;">📁</div>
+          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic</div>
           <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
         </div>
-        <div id="files-hp"></div>
+        <div id="fl-hp"></div>
       </div>
-      <div class="confirm-row">
-        <button class="btn-confirm" id="btn-hp" onclick="confirmUpdate('hp')">✔ Confirmar HP</button>
-        <span class="confirm-ts" id="ts-hp"></span>
+      <div class="sc-foot">
+        <button class="btn-conf" id="btn-hp" onclick="confirm1('hp')">✔ Confirmar HP</button>
+        <span id="ts-hp" style="font-size:10px;color:var(--muted);"></span>
       </div>
     </div>
-
   </div>
 
   <!-- Sync bar -->
-  <div class="glass" style="padding:18px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-left:3px solid var(--accent);">
+  <div class="g" style="padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-left:3px solid var(--accent);">
     <div>
       <strong style="font-size:13px;">Sincronizar con Monday Board 18432741374</strong>
-      <p style="font-size:12px;color:var(--muted);margin-top:4px;">Crea el ítem con todas las columnas y sube los soportes adjuntos.</p>
-      <div id="syncOk" style="font-size:11px;color:var(--success);font-weight:600;display:none;margin-top:6px;">✅ Sincronizado · <span id="syncTs"></span></div>
+      <p style="font-size:12px;color:var(--muted);margin-top:3px;">Crea el ítem con todas las columnas y sube los soportes.</p>
+      <div id="sync1ok" style="font-size:11px;color:var(--success);font-weight:600;display:none;margin-top:5px;">✅ Sincronizado · <span id="sync1ts"></span></div>
     </div>
-    <button class="btn-primary" onclick="syncToMonday(event)">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    <button class="btn btn-p" onclick="syncSlide1(event)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
       Sincronizar con Monday
     </button>
   </div>
+</div>
 
-</div><!-- /slide1 -->
-
-<!-- ══════════════════════════════════════════
-     SLIDE 2 — SOLICITUD DE HORAS EXTRAS
-     ══════════════════════════════════════════ -->
+<!-- ══════════════════════════════
+     SLIDE 2 — HORAS EXTRAS
+     ══════════════════════════════ -->
 <div class="slide" id="slide2">
-
   <div class="section-title">Solicitud de Horas Extras</div>
-  <div class="section-sub">Solo líderes autorizados pueden aprobar. Mapeado a columnas reales del board.</div>
+  <div class="section-sub">Solo líderes autorizados pueden aprobar. Se sincroniza con Monday Board <strong>18432741374</strong>.</div>
 
-  <div class="col-map glass" style="margin-bottom:20px;">
-    <strong style="color:#93c5fd;margin-right:6px;">🔗 Board 18432741374:</strong>
-    <span class="col-tag">Fecha Solicitud HE</span><span class="col-tag">Horas Extras</span>
-    <span class="col-tag">Aprobador</span><span class="col-tag">Estado Aprobación</span>
-    <span class="col-tag">Comentarios HE</span>
+  <div class="cmap" style="margin-bottom:18px;">
+    <strong style="color:#93c5fd;margin-right:5px;font-size:11px;">🔗 Board 18432741374:</strong>
+    <span class="ct">Fecha HE</span><span class="ct">Horas Extras</span><span class="ct">Aprobador</span><span class="ct">Estado Aprobación</span><span class="ct">Comentarios HE</span>
   </div>
 
-  <div class="glass role-sw" style="margin-bottom:20px;">
-    <span style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Vista:</span>
-    <label><input type="radio" name="ot-role" value="colaborador" checked onchange="setOTRole(this.value)"/> 👤 Colaborador</label>
-    <label><input type="radio" name="ot-role" value="aprobador" onchange="setOTRole(this.value)"/> ✅ Aprobador</label>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:11px 16px;border-left:3px solid var(--accent3);background:var(--p-teal);border-radius:0 10px 10px 0;">
+    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Vista:</span>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;">
+      <input type="radio" name="otr" value="col" checked onchange="setOTRole(this.value)" style="accent-color:var(--accent);"/> 👤 Colaborador
+    </label>
+    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;">
+      <input type="radio" name="otr" value="apr" onchange="setOTRole(this.value)" style="accent-color:var(--accent);"/> ✅ Aprobador
+    </label>
   </div>
 
-  <div class="ot-wrap">
-    <!-- Form -->
-    <div class="glass" style="padding:24px;" id="ot-form-panel">
-      <h3 style="font-size:14px;font-weight:700;margin-bottom:16px;">➕ Nueva Solicitud de Horas Extras</h3>
+  <div class="ot-grid">
+    <div class="g" style="padding:22px;" id="ot-form">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">➕ Nueva Solicitud</h3>
       <div class="notice">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <div><strong>Solo líderes:</strong> Jesús Alberto Pérez o Víctor Suárez Ardila pueden aprobar.</div>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div><strong>Solo líderes:</strong> Jesús Alberto Pérez o Víctor Suárez Ardila aprueban esta solicitud.</div>
       </div>
-      <div class="fg"><label>ADCAR</label><input type="text" id="ot-adcar" placeholder="Ej. AMC304"/></div>
-      <div class="fg"><label>Correo IBM</label><input type="email" id="ot-email" placeholder="usuario@ibm.com"/></div>
-      <div class="fg"><label>Fecha solicitud HE</label><input type="date" id="ot-date"/></div>
-      <div class="two-col">
-        <div class="fg"><label>Hora inicio</label><input type="time" id="ot-start"/></div>
-        <div class="fg"><label>Hora fin</label><input type="time" id="ot-end"/></div>
+      <div class="fg"><label>ADCAR</label><input type="text" id="ot-adcar" class="fi" placeholder="Ej. AMC304"/></div>
+      <div class="fg"><label>Correo IBM</label><input type="email" id="ot-email" class="fi" placeholder="usuario@ibm.com"/></div>
+      <div class="fg"><label>Fecha solicitud HE</label><input type="date" id="ot-date" class="fi"/></div>
+      <div class="two">
+        <div class="fg"><label>Hora inicio</label><input type="time" id="ot-ini" class="fi"/></div>
+        <div class="fg"><label>Hora fin</label><input type="time" id="ot-fin" class="fi"/></div>
       </div>
-      <div class="two-col">
+      <div class="two">
         <div class="fg"><label>Horas calculadas <span style="color:var(--success);font-size:9px;">(auto)</span></label>
-          <input type="number" id="ot-total" min="0" max="24" step="0.5" readonly style="background:#f0fdf4;font-weight:700;color:var(--success);"/></div>
-        <div class="fg"><label>Ajuste manual</label><input type="number" id="ot-total-manual" min="0.5" max="24" step="0.5" placeholder="Sobreescribir"/></div>
+          <input type="number" id="ot-total" class="fi" readonly style="background:#f0fdf4;font-weight:700;color:var(--success);"/></div>
+        <div class="fg"><label>Ajuste manual</label><input type="number" id="ot-manual" class="fi" min="0.5" max="24" step="0.5" placeholder="Sobreescribir"/></div>
       </div>
       <div class="fg"><label>Aprobador</label>
-        <select id="ot-leader">
+        <select id="ot-ldr" class="fi">
           <option value="">— Seleccionar —</option>
-          <option value="PEREZ_JESUS">Jesús Alberto Pérez</option>
-          <option value="SUAREZ_VICTOR">Víctor Suárez Ardila</option>
+          <option value="PEREZ">Jesús Alberto Pérez</option>
+          <option value="SUAREZ">Víctor Suárez Ardila</option>
         </select>
       </div>
-      <div class="fg"><label>Justificación</label><textarea id="ot-reason" placeholder="Motivo de las horas extras…"></textarea></div>
-      <button class="btn-primary" style="width:100%;justify-content:center;" onclick="submitOT()">
+      <div class="fg"><label>Justificación</label><textarea id="ot-reason" class="fi" placeholder="Motivo de las horas extras…"></textarea></div>
+      <button class="btn btn-p" style="width:100%;justify-content:center;" onclick="submitOT()">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         Enviar solicitud al líder
       </button>
-      <div id="my-request-status" style="display:none;margin-top:18px;border:1px solid var(--border);border-radius:10px;padding:16px;background:#fafbff;">
-        <div style="font-size:10px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.4px;">📋 Estado de mi última solicitud</div>
-        <div id="my-request-detail"></div>
+      <div id="ot-my" style="display:none;margin-top:16px;border:1px solid var(--border);border-radius:10px;padding:14px;background:#fafbff;">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:9px;">📋 Estado de mi última solicitud</div>
+        <div id="ot-my-det"></div>
       </div>
     </div>
 
-    <!-- Approval panel -->
-    <div class="glass" style="padding:24px;" id="ot-approval-panel">
-      <h3 style="font-size:14px;font-weight:700;margin-bottom:16px;">📋 Cola de Aprobaciones</h3>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Estado sincronizado con Monday columna <strong style="color:var(--text);">Estado Aprobación</strong>.</div>
-      <div id="otQueue"><div style="text-align:center;padding:28px;color:var(--muted);font-size:12px;" id="emptyQ">📭 Sin solicitudes pendientes</div></div>
-      <div style="margin-top:18px;display:flex;gap:16px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--border);">
-        <div><div style="font-size:20px;font-weight:800;color:var(--warn);" id="ot-pend">0</div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">Pendientes</div></div>
-        <div><div style="font-size:20px;font-weight:800;color:var(--success);" id="ot-appr">0</div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">Aprobadas</div></div>
-        <div><div style="font-size:20px;font-weight:800;color:var(--danger);" id="ot-rejc">0</div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">Rechazadas</div></div>
-        <div><div style="font-size:20px;font-weight:800;color:var(--accent2);" id="ot-hrs">0</div><div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;">Hrs aprobadas</div></div>
+    <div class="g" style="padding:22px;" id="ot-apr">
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:14px;">📋 Cola de Aprobaciones</h3>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">Sincronizado con Monday · columna <strong style="color:var(--text);">Estado Aprobación</strong>.</div>
+      <div id="ot-queue"><div style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin solicitudes pendientes</div></div>
+      <div style="margin-top:16px;display:flex;gap:14px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--border);">
+        <div><div style="font-size:20px;font-weight:800;color:var(--warn);" id="ot-np">0</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;">Pendientes</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:var(--success);" id="ot-na">0</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;">Aprobadas</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:var(--danger);" id="ot-nr">0</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;">Rechazadas</div></div>
+        <div><div style="font-size:20px;font-weight:800;color:var(--accent2);" id="ot-nh">0</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;">Hrs aprobadas</div></div>
       </div>
-      <button class="btn-secondary" style="margin-top:14px;" onclick="syncOT(event)">
+      <button class="btn btn-s" style="margin-top:14px;" onclick="syncOT(event)">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         Sincronizar con Monday
       </button>
     </div>
   </div>
-</div><!-- /slide2 -->
+</div>
 
-<!-- ══════════════════════════════════════════
-     SLIDE 3 — SEMANAS CARGADAS
-     ══════════════════════════════════════════ -->
+<!-- ══════════════════════════════
+     SLIDE 3 — MODALIDAD DE TRABAJO (Board 18433232131)
+     ══════════════════════════════ -->
 <div class="slide" id="slide3">
+  <div class="section-title">Modalidad de Trabajo</div>
+  <div class="section-sub">Conectado en vivo al Board Monday <strong>18433232131</strong>. Se sincroniza automáticamente al cargar.</div>
 
-  <div class="section-title">Historial de Semanas Cargadas</div>
-  <div class="section-sub">Registro por colaborador y semana. Puedes agregar nuevas semanas o nuevas personas desde aquí.</div>
+  <div class="cmap" style="margin-bottom:18px;">
+    <strong style="color:#93c5fd;margin-right:5px;font-size:11px;">🔗 Board 18433232131:</strong>
+    <span class="ct">Adcar</span><span class="ct">Nombre</span><span class="ct">Semana</span><span class="ct">Modalidad</span><span class="ct">Días Presencial</span><span class="ct">Días Remoto</span><span class="ct">Observaciones</span>
+  </div>
 
   <!-- Toolbar -->
-  <div class="glass" style="padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <input type="text" id="weeksSearch" oninput="filterWeeks()" placeholder="🔍 Buscar colaborador o semana…"
-        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;min-width:220px;background:#fafbff;color:var(--text);font-family:inherit;"/>
-      <select id="weeksStatusFilter" onchange="filterWeeks()"
-        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;background:#fafbff;color:var(--text);font-family:inherit;">
-        <option value="">Todos los estados</option>
-        <option value="Actualizado">Actualizado</option>
-        <option value="Pendiente">Pendiente</option>
-        <option value="Sin Actualizar">Sin Actualizar</option>
+  <div class="g" style="padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <input type="text" id="mod-search" oninput="filterMod()" placeholder="🔍 Buscar colaborador o semana…"
+        class="fi" style="min-width:210px;padding:8px 12px;"/>
+      <select id="mod-filter" onchange="filterMod()" class="fi" style="min-width:160px;padding:8px 12px;">
+        <option value="">Todas las modalidades</option>
+        <option>Presencial</option><option>Remoto</option><option>Híbrido</option><option>Home Office</option>
       </select>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn-primary" onclick="openAddWeekModal()">
+      <button class="btn btn-p" onclick="openModNew()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nuevo Registro
+      </button>
+      <button class="btn btn-s" onclick="loadModalidad()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Sincronizar
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIs modalidad -->
+  <div class="kpi-grid" style="margin-bottom:20px;">
+    <div class="g kpi"><div><div class="kpi-n" id="m-total" style="color:var(--accent);">0</div><div class="kpi-l">Total registros</div></div><div style="font-size:26px;">👥</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-pres" style="color:var(--success);">0</div><div class="kpi-l">Presencial</div></div><div style="font-size:26px;">🏢</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-rem" style="color:var(--accent2);">0</div><div class="kpi-l">Remoto</div></div><div style="font-size:26px;">🏠</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-hib" style="color:var(--warn);">0</div><div class="kpi-l">Híbrido</div></div><div style="font-size:26px;">🔄</div></div>
+  </div>
+
+  <!-- Chart + Table -->
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:18px;margin-bottom:20px;" class="mod-layout">
+    <div class="g" style="padding:18px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📊 Distribución Modalidad</div>
+      <div style="position:relative;height:200px;"><canvas id="modChart"></canvas></div>
+    </div>
+    <div class="g" style="padding:0;overflow:hidden;">
+      <div style="overflow-x:auto;max-height:320px;overflow-y:auto;">
+        <table class="tbl" id="modTable">
+          <thead><tr>
+            <th>Colaborador / ADCAR</th><th>Semana</th><th>Modalidad</th>
+            <th style="text-align:center;">Días Presencial</th><th style="text-align:center;">Días Remoto</th>
+            <th>Observaciones</th><th style="text-align:center;">Acción</th>
+          </tr></thead>
+          <tbody id="modBody"></tbody>
+        </table>
+      </div>
+      <div id="modPager" style="padding:9px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SLIDE 4 — SEMANAS / PERSONAS
+     ══════════════════════════════ -->
+<div class="slide" id="slide4">
+  <div class="section-title">Semanas y Personas</div>
+  <div class="section-sub">Gestiona semanas y colaboradores del Board <strong>18432741374</strong>. Los cambios se reflejan en Monday inmediatamente.</div>
+
+  <!-- Toolbar -->
+  <div class="g" style="padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <input type="text" id="sw-search" oninput="filterSW()" placeholder="🔍 Buscar colaborador o semana…"
+        class="fi" style="min-width:210px;padding:8px 12px;"/>
+      <select id="sw-filter" onchange="filterSW()" class="fi" style="min-width:160px;padding:8px 12px;">
+        <option value="">Todos los estados</option>
+        <option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-p" onclick="openAddWeek()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Agregar Semana
       </button>
-      <button class="btn-secondary" onclick="openAddPersonModal()">
+      <button class="btn btn-s" onclick="openAddPerson()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         Agregar Persona
       </button>
-      <button class="btn-secondary" onclick="loadWeeksFromMonday()">
+      <button class="btn btn-s" onclick="loadWeeks()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        Sincronizar Monday
+        Sincronizar
       </button>
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="glass" style="padding:0;overflow:hidden;">
-    <div style="overflow-x:auto;max-height:600px;overflow-y:auto;">
-      <table class="weeks-tbl" id="weeksTable">
-        <thead>
-          <tr>
-            <th>Colaborador / ADCAR</th>
-            <th>Semana / Período</th>
-            <th style="text-align:center;">Time</th>
-            <th style="text-align:center;">Success Factors</th>
-            <th style="text-align:center;">My Hour Plan</th>
-            <th>Gerencia</th>
-            <th style="text-align:center;">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="weeksBody"></tbody>
+  <div class="g" style="padding:0;overflow:hidden;">
+    <div style="overflow-x:auto;max-height:580px;overflow-y:auto;">
+      <table class="tbl" id="swTable">
+        <thead><tr>
+          <th>Colaborador / ADCAR</th><th>Período</th>
+          <th style="text-align:center;">Time</th><th style="text-align:center;">Success Factors</th>
+          <th style="text-align:center;">My Hour Plan</th><th>Región</th><th style="text-align:center;">Acción</th>
+        </tr></thead>
+        <tbody id="swBody"></tbody>
       </table>
     </div>
-    <div id="weeksPager" style="padding:10px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);"></div>
+    <div id="swPager" style="padding:9px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);"></div>
   </div>
+</div>
 
-</div><!-- /slide3 -->
-
-<!-- ══════════════════════════════════════════
-     SLIDE 4 — FORECAST (Board 18433232131)
-     ══════════════════════════════════════════ -->
-<div class="slide" id="slide4">
-
-  <div class="section-title">Forecast del Equipo</div>
-  <div class="section-sub">Vista de proyección y estado de horas. Conectado en vivo al Board Monday <strong>18433232131</strong>.</div>
-
-  <div class="col-map glass" style="margin-bottom:20px;">
-    <strong style="color:#93c5fd;margin-right:6px;">🔗 Board 18433232131:</strong>
-    <span class="col-tag">Adcar</span><span class="col-tag">Semana</span>
-    <span class="col-tag">Horas Planeadas</span><span class="col-tag">Horas Reales</span>
-    <span class="col-tag">Variación</span><span class="col-tag">Estado Forecast</span>
-  </div>
-
-  <!-- Sync + filter bar -->
-  <div class="glass" style="padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <input type="text" id="forecastSearch" oninput="filterForecast()" placeholder="🔍 Buscar persona o semana…"
-        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;min-width:220px;background:#fafbff;color:var(--text);font-family:inherit;"/>
-      <select id="forecastStatusFilter" onchange="filterForecast()"
-        style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;background:#fafbff;color:var(--text);font-family:inherit;">
-        <option value="">Todos los estados</option>
-        <option value="Al día">Al día</option>
-        <option value="En riesgo">En riesgo</option>
-        <option value="Atrasado">Atrasado</option>
-        <option value="Pendiente">Pendiente</option>
-      </select>
-    </div>
-    <button class="btn-primary" onclick="loadForecastFromMonday()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      Sincronizar Forecast
-    </button>
-  </div>
-
-  <!-- KPIs Forecast -->
-  <div class="kpi-grid" style="margin-bottom:24px;">
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="fc-total" style="color:var(--accent);">0</div><div class="kpi-lbl">Total personas</div></div>
-      <div style="font-size:28px;">👥</div>
-    </div>
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="fc-aldia" style="color:var(--success);">0</div><div class="kpi-lbl">Al día</div></div>
-      <div style="font-size:28px;">✅</div>
-    </div>
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="fc-riesgo" style="color:var(--warn);">0</div><div class="kpi-lbl">En riesgo</div></div>
-      <div style="font-size:28px;">⚠️</div>
-    </div>
-    <div class="glass kpi-card">
-      <div><div class="kpi-num" id="fc-atrasado" style="color:var(--danger);">0</div><div class="kpi-lbl">Atrasado</div></div>
-      <div style="font-size:28px;">🔴</div>
-    </div>
-  </div>
-
-  <!-- Chart + Cards -->
-  <div style="display:grid;grid-template-columns:340px 1fr;gap:20px;margin-bottom:24px;" class="forecast-main">
-    <div class="glass" style="padding:20px;">
-      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:14px;">📊 Distribución por Estado</div>
-      <div style="position:relative;height:220px;"><canvas id="forecastChart"></canvas></div>
-    </div>
-    <div>
-      <div id="forecastCards" class="forecast-grid"></div>
-      <div id="forecastEmpty" style="text-align:center;padding:40px;color:var(--muted);font-size:12px;display:none;">
-        📭 Sin datos. Sincroniza desde Monday Board 18433232131.
-      </div>
-    </div>
-  </div>
-
-  <!-- Detail table -->
-  <div class="glass" style="padding:0;overflow:hidden;">
-    <div style="padding:14px 18px;border-bottom:1px solid var(--border);font-size:13px;font-weight:700;color:var(--text);">📋 Detalle Forecast</div>
-    <div style="overflow-x:auto;max-height:500px;overflow-y:auto;">
-      <table class="weeks-tbl" id="forecastTable">
-        <thead>
-          <tr>
-            <th>Colaborador / ADCAR</th>
-            <th>Semana</th>
-            <th style="text-align:right;">Hrs Planeadas</th>
-            <th style="text-align:right;">Hrs Reales</th>
-            <th style="text-align:right;">Variación</th>
-            <th style="text-align:center;">Estado</th>
-            <th>Comentarios</th>
-          </tr>
-        </thead>
-        <tbody id="forecastBody"></tbody>
-      </table>
-    </div>
-    <div id="forecastPager" style="padding:10px 16px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);"></div>
-  </div>
-
-</div><!-- /slide4 -->
-
-<!-- ══════════════════════
-     MODAL: Agregar Semana
-     ══════════════════════ -->
-<div id="addWeekModal" class="modal-bg">
-  <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+<!-- MODAL: Agregar Semana -->
+<div id="mAddWeek" class="mbg">
+  <div class="mbox">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <h4>➕ Agregar Nueva Semana</h4>
-      <button onclick="closeModal('addWeekModal')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+      <button onclick="closeM('mAddWeek')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
     <div class="fg"><label>Colaborador / ADCAR</label>
-      <select id="aw-adcar" style="width:100%;">
-        <option value="">— Seleccionar colaborador —</option>
-      </select>
+      <select id="aw-adcar" class="fi"><option value="">— Seleccionar colaborador —</option></select>
     </div>
-    <div class="fg"><label>Período / Semana</label><input type="text" id="aw-period" placeholder="Ej. Semana 28 – 2025"/></div>
-    <div class="three-col">
+    <div class="fg"><label>Período / Semana</label><input type="text" id="aw-period" class="fi" placeholder="Semana 28 – 2025"/></div>
+    <div class="three">
       <div class="fg"><label>Time</label>
-        <select id="aw-time">
-          <option value="Pendiente">Pendiente</option>
-          <option value="Actualizado">Actualizado</option>
-          <option value="Sin Actualizar">Sin Actualizar</option>
-        </select>
+        <select id="aw-time" class="fi"><option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option></select>
       </div>
       <div class="fg"><label>Success Factors</label>
-        <select id="aw-sf">
-          <option value="Pendiente">Pendiente</option>
-          <option value="Actualizado">Actualizado</option>
-          <option value="Sin Actualizar">Sin Actualizar</option>
-        </select>
+        <select id="aw-sf" class="fi"><option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option></select>
       </div>
       <div class="fg"><label>My Hour Plan</label>
-        <select id="aw-hp">
-          <option value="Pendiente">Pendiente</option>
-          <option value="Actualizado">Actualizado</option>
-          <option value="Sin Actualizar">Sin Actualizar</option>
-        </select>
+        <select id="aw-hp" class="fi"><option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option></select>
       </div>
     </div>
-    <div class="fg"><label>Gerencia</label><input type="text" id="aw-gerencia" placeholder="Ej. GBS Colombia"/></div>
-    <div class="fg"><label>Comentarios</label><textarea id="aw-notes" placeholder="Observaciones…"></textarea></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('addWeekModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveNewWeek()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        Guardar en Monday
-      </button>
+    <div class="fg"><label>Región</label><input type="text" id="aw-ger" class="fi" placeholder="Ej. GBS Colombia"/></div>
+    <div class="fg"><label>Comentarios</label><textarea id="aw-notes" class="fi" placeholder="Observaciones…"></textarea></div>
+    <div class="m-act">
+      <button class="btn-cancel" onclick="closeM('mAddWeek')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveWeek()">💾 Guardar en Monday</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════
-     MODAL: Agregar Persona
-     ══════════════════════ -->
-<div id="addPersonModal" class="modal-bg">
-  <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+<!-- MODAL: Agregar Persona -->
+<div id="mAddPerson" class="mbg">
+  <div class="mbox">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <h4>👤 Agregar Nueva Persona</h4>
-      <button onclick="closeModal('addPersonModal')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+      <button onclick="closeM('mAddPerson')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
     <div class="notice">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <div>Se creará un nuevo elemento en el Board Monday <strong>18432741374</strong> con los datos ingresados.</div>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Se creará un nuevo elemento en Monday Board <strong>18432741374</strong>.
     </div>
-    <div class="fg"><label>Nombre completo *</label><input type="text" id="ap-name" placeholder="Ej. María González"/></div>
-    <div class="two-col">
-      <div class="fg"><label>ADCAR *</label><input type="text" id="ap-adcar" placeholder="Ej. MGA001"/></div>
-      <div class="fg"><label>Correo IBM *</label><input type="email" id="ap-email" placeholder="usuario@ibm.com"/></div>
+    <div class="fg"><label>Nombre completo *</label><input type="text" id="ap-name" class="fi" placeholder="Ej. María González"/></div>
+    <div class="two">
+      <div class="fg"><label>ADCAR *</label><input type="text" id="ap-adcar" class="fi" placeholder="Ej. MGA001"/></div>
+      <div class="fg"><label>Correo IBM *</label><input type="email" id="ap-email" class="fi" placeholder="usuario@ibm.com"/></div>
     </div>
-    <div class="fg"><label>Gerencia</label><input type="text" id="ap-gerencia" placeholder="Ej. GBS Colombia"/></div>
-    <div class="fg"><label>Semana inicial</label><input type="text" id="ap-period" placeholder="Semana 28 – 2025"/></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('addPersonModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveNewPerson()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Crear en Monday
-      </button>
+    <div class="fg"><label>Región</label><input type="text" id="ap-ger" class="fi" placeholder="Ej. GBS Colombia"/></div>
+    <div class="fg"><label>Semana inicial</label><input type="text" id="ap-period" class="fi" placeholder="Semana 28 – 2025"/></div>
+    <div class="m-act">
+      <button class="btn-cancel" onclick="closeM('mAddPerson')">Cancelar</button>
+      <button class="btn btn-p" onclick="savePerson()">➕ Crear en Monday</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════
-     MODAL: Editar Semana
-     ══════════════════════ -->
-<div id="editWeekModal" class="modal-bg">
-  <div class="modal-box">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+<!-- MODAL: Editar semana -->
+<div id="mEditWeek" class="mbg">
+  <div class="mbox">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
       <h4>✏️ Corregir Semana</h4>
-      <button onclick="closeModal('editWeekModal')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+      <button onclick="closeM('mEditWeek')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;" id="editWeekMeta"></div>
-    <div class="three-col">
+    <div id="ew-meta" style="font-size:11px;color:var(--muted);margin-bottom:12px;"></div>
+    <div class="three">
       <div class="fg"><label>Time</label>
-        <select id="ewTime">
-          <option value="Actualizado">Actualizado</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="Sin Actualizar">Sin Actualizar</option>
-        </select>
+        <select id="ew-time" class="fi"><option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option></select>
       </div>
       <div class="fg"><label>Success Factors</label>
-        <select id="ewSF">
-          <option value="Actualizado">Actualizado</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="Sin Actualizar">Sin Actualizar</option>
-        </select>
+        <select id="ew-sf" class="fi"><option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option></select>
       </div>
       <div class="fg"><label>My Hour Plan</label>
-        <select id="ewHP">
-          <option value="Actualizado">Actualizado</option>
-          <option value="Pendiente">Pendiente</option>
-          <option value="Sin Actualizar">Sin Actualizar</option>
-        </select>
+        <select id="ew-hp" class="fi"><option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option></select>
       </div>
     </div>
-    <div class="fg"><label>Comentarios</label><textarea id="ewNotes" placeholder="Observaciones de corrección…"></textarea></div>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal('editWeekModal')">Cancelar</button>
-      <button class="btn-primary" onclick="saveEditWeek()">💾 Guardar en Monday</button>
+    <div class="fg"><label>Región</label><input type="text" id="ew-ger" class="fi" placeholder="Ej. GBS Colombia"/></div>
+    <div class="fg"><label>Comentarios</label><textarea id="ew-notes" class="fi" placeholder="Observaciones…"></textarea></div>
+    <div class="m-act">
+      <button class="btn-cancel" onclick="closeM('mEditWeek')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveEditWeek()">💾 Guardar en Monday</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Nuevo registro modalidad -->
+<div id="mModNew" class="mbg">
+  <div class="mbox">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <h4>➕ Nuevo Registro — Modalidad de Trabajo</h4>
+      <button onclick="closeM('mModNew')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+    <div class="fg"><label>Colaborador / ADCAR</label>
+      <select id="mn-adcar" class="fi"><option value="">— Seleccionar —</option></select>
+    </div>
+    <div class="fg"><label>Semana / Período</label><input type="text" id="mn-sem" class="fi" placeholder="Semana 28 – 2025"/></div>
+    <div class="fg"><label>Modalidad</label>
+      <select id="mn-mod" class="fi">
+        <option value="">— Seleccionar —</option>
+        <option>Presencial</option><option>Remoto</option><option>Híbrido</option><option>Home Office</option>
+      </select>
+    </div>
+    <div class="two">
+      <div class="fg"><label>Días Presencial</label><input type="number" id="mn-pres" class="fi" min="0" max="5" placeholder="0"/></div>
+      <div class="fg"><label>Días Remoto</label><input type="number" id="mn-rem" class="fi" min="0" max="5" placeholder="0"/></div>
+    </div>
+    <div class="fg"><label>Observaciones</label><textarea id="mn-obs" class="fi" placeholder="Observaciones…"></textarea></div>
+    <div class="m-act">
+      <button class="btn-cancel" onclick="closeM('mModNew')">Cancelar</button>
+      <button class="btn btn-p" onclick="saveModNew()">💾 Guardar en Monday</button>
     </div>
   </div>
 </div>
 
 <!-- Progress overlay -->
-<div class="progress-overlay" id="progressOverlay">
-  <div class="progress-box">
-    <div style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text);" id="progressTitle">Sincronizando…</div>
-    <div class="progress-bar-wrap"><div class="progress-bar-inner" id="progressBar"></div></div>
-    <div style="font-size:11px;color:var(--muted);" id="progressMsg">Iniciando…</div>
+<div class="pov" id="pov">
+  <div class="pbox">
+    <div style="font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text);" id="p-title">Sincronizando…</div>
+    <div class="pbar-w"><div class="pbar" id="p-bar"></div></div>
+    <div style="font-size:11px;color:var(--muted);" id="p-msg">Iniciando…</div>
   </div>
 </div>
 
-<!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-/* ═══════════════════════════════════════════════
-   SECURITY NOTE: No API token stored in browser.
-   All Monday.com calls proxied via backend/server.js.
-   Token lives exclusively in backend/.env
-   ═══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════
+   SECURITY: Token never in browser. All Monday calls
+   proxied via backend/server.js reading .env server-side.
+   ══════════════════════════════════════════════════════ */
+const PROXY   = 'http://127.0.0.1:3000';
+const BOARD_A = '18432741374';   // Actualizaciones / Confirmaciones / HE
+const BOARD_M = '18433232131';   // Modalidad de Trabajo
 
-const BOARD_ID         = '18432741374';  // Actualizaciones / Confirmaciones
-const BOARD_FORECAST   = '18433232131';  // Forecast
-const PROXY_BASE       = 'http://127.0.0.1:3000';
-
-/* Column IDs — Board 18432741374 */
+/* Column IDs — Board 18432741374 (discover dynamically, fallbacks below) */
 const COL = {
-  adcar:             'text_mm7hadcar',    // Adcar column (adjust to real ID after sync)
-  gerencia:          'color_mm7hc288',
-  time:              'color_mm7h4cdb',
-  soporte_time:      'file_mm7hg5fg',
-  sf:                'color_mm7hdfqa',
-  soporte_sf:        'file_mm7hqp3m',
-  hp:                'status',
-  soporte_hp:        'file_mm7h43r0',
-  comentarios:       'text_mm7h6n1c',
-  fecha_he:          'timerange_mm7m57ra',
-  horas_extras:      'numeric_mm7mrmr6',
-  aprobador:         'color_mm7mtfss',
-  estado_aprobacion: 'color_mm7mtv3w',
-  comentarios_he:    'text_mm7my82t'
+  adcar:'',gerencia:'color_mm7hc288',time:'color_mm7h4cdb',
+  soporte_time:'file_mm7hg5fg',sf:'color_mm7hdfqa',soporte_sf:'file_mm7hqp3m',
+  hp:'status',soporte_hp:'file_mm7h43r0',comentarios:'text_mm7h6n1c',
+  aprobador:'color_mm7mtfss',estado_apr:'color_mm7mtv3w',
+  horas_extras:'numeric_mm7mrmr6',comentarios_he:'text_mm7my82t'
 };
 
 /* ── Proxy helper ── */
-async function mondayQuery(query, variables = {}) {
-  const res = await fetch(`${PROXY_BASE}/api/monday/query`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query, variables })
-  });
-  if (!res.ok) throw new Error(`Proxy HTTP ${res.status}`);
-  const json = await res.json();
-  if (json.error) throw new Error(json.error);
-  return json.data;
+async function mq(query, variables={}) {
+  const r = await fetch(`${PROXY}/api/monday/query`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,variables})});
+  if(!r.ok) throw new Error(`Proxy HTTP ${r.status}`);
+  const j = await r.json();
+  if(j.error) throw new Error(j.error);
+  return j.data;
 }
-
-async function createMondayItem(boardId, itemName, columnValues) {
-  const q = `mutation ($board: ID!, $name: String!, $cols: JSON!) {
-    create_item(board_id: $board, item_name: $name, column_values: $cols) { id } }`;
-  return mondayQuery(q, { board: boardId, name: itemName, cols: JSON.stringify(columnValues) });
+async function mc(boardId, name, cols) {
+  return mq(`mutation($b:ID!,$n:String!,$c:JSON!){create_item(board_id:$b,item_name:$n,column_values:$c){id}}`,{b:boardId,n:name,c:JSON.stringify(cols)});
 }
-
-async function uploadFileToMonday(itemId, colId, file) {
-  const form = new FormData();
-  form.append('itemId', itemId);
-  form.append('columnId', colId);
-  form.append('file', file, file.name);
-  const res = await fetch(`${PROXY_BASE}/api/monday/upload`, { method: 'POST', body: form });
-  if (!res.ok) throw new Error(`Upload HTTP ${res.status}`);
-  const json = await res.json();
-  if (json.error) throw new Error(json.error);
-  return json;
+async function mup(itemId, colId, file) {
+  const fd = new FormData();
+  fd.append('itemId',itemId); fd.append('columnId',colId); fd.append('file',file,file.name);
+  const r = await fetch(`${PROXY}/api/monday/upload`,{method:'POST',body:fd});
+  if(!r.ok) throw new Error(`Upload HTTP ${r.status}`);
+  const j = await r.json(); if(j.error) throw new Error(j.error); return j;
 }
 
 /* ── Backend health ── */
-function checkBackend() {
-  const btn = document.getElementById('tokenStatusBtn');
-  fetch(`${PROXY_BASE}/api/health`)
-    .then(r => r.ok ? r.json() : Promise.reject())
-    .then(() => { btn.textContent = '🟢 Backend conectado'; btn.classList.add('connected'); showToast('✅ Backend conectado', 'success'); })
-    .catch(() => { btn.textContent = '🔴 Backend desconectado'; btn.classList.remove('connected'); showToast('❌ Backend desconectado. Ejecuta: node backend/server.js', 'error'); });
+function checkBackend(){
+  const b=document.getElementById('backendBtn');
+  fetch(`${PROXY}/api/health`).then(r=>r.ok?r.json():Promise.reject())
+    .then(()=>{b.textContent='🟢 Conectado';b.classList.add('ok');showToast('✅ Backend conectado','ok');})
+    .catch(()=>{b.textContent='🔴 Desconectado';b.classList.remove('ok');showToast('❌ Backend desconectado. Ejecuta: node backend/server.js','err');});
 }
 
 /* ── Progress ── */
-function showProgress(title) {
-  document.getElementById('progressTitle').textContent = title;
-  document.getElementById('progressBar').style.width = '0%';
-  document.getElementById('progressMsg').textContent = 'Iniciando…';
-  document.getElementById('progressOverlay').classList.add('show');
-}
-function setProgress(pct, msg) {
-  document.getElementById('progressBar').style.width = pct + '%';
-  document.getElementById('progressMsg').textContent = msg;
-}
-function hideProgress() { document.getElementById('progressOverlay').classList.remove('show'); }
+function pshow(t){document.getElementById('p-title').textContent=t;document.getElementById('p-bar').style.width='0%';document.getElementById('p-msg').textContent='Iniciando…';document.getElementById('pov').classList.add('open');}
+function pset(pct,msg){document.getElementById('p-bar').style.width=pct+'%';document.getElementById('p-msg').textContent=msg;}
+function phide(){document.getElementById('pov').classList.remove('open');}
 
 /* ── Toast ── */
-function showToast(msg, type = 'info') {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.className = 'toast ' + type;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3800);
+function showToast(msg,type='inf'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast '+type+' show';
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),3800);
 }
 
 /* ── Slide nav ── */
-function showSlide(n, tab) {
-  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.slide-tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('slide' + n).classList.add('active');
-  tab.classList.add('active');
+function goSlide(n,tab){
+  document.querySelectorAll('.slide').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('slide'+n).classList.add('on');
+  tab.classList.add('on');
+  if(n===3 && modItems.length===0) loadModalidad();
+  if(n===4 && swItems.length===0) loadWeeks();
 }
 
 /* ── Modal helpers ── */
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
 
-/* ═══════════════════════════════
+/* ══════════════════════
    SLIDE 1 — CONFIRMACIONES
-   ═══════════════════════════════ */
-const uploaded  = { time: [], sf: [], hp: [] };
-const confirmed = { time: false, sf: false, hp: false };
+   ══════════════════════ */
+const upl={time:[],sf:[],hp:[]};
+const conf={time:false,sf:false,hp:false};
 
-/* Load Adcar list from Monday board */
-async function loadAdcars() {
-  const sel = document.getElementById('collab-adcar');
-  const loading = document.getElementById('adcarLoading');
-  loading.style.display = 'inline';
-  try {
-    const metaData = await mondayQuery(`{ boards(ids: ${BOARD_ID}) { columns { id title type } } }`);
-    const cols = metaData?.boards?.[0]?.columns || [];
-    const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-    const adcarCol = cols.find(c => norm(c.title).includes('adcar'));
-    const gerCol   = cols.find(c => norm(c.title).includes('gerencia'));
+async function loadAdcars(){
+  const sel=document.getElementById('s1adcar');
+  const sp=document.getElementById('adcarSpin');
+  const gsp=document.getElementById('gerSpin');
+  sp.style.display='inline'; gsp.style.display='inline';
+  try{
+    const meta=await mq(`{boards(ids:${BOARD_A}){columns{id title type}}}`);
+    const cols=meta?.boards?.[0]?.columns||[];
+    const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    const ac=cols.find(c=>norm(c.title).includes('adcar'));
+    const gc=cols.find(c=>norm(c.title).includes('gerencia')||norm(c.title).includes('region'));
+    if(ac) COL.adcar=ac.id;
+    if(gc) COL.gerencia=gc.id;
 
-    if (adcarCol) {
-      let cursor = null; const adcars = new Set(); const gerencias = new Set();
-      do {
-        const cursorArg = cursor ? `, cursor: "${cursor}"` : '';
-        const page = await mondayQuery(`{ boards(ids: ${BOARD_ID}) { items_page(limit: 500${cursorArg}) {
-          cursor items { name column_values(ids: ["${adcarCol.id}"${gerCol ? `,"${gerCol.id}"` : ''}]) { id text } } } } }`);
-        const pd = page?.boards?.[0]?.items_page;
-        cursor = pd?.cursor || null;
-        (pd?.items || []).forEach(item => {
-          const av = item.column_values.find(c => c.id === adcarCol.id);
-          const gv = gerCol ? item.column_values.find(c => c.id === gerCol.id) : null;
-          const adcarTxt = (av?.text || item.name || '').trim();
-          if (adcarTxt) adcars.add(adcarTxt);
-          if (gv?.text) gerencias.add(gv.text.trim());
-        });
-      } while (cursor);
-
-      // Update COL.adcar with real ID
-      if (adcarCol) COL.adcar = adcarCol.id;
-      if (gerCol)   COL.gerencia = gerCol.id;
-
-      const current = sel.value;
-      sel.innerHTML = '<option value="">— Seleccionar ADCAR —</option>';
-      [...adcars].sort((a,b) => a.localeCompare(b,'es')).forEach(v => {
-        const opt = document.createElement('option'); opt.value = v; opt.textContent = v;
-        if (v === current) opt.selected = true; sel.appendChild(opt);
+    let cur=null; const adcars=new Set(); const gers=new Set();
+    do{
+      const ca=cur?`, cursor:"${cur}"`:'';
+      const colIds=[ac?.id||'name', gc?.id].filter(Boolean).map(x=>`"${x}"`).join(',');
+      const pg=await mq(`{boards(ids:${BOARD_A}){items_page(limit:500${ca}){cursor items{name column_values(ids:[${colIds}]){id text}}}}}`)
+      const pd=pg?.boards?.[0]?.items_page;
+      cur=pd?.cursor||null;
+      (pd?.items||[]).forEach(it=>{
+        const av=it.column_values.find(c=>c.id===(ac?.id));
+        const gv=gc?it.column_values.find(c=>c.id===gc.id):null;
+        const atxt=(av?.text||it.name||'').trim();
+        if(atxt) adcars.add(atxt);
+        if(gv?.text) gers.add(gv.text.trim());
       });
+    }while(cur);
 
-      // Also populate week modal selector
-      const awSel = document.getElementById('aw-adcar');
-      awSel.innerHTML = '<option value="">— Seleccionar colaborador —</option>';
-      [...adcars].sort((a,b) => a.localeCompare(b,'es')).forEach(v => {
-        const opt = document.createElement('option'); opt.value = v; opt.textContent = v; awSel.appendChild(opt);
+    const cur2=sel.value;
+    sel.innerHTML='<option value="">— Seleccionar ADCAR —</option>';
+    [...adcars].sort((a,b)=>a.localeCompare(b,'es')).forEach(v=>{
+      const o=document.createElement('option');o.value=v;o.textContent=v;
+      if(v===cur2)o.selected=true;sel.appendChild(o);
+    });
+    // Update aw-adcar and mn-adcar selects
+    ['aw-adcar','mn-adcar'].forEach(id=>{
+      const s2=document.getElementById(id); if(!s2)return;
+      s2.innerHTML='<option value="">— Seleccionar —</option>';
+      [...adcars].sort((a,b)=>a.localeCompare(b,'es')).forEach(v=>{
+        const o=document.createElement('option');o.value=v;o.textContent=v;s2.appendChild(o);
       });
+    });
 
-      // Gerencias
-      const gerSel = document.getElementById('collab-gerencia');
-      const cur2 = gerSel.value;
-      gerSel.innerHTML = '<option value="">— Seleccionar gerencia —</option>';
-      [...gerencias].sort((a,b) => a.localeCompare(b,'es')).forEach(v => {
-        const opt = document.createElement('option'); opt.value = v; opt.textContent = v;
-        if (v === cur2) opt.selected = true; gerSel.appendChild(opt);
-      });
+    const gs=document.getElementById('s1ger');
+    const g2=gs.value;
+    gs.innerHTML='<option value="">— Seleccionar —</option>';
+    [...gers].sort((a,b)=>a.localeCompare(b,'es')).forEach(v=>{
+      const o=document.createElement('option');o.value=v;o.textContent=v;
+      if(v===g2)o.selected=true;gs.appendChild(o);
+    });
 
-      if (!adcars.size) showToast('⚠️ No se encontraron Adcars en el tablero', 'error');
-      else showToast(`✅ ${adcars.size} Adcars cargados del Board`, 'success');
-    } else {
-      showToast('⚠️ Columna Adcar no encontrada. Verifica el nombre en Monday.', 'error');
-    }
-  } catch(err) {
-    console.error('[loadAdcars]', err);
-    showToast('❌ Error al cargar Adcars: ' + err.message, 'error');
-  } finally { loading.style.display = 'none'; }
+    if(!adcars.size) showToast('⚠️ No se encontraron Adcars en el tablero','err');
+    else showToast(`✅ ${adcars.size} Adcars cargados del Board ${BOARD_A}`,'ok');
+  }catch(e){console.error(e);showToast('❌ Error al cargar Adcars: '+e.message,'err');}
+  finally{sp.style.display='none';gsp.style.display='none';}
 }
 
-function propagateCollab() {
-  const adcar = document.getElementById('collab-adcar').value.trim();
-  const email = document.getElementById('collab-email').value.trim();
-  const info  = document.getElementById('collab-info');
-  if (adcar || email) { document.getElementById('collab-display').textContent = `${adcar} · ${email}`; info.style.display='block'; }
-  else info.style.display = 'none';
-  if (adcar && !document.getElementById('ot-adcar').value) document.getElementById('ot-adcar').value = adcar;
-  if (email && !document.getElementById('ot-email').value) document.getElementById('ot-email').value = email;
+function propagate(){
+  const a=document.getElementById('s1adcar').value.trim();
+  const e=document.getElementById('s1email').value.trim();
+  const info=document.getElementById('s1info');
+  if(a||e){document.getElementById('s1disp').textContent=`${a} · ${e}`;info.style.display='block';}
+  else info.style.display='none';
+  if(a&&!document.getElementById('ot-adcar').value) document.getElementById('ot-adcar').value=a;
+  if(e&&!document.getElementById('ot-email').value) document.getElementById('ot-email').value=e;
 }
 
-function getCollab() {
-  return {
-    adcar:    document.getElementById('collab-adcar').value.trim(),
-    email:    document.getElementById('collab-email').value.trim(),
-    gerencia: document.getElementById('collab-gerencia').value.trim(),
-    period:   document.getElementById('collab-period').value.trim()
-  };
+function getCollab(){return{adcar:document.getElementById('s1adcar').value.trim(),email:document.getElementById('s1email').value.trim(),ger:document.getElementById('s1ger').value.trim(),period:document.getElementById('s1period').value.trim()};}
+
+function confirm1(id){
+  const c=getCollab();
+  if(!c.adcar&&!c.email){showToast('⚠️ Selecciona tu ADCAR o ingresa tu correo','err');return;}
+  if(c.email&&!c.email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
+  conf[id]=true;
+  document.getElementById('btn-'+id).classList.add('done');
+  document.getElementById('btn-'+id).textContent='✅ Confirmado';
+  document.getElementById('bdg-'+id).textContent='Confirmado';
+  document.getElementById('bdg-'+id).className='sb sb-ok';
+  const now=new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
+  document.getElementById('ts-'+id).textContent=` · ${c.adcar||c.email} · ${now}`;
+  updSummary();
+  showToast(`✅ ${({time:'Time',sf:'Success Factors',hp:'My Hour Plan'}[id])} confirmado`,'ok');
+}
+function updSummary(){
+  const n=Object.values(conf).filter(Boolean).length;
+  document.getElementById('k-conf').textContent=n;
+  document.getElementById('k-pend').textContent=3-n;
+  document.getElementById('k-files').textContent=upl.time.length+upl.sf.length+upl.hp.length;
 }
 
-function confirmUpdate(id) {
-  const c = getCollab();
-  if (!c.adcar && !c.email) { showToast('⚠️ Selecciona tu ADCAR o ingresa tu correo.','error'); document.getElementById('collab-adcar').focus(); return; }
-  if (c.email && !c.email.endsWith('@ibm.com')) { showToast('⚠️ El correo debe ser @ibm.com.','error'); return; }
-  confirmed[id] = true;
-  document.getElementById('btn-' + id).classList.add('confirmed');
-  document.getElementById('btn-' + id).textContent = '✅ Confirmado';
-  document.getElementById('badge-' + id).textContent = 'Confirmado';
-  document.getElementById('badge-' + id).className = 'sbadge s-appr';
-  const now = new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
-  document.getElementById('ts-' + id).textContent = ` · ${c.adcar || c.email} · ${now}`;
-  updateSummary();
-  showToast(`✅ ${({time:'Time',sf:'Success Factors',hp:'My Hour Plan'}[id])} confirmado`, 'success');
+/* File upload */
+const ICONS={pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊',pptx:'📊',txt:'📃'};
+function fi_icon(n){return ICONS[n.split('.').pop().toLowerCase()]||'📎';}
+function hf(files,cat){[...files].forEach(f=>{if(f.size>50*1024*1024){showToast(`⚠️ ${f.name} supera 50 MB`,'err');return;}upl[cat].push(f);});renderFiles(cat);updSummary();}
+function ddr(e,cat){e.preventDefault();dlv('upl-'+cat);hf(e.dataTransfer.files,cat);}
+function dov(e,id){e.preventDefault();document.getElementById(id).classList.add('over');}
+function dlv(id){document.getElementById(id).classList.remove('over');}
+function renderFiles(cat){
+  const c=document.getElementById('fl-'+cat);c.innerHTML='';
+  upl[cat].forEach((f,i)=>{const d=document.createElement('div');d.className='fi-item';d.innerHTML=`${fi_icon(f.name)}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span class="fi-rm" onclick="rmFile('${cat}',${i})">✕</span>`;c.appendChild(d);});
 }
+function rmFile(cat,i){upl[cat].splice(i,1);renderFiles(cat);updSummary();}
 
-function updateSummary() {
-  const conf = Object.values(confirmed).filter(Boolean).length;
-  document.getElementById('s-conf').textContent = conf;
-  document.getElementById('s-pend').textContent = 3 - conf;
-  document.getElementById('s-files').textContent = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
-}
-
-/* ── File upload ── */
-const ICONS = {pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',gif:'🖼',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊',pptx:'📊',mp4:'🎬',zip:'🗜',txt:'📃',csv:'📊'};
-function fileIcon(n) { return ICONS[n.split('.').pop().toLowerCase()]||'📎'; }
-function handleFiles(files, cat) {
-  [...files].forEach(f => {
-    if (f.size > 50*1024*1024) { showToast(`⚠️ ${f.name} supera 50 MB.`,'error'); return; }
-    uploaded[cat].push(f);
-  });
-  renderFiles(cat); updateSummary();
-}
-function dropFile(e, cat) { e.preventDefault(); dragLeave('drop-'+cat); handleFiles(e.dataTransfer.files, cat); }
-function dragOver(e, id)  { e.preventDefault(); document.getElementById(id).classList.add('drag-over'); }
-function dragLeave(id)    { document.getElementById(id).classList.remove('drag-over'); }
-function renderFiles(cat) {
-  const c = document.getElementById('files-' + cat); c.innerHTML = '';
-  uploaded[cat].forEach((f,i) => {
-    const d = document.createElement('div'); d.className = 'file-item';
-    d.innerHTML = `${fileIcon(f.name)}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span class="rm" onclick="removeFile('${cat}',${i})">✕</span>`;
-    c.appendChild(d);
-  });
-}
-function removeFile(cat, i) { uploaded[cat].splice(i,1); renderFiles(cat); updateSummary(); }
-
-/* ── Sync to Monday ── */
-async function syncToMonday(e) {
-  const btn = e.currentTarget; const orig = btn.innerHTML;
-  const conf  = Object.values(confirmed).filter(Boolean).length;
-  const total = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
-  if (conf === 0 && total === 0) { showToast('⚠️ Confirma al menos un sistema o adjunta soportes.','error'); return; }
-  const c = getCollab();
-  btn.disabled = true; btn.textContent = '⏳ Sincronizando…';
-  showProgress('Sincronizando con Monday Board 18432741374…');
-  try {
-    setProgress(15, 'Preparando columnas…');
-    const colVals = {};
-    if (c.gerencia) colVals[COL.gerencia] = { label: c.gerencia };
-    const timeStatus = document.getElementById('time-status').value;
-    const timeNotes  = document.getElementById('time-notes').value.trim();
-    if (confirmed.time && timeStatus) colVals[COL.time] = { label: timeStatus };
-    const sfStatus = document.getElementById('sf-status').value;
-    if (confirmed.sf && sfStatus) colVals[COL.sf] = { label: sfStatus === 'Sin Actualizar' ? 'Sin actualizar' : sfStatus };
-    const hpStatus = document.getElementById('hp-status').value;
-    if (confirmed.hp && hpStatus) colVals[COL.hp] = { label: hpStatus === 'Sin Actualizar' ? 'Sin actualizar' : hpStatus };
-    const parts = [];
-    if (timeNotes) parts.push(`Time: ${timeNotes}`);
-    const sfNotes = document.getElementById('sf-notes').value.trim(); if (sfNotes) parts.push(`SF: ${sfNotes}`);
-    const hpNotes = document.getElementById('hp-notes').value.trim(); if (hpNotes) parts.push(`HP: ${hpNotes}`);
-    if (parts.length) colVals[COL.comentarios] = parts.join(' | ');
-
-    setProgress(30, 'Creando ítem en Monday…');
-    const itemName = `${c.adcar || c.email} · ${c.period || new Date().toLocaleDateString('es-CO')}`;
-    const result = await createMondayItem(BOARD_ID, itemName, colVals);
-    const itemId = result?.create_item?.id;
-    setProgress(50, 'Ítem creado. Subiendo soportes…');
-
-    let done = 0, uploadedCount = 0;
-    const fileColMap = [
-      { files: uploaded.time, colId: COL.soporte_time },
-      { files: uploaded.sf,   colId: COL.soporte_sf },
-      { files: uploaded.hp,   colId: COL.soporte_hp }
-    ];
-    const totalFiles = uploaded.time.length + uploaded.sf.length + uploaded.hp.length;
-    if (itemId && totalFiles > 0) {
-      for (const { files, colId } of fileColMap) {
-        for (const file of files) {
-          try {
-            setProgress(50 + Math.round((done/totalFiles)*45), `Subiendo: ${file.name}…`);
-            await uploadFileToMonday(itemId, colId, file); uploadedCount++; done++;
-          } catch(fe) { console.warn('[upload]', fe.message); done++; }
+async function syncSlide1(e){
+  const btn=e.currentTarget;const orig=btn.innerHTML;
+  const cn=Object.values(conf).filter(Boolean).length;
+  const tf=upl.time.length+upl.sf.length+upl.hp.length;
+  if(cn===0&&tf===0){showToast('⚠️ Confirma al menos un sistema o adjunta soportes','err');return;}
+  const c=getCollab();
+  btn.disabled=true;btn.textContent='⏳ Sincronizando…';
+  pshow('Sincronizando con Monday Board '+BOARD_A+'…');
+  try{
+    pset(15,'Preparando columnas…');
+    const cv={};
+    if(c.ger&&COL.gerencia) cv[COL.gerencia]={label:c.ger};
+    const ts=document.getElementById('sel-time').value;
+    if(conf.time&&ts) cv[COL.time]={label:ts};
+    const ss=document.getElementById('sel-sf').value;
+    if(conf.sf&&ss) cv[COL.sf]={label:ss==='Sin Actualizar'?'Sin actualizar':ss};
+    const hs=document.getElementById('sel-hp').value;
+    if(conf.hp&&hs) cv[COL.hp]={label:hs==='Sin Actualizar'?'Sin actualizar':hs};
+    const parts=[];
+    const tn=document.getElementById('txt-time').value.trim();if(tn)parts.push('Time: '+tn);
+    const sn=document.getElementById('txt-sf').value.trim();if(sn)parts.push('SF: '+sn);
+    const hn=document.getElementById('txt-hp').value.trim();if(hn)parts.push('HP: '+hn);
+    if(parts.length) cv[COL.comentarios]=parts.join(' | ');
+    pset(30,'Creando ítem en Monday…');
+    const nm=`${c.adcar||c.email} · ${c.period||new Date().toLocaleDateString('es-CO')}`;
+    const res=await mc(BOARD_A,nm,cv);
+    const iid=res?.create_item?.id;
+    pset(50,'Ítem creado. Subiendo soportes…');
+    let done=0,cnt=0;
+    const fmap=[{files:upl.time,colId:COL.soporte_time},{files:upl.sf,colId:COL.soporte_sf},{files:upl.hp,colId:COL.soporte_hp}];
+    if(iid&&tf>0){
+      for(const{files,colId}of fmap){
+        for(const f of files){
+          try{pset(50+Math.round((done/tf)*45),`Subiendo: ${f.name}…`);await mup(iid,colId,f);cnt++;done++;}
+          catch(fe){console.warn(fe);done++;}
         }
       }
     }
-    setProgress(100, '¡Sincronización completa!'); setTimeout(hideProgress, 1000);
-    document.getElementById('syncOk').style.display = 'block';
-    document.getElementById('syncTs').textContent = new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'}) + (uploadedCount ? ` · ${uploadedCount} soporte(s)` : '');
-    showToast(uploadedCount ? `✅ Monday actualizado · ${uploadedCount} soporte(s) subido(s)` : `✅ Ítem creado en Monday`, 'success');
-  } catch(err) {
-    hideProgress(); showToast('❌ Error Monday: ' + err.message, 'error');
-  } finally { btn.disabled = false; btn.innerHTML = orig; }
+    pset(100,'¡Listo!');setTimeout(phide,800);
+    document.getElementById('sync1ok').style.display='block';
+    document.getElementById('sync1ts').textContent=new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'})+(cnt?` · ${cnt} soporte(s)`:'');
+    showToast(cnt?`✅ Monday actualizado · ${cnt} soporte(s) subido(s)`:'✅ Ítem creado en Monday','ok');
+  }catch(err){phide();showToast('❌ Error Monday: '+err.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML=orig;}
 }
 
-/* ═══════════════════════════════
+/* ══════════════════════
    SLIDE 2 — HORAS EXTRAS
-   ═══════════════════════════════ */
-let otList = [], otId = 1, lastSubmittedId = null, currentRole = 'colaborador';
-const LEADERS = { PEREZ_JESUS: 'Jesús Alberto Pérez', SUAREZ_VICTOR: 'Víctor Suárez Ardila' };
+   ══════════════════════ */
+let otList=[],otIdx=1,otLast=null,otRole='col';
+const LDRS={PEREZ:'Jesús Alberto Pérez',SUAREZ:'Víctor Suárez Ardila'};
 
-function calcOTHours() {
-  const s = document.getElementById('ot-start').value;
-  const e = document.getElementById('ot-end').value;
-  const manualEl = document.getElementById('ot-total-manual');
-  const autoEl   = document.getElementById('ot-total');
-  if (manualEl && manualEl.value.trim()) { autoEl.value = manualEl.value; return; }
-  if (s && e) {
-    const [sh,sm] = s.split(':').map(Number);
-    const [eh,em] = e.split(':').map(Number);
-    const diff = (eh*60+em) - (sh*60+sm);
-    if (diff > 0) { autoEl.value = (diff/60).toFixed(1); return; }
-  }
-  autoEl.value = '';
+function calcOT(){
+  const s=document.getElementById('ot-ini').value;
+  const e=document.getElementById('ot-fin').value;
+  const m=document.getElementById('ot-manual').value;
+  const a=document.getElementById('ot-total');
+  if(m&&m.trim()){a.value=m;return;}
+  if(s&&e){const[sh,sm]=s.split(':').map(Number);const[eh,em]=e.split(':').map(Number);const d=(eh*60+em)-(sh*60+sm);if(d>0){a.value=(d/60).toFixed(1);return;}}
+  a.value='';
 }
-
-function submitOT() {
-  const adcar  = document.getElementById('ot-adcar').value.trim();
-  const email  = document.getElementById('ot-email').value.trim();
-  const date   = document.getElementById('ot-date').value;
-  const start  = document.getElementById('ot-start').value;
-  const end    = document.getElementById('ot-end').value;
-  const total  = parseFloat(document.getElementById('ot-total-manual').value || document.getElementById('ot-total').value);
-  const leader = document.getElementById('ot-leader').value;
-  const reason = document.getElementById('ot-reason').value.trim();
-  if (!adcar||!email||!date||!start||!end||isNaN(total)||!leader||!reason) { showToast('⚠️ Completa todos los campos.','error'); return; }
-  if (!email.endsWith('@ibm.com')) { showToast('⚠️ El correo debe ser @ibm.com.','error'); return; }
-  const req = { id: otId++, adcar, email, date, start, end, total, leader, reason, status:'pending', at: new Date().toLocaleString('es-CO') };
-  otList.unshift(req); lastSubmittedId = req.id;
-  renderQueue(); updateMyRequestStatus();
-  ['ot-start','ot-end','ot-total','ot-total-manual','ot-reason'].forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
-  document.getElementById('ot-leader').value = '';
-  document.getElementById('ot-date').valueAsDate = new Date();
-  showToast(`📤 Solicitud #${req.id} enviada a ${LEADERS[leader]}.`, 'info');
+function submitOT(){
+  const adcar=document.getElementById('ot-adcar').value.trim();
+  const email=document.getElementById('ot-email').value.trim();
+  const date=document.getElementById('ot-date').value;
+  const ini=document.getElementById('ot-ini').value;
+  const fin=document.getElementById('ot-fin').value;
+  const total=parseFloat(document.getElementById('ot-manual').value||document.getElementById('ot-total').value);
+  const ldr=document.getElementById('ot-ldr').value;
+  const reason=document.getElementById('ot-reason').value.trim();
+  if(!adcar||!email||!date||!ini||!fin||isNaN(total)||!ldr||!reason){showToast('⚠️ Completa todos los campos','err');return;}
+  if(!email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
+  const r={id:otIdx++,adcar,email,date,ini,fin,total,ldr,reason,status:'pending',at:new Date().toLocaleString('es-CO')};
+  otList.unshift(r);otLast=r.id;
+  renderQueue();updMyOT();
+  ['ot-ini','ot-fin','ot-total','ot-manual','ot-reason'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ot-ldr').value='';
+  document.getElementById('ot-date').valueAsDate=new Date();
+  showToast(`📤 Solicitud #${r.id} enviada a ${LDRS[ldr]}`,'inf');
 }
-
-function setOTRole(role) {
-  currentRole = role;
-  const fp = document.getElementById('ot-form-panel');
-  const ap = document.getElementById('ot-approval-panel');
-  if (role === 'aprobador') { fp.style.display='none'; ap.style.display='block'; }
-  else { fp.style.display='block'; ap.style.display='none'; updateMyRequestStatus(); }
+function setOTRole(v){
+  otRole=v;
+  document.getElementById('ot-form').style.display=v==='apr'?'none':'block';
+  document.getElementById('ot-apr').style.display=v==='apr'?'block':'none';
+  if(v==='col')updMyOT();
   renderQueue();
 }
-
-function updateMyRequestStatus() {
-  const box = document.getElementById('my-request-status');
-  if (lastSubmittedId === null) { box.style.display='none'; return; }
-  const r = otList.find(x=>x.id===lastSubmittedId);
-  if (!r) { box.style.display='none'; return; }
-  const sc = {pending:'s-pend',approved:'s-appr',rejected:'s-rej'}[r.status];
-  const sl = {pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
-  document.getElementById('my-request-detail').innerHTML = `
-    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--text);">#${r.id} · ${r.adcar}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px;">${r.date} · ${r.start}–${r.end} · <strong>${r.total}h</strong></div>
-        <div style="font-size:10px;color:var(--muted);">Aprobador: ${LEADERS[r.leader]||r.leader}</div>
-      </div>
-      <span class="sbadge ${sc}">${sl}</span>
+function updMyOT(){
+  const box=document.getElementById('ot-my');
+  if(otLast===null){box.style.display='none';return;}
+  const r=otList.find(x=>x.id===otLast);if(!r){box.style.display='none';return;}
+  const sc={pending:'sb-pend',approved:'sb-ok',rejected:'sb-err'}[r.status];
+  const sl={pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
+  document.getElementById('ot-my-det').innerHTML=`
+    <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:7px;">
+      <div><div style="font-size:12px;font-weight:700;">#${r.id} · ${r.adcar}</div>
+      <div style="font-size:10px;color:var(--muted);">${r.date} · ${r.ini}–${r.fin} · <strong>${r.total}h</strong> · ${LDRS[r.ldr]||r.ldr}</div></div>
+      <span class="sb ${sc}">${sl}</span>
     </div>
     <div style="font-size:11px;color:#1d4ed8;font-style:italic;">"${r.reason}"</div>`;
-  box.style.display = 'block';
+  box.style.display='block';
 }
-
-function renderQueue() {
-  const c = document.getElementById('otQueue');
-  if (!otList.length) { c.innerHTML = '<div style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin solicitudes pendientes</div>'; updateOTStats(); return; }
-  c.innerHTML = '';
-  otList.forEach(r => {
-    const sc = {pending:'s-pend',approved:'s-appr',rejected:'s-rej'}[r.status];
-    const sl = {pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
-    const d = document.createElement('div'); d.className = 'req-item';
-    d.innerHTML = `<div class="req-head">
-      <div>
-        <div class="req-name">#${r.id} · ${r.adcar} · ${r.email}</div>
-        <div class="req-meta">${r.date} · ${r.start}–${r.end} · <strong>${r.total}h</strong> · Aprobador: ${LEADERS[r.leader]||r.leader}</div>
-      </div>
-      <span class="sbadge ${sc}">${sl}</span>
+function renderQueue(){
+  const c=document.getElementById('ot-queue');
+  if(!otList.length){c.innerHTML='<div style="text-align:center;padding:26px;color:var(--muted);font-size:12px;">📭 Sin solicitudes</div>';updOTStats();return;}
+  c.innerHTML='';
+  otList.forEach(r=>{
+    const sc={pending:'sb-pend',approved:'sb-ok',rejected:'sb-err'}[r.status];
+    const sl={pending:'⏳ Pendiente',approved:'✅ Aprobada',rejected:'❌ Rechazada'}[r.status];
+    const d=document.createElement('div');d.className='req';
+    d.innerHTML=`<div class="rh">
+      <div><div class="rn">#${r.id} · ${r.adcar} · ${r.email}</div>
+      <div class="rm">${r.date} · ${r.ini}–${r.fin} · <strong>${r.total}h</strong> · ${LDRS[r.ldr]||r.ldr}</div></div>
+      <span class="sb ${sc}">${sl}</span>
     </div>
-    <div class="req-reason">"${r.reason}"</div>
-    ${currentRole==='aprobador'&&r.status==='pending'?`<div class="req-actions">
-      <button class="btn-success" onclick="resolveOT(${r.id},'approved')">✅ Aprobar</button>
-      <button class="btn-danger" onclick="resolveOT(${r.id},'rejected')">❌ Rechazar</button>
-    </div>`:''}`;
+    <div class="rr">"${r.reason}"</div>
+    ${otRole==='apr'&&r.status==='pending'?`<div style="display:flex;gap:8px;"><button class="btn btn-ok" style="padding:5px 13px;font-size:11px;" onclick="resolveOT(${r.id},'approved')">✅ Aprobar</button><button class="btn btn-err" style="padding:5px 13px;font-size:11px;" onclick="resolveOT(${r.id},'rejected')">❌ Rechazar</button></div>`:''}`;
     c.appendChild(d);
   });
-  updateOTStats();
+  updOTStats();
 }
-
-function resolveOT(id, status) {
-  if (currentRole !== 'aprobador') return;
-  const r = otList.find(x=>x.id===id); if (!r||r.status!=='pending') return;
-  r.status = status; renderQueue(); updateMyRequestStatus();
-  showToast(status==='approved'?`✅ Solicitud #${id} aprobada.`:`❌ Solicitud #${id} rechazada.`, status==='approved'?'success':'error');
+function resolveOT(id,status){
+  const r=otList.find(x=>x.id===id);if(!r||r.status!=='pending')return;
+  r.status=status;renderQueue();updMyOT();
+  showToast(status==='approved'?`✅ Solicitud #${id} aprobada`:`❌ Solicitud #${id} rechazada`,status==='approved'?'ok':'err');
 }
-
-function updateOTStats() {
-  document.getElementById('ot-pend').textContent = otList.filter(r=>r.status==='pending').length;
-  document.getElementById('ot-appr').textContent = otList.filter(r=>r.status==='approved').length;
-  document.getElementById('ot-rejc').textContent = otList.filter(r=>r.status==='rejected').length;
-  document.getElementById('ot-hrs').textContent  = otList.filter(r=>r.status==='approved').reduce((s,r)=>s+r.total,0).toFixed(1);
+function updOTStats(){
+  document.getElementById('ot-np').textContent=otList.filter(r=>r.status==='pending').length;
+  document.getElementById('ot-na').textContent=otList.filter(r=>r.status==='approved').length;
+  document.getElementById('ot-nr').textContent=otList.filter(r=>r.status==='rejected').length;
+  document.getElementById('ot-nh').textContent=otList.filter(r=>r.status==='approved').reduce((s,r)=>s+r.total,0).toFixed(1);
 }
-
-async function syncOT(e) {
-  const btn = e.currentTarget; const orig = btn.innerHTML;
-  if (!otList.length) { showToast('⚠️ No hay solicitudes para sincronizar.','error'); return; }
-  btn.disabled=true; btn.textContent='⏳ Sincronizando…';
-  showProgress('Sincronizando horas extras con Monday…');
-  try {
-    const LEADER_LABELS = { PEREZ_JESUS: 'Jesus Alberto Perez', SUAREZ_VICTOR: 'Victor Suarez' };
-    const ESTADO_LABELS = { approved: 'Aprobación', rejected: 'Rechazadas', pending: 'En revisión' };
-    let i = 0;
-    for (const r of otList) {
-      setProgress(10 + Math.round((i/otList.length)*85), `Enviando solicitud #${r.id}…`);
-      const colVals = {};
-      colVals[COL.aprobador]         = { label: LEADER_LABELS[r.leader] };
-      colVals[COL.estado_aprobacion] = { label: ESTADO_LABELS[r.status] || 'En revisión' };
-      colVals[COL.horas_extras]      = r.total;
-      colVals[COL.comentarios_he]    = r.reason;
-      const name = `HE · ${r.adcar} · ${r.date}`;
-      await createMondayItem(BOARD_ID, name, colVals);
-      i++;
+async function syncOT(e){
+  const btn=e.currentTarget;const orig=btn.innerHTML;
+  if(!otList.length){showToast('⚠️ No hay solicitudes para sincronizar','err');return;}
+  btn.disabled=true;btn.textContent='⏳ Sincronizando…';
+  pshow('Sincronizando horas extras con Monday…');
+  try{
+    const LL={PEREZ:'Jesus Alberto Perez',SUAREZ:'Victor Suarez'};
+    const EL={approved:'Aprobación',rejected:'Rechazadas',pending:'En revisión'};
+    let i=0;
+    for(const r of otList){
+      pset(10+Math.round((i/otList.length)*85),`Enviando #${r.id}…`);
+      const cv={};
+      cv[COL.aprobador]={label:LL[r.ldr]||r.ldr};
+      cv[COL.estado_apr]={label:EL[r.status]||'En revisión'};
+      cv[COL.horas_extras]=r.total;
+      cv[COL.comentarios_he]=r.reason;
+      await mc(BOARD_A,`HE · ${r.adcar} · ${r.date}`,cv);i++;
     }
-    setProgress(100,'¡Listo!'); setTimeout(hideProgress,700);
-    showToast(`✅ ${otList.length} solicitud(es) sincronizada(s) en Monday.`, 'success');
-  } catch(err) {
-    hideProgress(); showToast('❌ Error: ' + err.message, 'error');
-  } finally { btn.disabled = false; btn.innerHTML = orig; }
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    showToast(`✅ ${otList.length} solicitud(es) sincronizada(s)`,'ok');
+  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
+  finally{btn.disabled=false;btn.innerHTML=orig;}
 }
 
-/* ═══════════════════════════════
-   SLIDE 3 — SEMANAS CARGADAS
-   ═══════════════════════════════ */
-let weekItems = [], editWeekItemId = null;
-let weeksFilter = '', weeksStatusFilter2 = '';
+/* ══════════════════════
+   SLIDE 3 — MODALIDAD
+   ══════════════════════ */
+let modItems=[],modFilter='',modStatusF='';
+let modChart=null;
 
-async function loadWeeksFromMonday() {
-  showProgress('Cargando semanas desde Monday…');
-  try {
-    setProgress(20, 'Consultando tablero…');
-    const data = await mondayQuery(`{
-      boards(ids: [${BOARD_ID}]) {
-        items_page(limit: 500) {
-          items {
-            id name
-            column_values(ids: ["${COL.gerencia}","${COL.time}","${COL.sf}","${COL.hp}","${COL.comentarios}"]) {
-              id text
-            }
-          }
-        }
-      }
-    }`);
-    weekItems = (data?.boards?.[0]?.items_page?.items || []).map(it => {
-      const cv = {};
-      it.column_values.forEach(c => { cv[c.id] = c.text; });
-      return { id: it.id, name: it.name,
-        gerencia: cv[COL.gerencia] || '',
-        time:     cv[COL.time]     || '',
-        sf:       cv[COL.sf]       || '',
-        hp:       cv[COL.hp]       || '',
-        notes:    cv[COL.comentarios] || '' };
+async function loadModalidad(){
+  pshow('Cargando Modalidad de Trabajo del Board '+BOARD_M+'…');
+  try{
+    pset(20,'Consultando board…');
+    const data=await mq(`{boards(ids:[${BOARD_M}]){columns{id title type}items_page(limit:500){items{id name column_values{id type text value}}}}}`);
+    const board=data?.boards?.[0];
+    if(!board) throw new Error('Board '+BOARD_M+' no encontrado');
+    const cols=board.columns||[];
+    const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    const ac=cols.find(c=>norm(c.title).includes('adcar'));
+    const sc=cols.find(c=>norm(c.title).includes('semana')||norm(c.title).includes('period'));
+    const mc2=cols.find(c=>norm(c.title).includes('modalidad'));
+    const pc=cols.find(c=>norm(c.title).includes('presencial'));
+    const rc=cols.find(c=>norm(c.title).includes('remoto'));
+    const oc=cols.find(c=>norm(c.title).includes('observ')||norm(c.title).includes('coment'));
+
+    modItems=(board.items_page?.items||[]).map(it=>{
+      const cv={}; it.column_values.forEach(c=>{cv[c.id]=c.text||'';});
+      return{id:it.id,name:it.name,adcar:cv[ac?.id]||it.name,semana:cv[sc?.id]||'',modalidad:cv[mc2?.id]||'',pres:cv[pc?.id]||'0',rem:cv[rc?.id]||'0',obs:cv[oc?.id]||''};
     });
-    setProgress(100,'¡Listo!'); setTimeout(hideProgress, 700);
-    renderWeeksTable();
-    showToast(`✅ ${weekItems.length} registros cargados`, 'success');
-  } catch(err) {
-    hideProgress(); showToast('❌ Error: ' + err.message, 'error');
-  }
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    renderMod();
+    showToast(`✅ ${modItems.length} registros de Modalidad cargados`,'ok');
+  }catch(err){phide();showToast('❌ Error Modalidad: '+err.message,'err');}
 }
 
-function filterWeeks() {
-  weeksFilter = document.getElementById('weeksSearch').value.toLowerCase();
-  weeksStatusFilter2 = document.getElementById('weeksStatusFilter').value;
-  renderWeeksTable();
+function filterMod(){
+  modFilter=document.getElementById('mod-search').value.toLowerCase();
+  modStatusF=document.getElementById('mod-filter').value;
+  renderMod();
 }
 
-function statusBadgeHtml(val) {
-  const v = (val||'').toLowerCase();
-  if (v.includes('actual')) return `<span style="background:#d1fae5;color:#065f46;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
-  if (v.includes('pendiente')) return `<span style="background:#fef3c7;color:#92400e;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
-  if (v.includes('sin')) return `<span style="background:#fee2e2;color:#991b1b;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
-  return `<span style="background:#f1f5f9;color:#475569;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${val||'—'}</span>`;
-}
-
-function renderWeeksTable() {
-  const tbody = document.getElementById('weeksBody');
-  const pager = document.getElementById('weeksPager');
-  const items = weekItems.filter(it => {
-    const matchTxt = !weeksFilter || it.name.toLowerCase().includes(weeksFilter) || it.gerencia.toLowerCase().includes(weeksFilter);
-    const matchSt  = !weeksStatusFilter2 || it.time === weeksStatusFilter2 || it.sf === weeksStatusFilter2 || it.hp === weeksStatusFilter2;
-    return matchTxt && matchSt;
+function renderMod(){
+  const items=modItems.filter(it=>{
+    const mTxt=!modFilter||it.name.toLowerCase().includes(modFilter)||it.semana.toLowerCase().includes(modFilter);
+    const mSt=!modStatusF||it.modalidad===modStatusF;
+    return mTxt&&mSt;
   });
-  if (!items.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday o agrega una nueva semana.</td></tr>`;
-    pager.textContent = ''; return;
-  }
-  tbody.innerHTML = items.map(it => `
-    <tr>
-      <td style="font-weight:600;color:var(--text);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.name}</td>
-      <td style="color:var(--muted);font-size:11px;">${it.notes ? `<span title="${it.notes}">${it.notes.substring(0,40)}${it.notes.length>40?'…':''}</span>` : '—'}</td>
-      <td style="text-align:center;">${statusBadgeHtml(it.time)}</td>
-      <td style="text-align:center;">${statusBadgeHtml(it.sf)}</td>
-      <td style="text-align:center;">${statusBadgeHtml(it.hp)}</td>
-      <td style="font-size:11px;color:var(--muted);">${it.gerencia||'—'}</td>
-      <td style="text-align:center;">
-        <button onclick="openEditWeek('${it.id}')" style="background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:4px 12px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">✏️ Corregir</button>
-      </td>
-    </tr>`).join('');
-  pager.textContent = `${items.length} de ${weekItems.length} registros`;
-}
-
-function openEditWeek(id) {
-  const it = weekItems.find(x => x.id === id); if (!it) return;
-  editWeekItemId = id;
-  document.getElementById('editWeekMeta').textContent = `${it.name} · ID ${it.id}`;
-  document.getElementById('ewTime').value  = it.time  || 'Pendiente';
-  document.getElementById('ewSF').value    = it.sf    || 'Pendiente';
-  document.getElementById('ewHP').value    = it.hp    || 'Pendiente';
-  document.getElementById('ewNotes').value = it.notes || '';
-  openModal('editWeekModal');
-}
-
-async function saveEditWeek() {
-  if (!editWeekItemId) return;
-  const timeVal = document.getElementById('ewTime').value;
-  const sfVal   = document.getElementById('ewSF').value;
-  const hpVal   = document.getElementById('ewHP').value;
-  const notes   = document.getElementById('ewNotes').value.trim();
-  const colVals = {};
-  colVals[COL.time] = { label: timeVal };
-  colVals[COL.sf]   = { label: sfVal };
-  colVals[COL.hp]   = { label: hpVal };
-  if (notes) colVals[COL.comentarios] = notes;
-  closeModal('editWeekModal');
-  showToast('⏳ Guardando en Monday…','info');
-  try {
-    await mondayQuery(`mutation {
-      change_multiple_column_values(item_id: ${editWeekItemId}, board_id: ${BOARD_ID},
-        column_values: ${JSON.stringify(JSON.stringify(colVals))}) { id }
-    }`);
-    const it = weekItems.find(x => x.id === editWeekItemId);
-    if (it) { it.time=timeVal; it.sf=sfVal; it.hp=hpVal; if(notes) it.notes=notes; }
-    renderWeeksTable();
-    showToast('✅ Semana corregida en Monday','success');
-  } catch(err) { showToast('❌ Error: ' + err.message,'error'); }
-}
-
-/* ── Add Week Modal ── */
-function openAddWeekModal() {
-  const now = new Date();
-  const wk = getWeek(now);
-  document.getElementById('aw-period').value = `Semana ${wk} – ${now.getFullYear()}`;
-  openModal('addWeekModal');
-}
-
-async function saveNewWeek() {
-  const adcar  = document.getElementById('aw-adcar').value.trim();
-  const period = document.getElementById('aw-period').value.trim();
-  const timeV  = document.getElementById('aw-time').value;
-  const sfV    = document.getElementById('aw-sf').value;
-  const hpV    = document.getElementById('aw-hp').value;
-  const gerV   = document.getElementById('aw-gerencia').value.trim();
-  const notesV = document.getElementById('aw-notes').value.trim();
-  if (!adcar || !period) { showToast('⚠️ Selecciona el colaborador e ingresa el período.','error'); return; }
-  const colVals = {};
-  colVals[COL.time] = { label: timeV };
-  colVals[COL.sf]   = { label: sfV };
-  colVals[COL.hp]   = { label: hpV };
-  if (gerV)   colVals[COL.gerencia]    = { label: gerV };
-  if (notesV) colVals[COL.comentarios] = notesV;
-  closeModal('addWeekModal');
-  showProgress('Creando semana en Monday…');
-  try {
-    setProgress(40, 'Enviando a Monday…');
-    const name = `${adcar} · ${period}`;
-    const result = await createMondayItem(BOARD_ID, name, colVals);
-    const newId = result?.create_item?.id || 'local_' + Date.now();
-    weekItems.unshift({ id: newId, name, gerencia: gerV, time: timeV, sf: sfV, hp: hpV, notes: notesV });
-    setProgress(100,'¡Listo!'); setTimeout(hideProgress, 700);
-    renderWeeksTable();
-    showToast(`✅ Semana "${name}" creada en Monday`, 'success');
-  } catch(err) {
-    hideProgress(); showToast('❌ Error: ' + err.message,'error');
-  }
-}
-
-/* ── Add Person Modal ── */
-function openAddPersonModal() { openModal('addPersonModal'); }
-
-async function saveNewPerson() {
-  const name   = document.getElementById('ap-name').value.trim();
-  const adcar  = document.getElementById('ap-adcar').value.trim();
-  const email  = document.getElementById('ap-email').value.trim();
-  const gerV   = document.getElementById('ap-gerencia').value.trim();
-  const period = document.getElementById('ap-period').value.trim();
-  if (!name || !adcar || !email) { showToast('⚠️ Nombre, ADCAR y correo son obligatorios.','error'); return; }
-  if (!email.endsWith('@ibm.com')) { showToast('⚠️ El correo debe ser @ibm.com.','error'); return; }
-  const colVals = {};
-  if (COL.adcar !== 'text_mm7hadcar') colVals[COL.adcar] = adcar;
-  if (gerV) colVals[COL.gerencia] = { label: gerV };
-  colVals[COL.time] = { label: 'Pendiente' };
-  colVals[COL.sf]   = { label: 'Pendiente' };
-  colVals[COL.hp]   = { label: 'Pendiente' };
-  if (period) colVals[COL.comentarios] = `Inicio: ${period}`;
-  closeModal('addPersonModal');
-  showProgress('Creando persona en Monday…');
-  try {
-    setProgress(40, 'Enviando a Monday…');
-    const itemName = `${name} (${adcar})`;
-    const result = await createMondayItem(BOARD_ID, itemName, colVals);
-    const newId = result?.create_item?.id || 'local_' + Date.now();
-    weekItems.unshift({ id: newId, name: itemName, gerencia: gerV, time: 'Pendiente', sf: 'Pendiente', hp: 'Pendiente', notes: period ? `Inicio: ${period}` : '' });
-    // Update ADCAR selects
-    const opt1 = new Option(adcar, adcar);
-    const opt2 = new Option(adcar, adcar);
-    document.getElementById('collab-adcar').appendChild(opt1);
-    document.getElementById('aw-adcar').appendChild(opt2);
-    setProgress(100,'¡Listo!'); setTimeout(hideProgress, 700);
-    renderWeeksTable();
-    showToast(`✅ Persona "${itemName}" creada en Monday`, 'success');
-  } catch(err) {
-    hideProgress(); showToast('❌ Error: ' + err.message,'error');
-  }
-}
-
-/* ═══════════════════════════════
-   SLIDE 4 — FORECAST
-   ═══════════════════════════════ */
-let forecastItems = [];
-let forecastFilter = '', forecastStatusFilter = '';
-let forecastChartInstance = null;
-
-async function loadForecastFromMonday() {
-  showProgress('Cargando Forecast desde Monday Board 18433232131…');
-  try {
-    setProgress(20,'Consultando board de forecast…');
-    /* Board 18433232131 — se leen todas las columnas disponibles */
-    const data = await mondayQuery(`{
-      boards(ids: [${BOARD_FORECAST}]) {
-        columns { id title type }
-        items_page(limit: 500) {
-          items {
-            id name
-            column_values { id type text value }
-          }
-        }
-      }
-    }`);
-    const board = data?.boards?.[0];
-    if (!board) throw new Error('No se encontró el Board de Forecast ' + BOARD_FORECAST);
-    const cols = board.columns || [];
-    const norm = s => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-
-    /* Map columns by semantic name */
-    const semanaCol    = cols.find(c => norm(c.title).includes('semana') || norm(c.title).includes('period'));
-    const planeadaCol  = cols.find(c => norm(c.title).includes('planeada') || norm(c.title).includes('plan'));
-    const realCol      = cols.find(c => norm(c.title).includes('real') || norm(c.title).includes('actual'));
-    const variacionCol = cols.find(c => norm(c.title).includes('variaci') || norm(c.title).includes('delta'));
-    const estadoCol    = cols.find(c => norm(c.title).includes('estado') || norm(c.title).includes('status'));
-    const comentCol    = cols.find(c => norm(c.title).includes('coment'));
-
-    forecastItems = (board.items_page?.items || []).map(it => {
-      const cv = {};
-      it.column_values.forEach(c => { cv[c.id] = c.text || ''; });
-      const hrs_plan = parseFloat(cv[planeadaCol?.id] || 0) || 0;
-      const hrs_real = parseFloat(cv[realCol?.id] || 0) || 0;
-      const variacion = variacionCol ? (parseFloat(cv[variacionCol.id]) || (hrs_real - hrs_plan)) : (hrs_real - hrs_plan);
-      const estado = cv[estadoCol?.id] || (Math.abs(variacion) < 2 ? 'Al día' : variacion < -2 ? 'En riesgo' : 'Atrasado');
-      return {
-        id: it.id,
-        name: it.name,
-        semana: cv[semanaCol?.id] || '—',
-        hrs_plan,
-        hrs_real,
-        variacion,
-        estado,
-        comentarios: cv[comentCol?.id] || ''
-      };
-    });
-    setProgress(100,'¡Listo!'); setTimeout(hideProgress, 700);
-    renderForecast();
-    showToast(`✅ ${forecastItems.length} registros de Forecast cargados`, 'success');
-  } catch(err) {
-    hideProgress(); showToast('❌ Error Forecast: ' + err.message,'error');
-  }
-}
-
-function filterForecast() {
-  forecastFilter = document.getElementById('forecastSearch').value.toLowerCase();
-  forecastStatusFilter = document.getElementById('forecastStatusFilter').value;
-  renderForecast();
-}
-
-function renderForecast() {
-  const items = forecastItems.filter(it => {
-    const matchTxt = !forecastFilter || it.name.toLowerCase().includes(forecastFilter) || it.semana.toLowerCase().includes(forecastFilter);
-    const matchSt  = !forecastStatusFilter || it.estado === forecastStatusFilter;
-    return matchTxt && matchSt;
-  });
-
-  /* KPIs */
-  document.getElementById('fc-total').textContent   = items.length;
-  document.getElementById('fc-aldia').textContent   = items.filter(i=>i.estado==='Al día').length;
-  document.getElementById('fc-riesgo').textContent  = items.filter(i=>i.estado==='En riesgo').length;
-  document.getElementById('fc-atrasado').textContent = items.filter(i=>i.estado==='Atrasado').length;
+  document.getElementById('m-total').textContent=items.length;
+  document.getElementById('m-pres').textContent=items.filter(i=>i.modalidad==='Presencial').length;
+  document.getElementById('m-rem').textContent=items.filter(i=>i.modalidad==='Remoto'||i.modalidad==='Home Office').length;
+  document.getElementById('m-hib').textContent=items.filter(i=>i.modalidad==='Híbrido').length;
 
   /* Chart */
-  const statusCounts = {};
-  items.forEach(i => { statusCounts[i.estado] = (statusCounts[i.estado]||0) + 1; });
-  const chartColors = { 'Al día':'#059669','En riesgo':'#d97706','Atrasado':'#dc2626','Pendiente':'#6b7fa3' };
-  const ctx = document.getElementById('forecastChart').getContext('2d');
-  if (forecastChartInstance) forecastChartInstance.destroy();
-  forecastChartInstance = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: Object.keys(statusCounts),
-      datasets: [{ data: Object.values(statusCounts), backgroundColor: Object.keys(statusCounts).map(k=>chartColors[k]||'#3b82f6'), borderWidth:0 }]
-    },
-    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ boxWidth:10, font:{ size:10 } } } }, cutout:'65%' }
-  });
-
-  /* Cards */
-  const cardsEl = document.getElementById('forecastCards');
-  const emptyEl = document.getElementById('forecastEmpty');
-  if (!items.length) { cardsEl.innerHTML=''; emptyEl.style.display='block'; }
-  else {
-    emptyEl.style.display='none';
-    const estColors = { 'Al día':'var(--success)','En riesgo':'var(--warn)','Atrasado':'var(--danger)','Pendiente':'var(--muted)' };
-    cardsEl.innerHTML = items.slice(0,12).map(it => {
-      const pct = it.hrs_plan > 0 ? Math.min(100, Math.round((it.hrs_real / it.hrs_plan)*100)) : 0;
-      const ec = estColors[it.estado] || 'var(--muted)';
-      return `<div class="forecast-card">
-        <div class="fc-name">${it.name}</div>
-        <div class="fc-adcar">${it.semana}</div>
-        <div class="fc-status" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
-          <span style="font-size:10px;font-weight:700;color:${ec};">${it.estado}</span>
-          <span style="font-size:10px;color:var(--muted);">${it.hrs_real}h / ${it.hrs_plan}h</span>
-        </div>
-        <div class="fc-bar-wrap"><div class="fc-bar" style="width:${pct}%;background:${ec};"></div></div>
-        ${it.variacion !== 0 ? `<div style="font-size:10px;margin-top:6px;color:${it.variacion<0?'var(--danger)':'var(--success)'};">${it.variacion>0?'+':''}${it.variacion.toFixed(1)}h vs planeado</div>` : ''}
-      </div>`;
-    }).join('');
-  }
+  const cnt={};items.forEach(i=>{cnt[i.modalidad||'Sin definir']=(cnt[i.modalidad||'Sin definir']||0)+1;});
+  const CC={'Presencial':'#059669','Remoto':'#0f62fe','Híbrido':'#d97706','Home Office':'#7c5cd8','Sin definir':'#6b7fa3'};
+  const ctx=document.getElementById('modChart').getContext('2d');
+  if(modChart) modChart.destroy();
+  modChart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cnt),datasets:[{data:Object.values(cnt),backgroundColor:Object.keys(cnt).map(k=>CC[k]||'#3b82f6'),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}});
 
   /* Table */
-  const tbody = document.getElementById('forecastBody');
-  const pager = document.getElementById('forecastPager');
-  if (!items.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--muted);font-size:12px;">📭 Sin datos de Forecast. Sincroniza desde Monday.</td></tr>`;
-    pager.textContent = ''; return;
-  }
-  const estColors = { 'Al día':'var(--success)','En riesgo':'var(--warn)','Atrasado':'var(--danger)','Pendiente':'var(--muted)' };
-  tbody.innerHTML = items.map(it => {
-    const vc = it.variacion < 0 ? 'color:var(--danger)' : it.variacion > 0 ? 'color:var(--success)' : 'color:var(--muted)';
-    const ec = estColors[it.estado] || 'var(--muted)';
-    return `<tr>
-      <td style="font-weight:600;color:var(--text);">${it.name}</td>
-      <td style="color:var(--muted);font-size:11px;">${it.semana}</td>
-      <td style="text-align:right;font-weight:600;">${it.hrs_plan.toFixed(1)}</td>
-      <td style="text-align:right;font-weight:600;">${it.hrs_real.toFixed(1)}</td>
-      <td style="text-align:right;font-weight:700;${vc};">${it.variacion>0?'+':''}${it.variacion.toFixed(1)}</td>
-      <td style="text-align:center;"><span style="background:${ec}20;color:${ec};border:1px solid ${ec}50;padding:2px 10px;border-radius:20px;font-size:10px;font-weight:700;">${it.estado}</span></td>
-      <td style="font-size:11px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.comentarios||'—'}</td>
+  const tbody=document.getElementById('modBody');
+  const pager=document.getElementById('modPager');
+  if(!items.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday Board ${BOARD_M}.</td></tr>`;pager.textContent='';return;}
+  const MC={'Presencial':'#059669','Remoto':'#0f62fe','Híbrido':'#d97706','Home Office':'#7c5cd8'};
+  tbody.innerHTML=items.map(it=>{
+    const mc=MC[it.modalidad]||'var(--muted)';
+    return`<tr>
+      <td style="font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.adcar||it.name}</td>
+      <td style="color:var(--muted);font-size:11px;">${it.semana||'—'}</td>
+      <td><span style="background:${mc}18;color:${mc};border:1px solid ${mc}40;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${it.modalidad||'—'}</span></td>
+      <td style="text-align:center;font-weight:700;">${it.pres||'—'}</td>
+      <td style="text-align:center;font-weight:700;">${it.rem||'—'}</td>
+      <td style="font-size:11px;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.obs||'—'}</td>
+      <td style="text-align:center;"><button onclick="editModItem('${it.id}')" style="background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">✏️</button></td>
     </tr>`;
   }).join('');
-  pager.textContent = `${items.length} registros · Board 18433232131`;
+  pager.textContent=`${items.length} de ${modItems.length} registros · Board ${BOARD_M}`;
 }
 
-/* ═══════════════════════════════
+function openModNew(){
+  const now=new Date();
+  document.getElementById('mn-sem').value=`Semana ${getWeek(now)} – ${now.getFullYear()}`;
+  openM('mModNew');
+}
+async function saveModNew(){
+  const adcar=document.getElementById('mn-adcar').value.trim();
+  const sem=document.getElementById('mn-sem').value.trim();
+  const mod=document.getElementById('mn-mod').value;
+  const pres=document.getElementById('mn-pres').value||'0';
+  const rem=document.getElementById('mn-rem').value||'0';
+  const obs=document.getElementById('mn-obs').value.trim();
+  if(!adcar||!sem||!mod){showToast('⚠️ ADCAR, semana y modalidad son obligatorios','err');return;}
+  closeM('mModNew');
+  pshow('Creando registro en Monday '+BOARD_M+'…');
+  try{
+    pset(40,'Enviando…');
+    const cv={};
+    // Add to board — use dynamic column IDs when available
+    const nm=`${adcar} · ${sem}`;
+    const res=await mc(BOARD_M,nm,cv);
+    const nid=res?.create_item?.id||'local_'+Date.now();
+    modItems.unshift({id:nid,name:nm,adcar,semana:sem,modalidad:mod,pres,rem,obs});
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    renderMod();
+    showToast(`✅ Registro "${nm}" creado en Monday`,'ok');
+  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
+}
+function editModItem(id){showToast('ℹ️ Edición disponible en Monday Board '+BOARD_M,'inf');}
+
+/* ══════════════════════
+   SLIDE 4 — SEMANAS/PERSONAS
+   ══════════════════════ */
+let swItems=[],swFilter='',swStatusF='',ewId=null;
+
+async function loadWeeks(){
+  pshow('Cargando semanas desde Monday…');
+  try{
+    pset(20,'Consultando tablero…');
+    const data=await mq(`{boards(ids:[${BOARD_A}]){items_page(limit:500){items{id name column_values(ids:["${COL.gerencia}","${COL.time}","${COL.sf}","${COL.hp}","${COL.comentarios}"]){id text}}}}}`);
+    swItems=(data?.boards?.[0]?.items_page?.items||[]).map(it=>{
+      const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text;});
+      return{id:it.id,name:it.name,ger:cv[COL.gerencia]||'',time:cv[COL.time]||'',sf:cv[COL.sf]||'',hp:cv[COL.hp]||'',notes:cv[COL.comentarios]||''};
+    });
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    renderSW();
+    showToast(`✅ ${swItems.length} registros cargados`,'ok');
+  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
+}
+
+function filterSW(){swFilter=document.getElementById('sw-search').value.toLowerCase();swStatusF=document.getElementById('sw-filter').value;renderSW();}
+
+function stBadge(v){
+  const vl=(v||'').toLowerCase();
+  if(vl.includes('actual'))return`<span style="background:#d1fae5;color:#065f46;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
+  if(vl.includes('pend'))return`<span style="background:#fef3c7;color:#92400e;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
+  if(vl.includes('sin'))return`<span style="background:#fee2e2;color:#991b1b;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
+  return`<span style="background:#f1f5f9;color:#475569;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
+}
+
+function renderSW(){
+  const items=swItems.filter(it=>{
+    const mt=!swFilter||it.name.toLowerCase().includes(swFilter)||it.ger.toLowerCase().includes(swFilter);
+    const ms=!swStatusF||it.time===swStatusF||it.sf===swStatusF||it.hp===swStatusF;
+    return mt&&ms;
+  });
+  const tbody=document.getElementById('swBody');
+  const pager=document.getElementById('swPager');
+  if(!items.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza o agrega una semana.</td></tr>`;pager.textContent='';return;}
+  tbody.innerHTML=items.map(it=>`<tr>
+    <td style="font-weight:600;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.name}</td>
+    <td style="font-size:11px;color:var(--muted);">${it.notes?`<span title="${it.notes}">${it.notes.substring(0,35)}${it.notes.length>35?'…':''}</span>`:'—'}</td>
+    <td style="text-align:center;">${stBadge(it.time)}</td>
+    <td style="text-align:center;">${stBadge(it.sf)}</td>
+    <td style="text-align:center;">${stBadge(it.hp)}</td>
+    <td style="font-size:11px;color:var(--muted);">${it.ger||'—'}</td>
+    <td style="text-align:center;"><button onclick="openEditW('${it.id}')" style="background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">✏️ Corregir</button></td>
+  </tr>`).join('');
+  pager.textContent=`${items.length} de ${swItems.length} registros`;
+}
+
+function openAddWeek(){
+  const now=new Date();
+  document.getElementById('aw-period').value=`Semana ${getWeek(now)} – ${now.getFullYear()}`;
+  openM('mAddWeek');
+}
+async function saveWeek(){
+  const adcar=document.getElementById('aw-adcar').value.trim();
+  const period=document.getElementById('aw-period').value.trim();
+  const tv=document.getElementById('aw-time').value;
+  const sv=document.getElementById('aw-sf').value;
+  const hv=document.getElementById('aw-hp').value;
+  const gv=document.getElementById('aw-ger').value.trim();
+  const nv=document.getElementById('aw-notes').value.trim();
+  if(!adcar||!period){showToast('⚠️ Selecciona el colaborador e ingresa el período','err');return;}
+  const cv={};
+  cv[COL.time]={label:tv};cv[COL.sf]={label:sv};cv[COL.hp]={label:hv};
+  if(gv) cv[COL.gerencia]={label:gv};
+  if(nv) cv[COL.comentarios]=nv;
+  closeM('mAddWeek');
+  pshow('Creando semana en Monday…');
+  try{
+    pset(40,'Enviando…');
+    const nm=`${adcar} · ${period}`;
+    const res=await mc(BOARD_A,nm,cv);
+    const nid=res?.create_item?.id||'local_'+Date.now();
+    swItems.unshift({id:nid,name:nm,ger:gv,time:tv,sf:sv,hp:hv,notes:nv});
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    renderSW();
+    showToast(`✅ Semana "${nm}" creada en Monday`,'ok');
+  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
+}
+
+function openAddPerson(){openM('mAddPerson');}
+async function savePerson(){
+  const name=document.getElementById('ap-name').value.trim();
+  const adcar=document.getElementById('ap-adcar').value.trim();
+  const email=document.getElementById('ap-email').value.trim();
+  const gv=document.getElementById('ap-ger').value.trim();
+  const period=document.getElementById('ap-period').value.trim();
+  if(!name||!adcar||!email){showToast('⚠️ Nombre, ADCAR y correo son obligatorios','err');return;}
+  if(!email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
+  const cv={};
+  if(COL.adcar) cv[COL.adcar]=adcar;
+  if(gv&&COL.gerencia) cv[COL.gerencia]={label:gv};
+  cv[COL.time]={label:'Pendiente'};cv[COL.sf]={label:'Pendiente'};cv[COL.hp]={label:'Pendiente'};
+  if(period&&COL.comentarios) cv[COL.comentarios]=`Inicio: ${period}`;
+  closeM('mAddPerson');
+  pshow('Creando persona en Monday…');
+  try{
+    pset(40,'Enviando…');
+    const nm=`${name} (${adcar})`;
+    const res=await mc(BOARD_A,nm,cv);
+    const nid=res?.create_item?.id||'local_'+Date.now();
+    swItems.unshift({id:nid,name:nm,ger:gv,time:'Pendiente',sf:'Pendiente',hp:'Pendiente',notes:period?`Inicio: ${period}`:''});
+    // Add to ADCAR selects
+    ['s1adcar','aw-adcar','mn-adcar'].forEach(id=>{
+      const s=document.getElementById(id);if(!s)return;
+      const o=new Option(adcar,adcar);s.appendChild(o);
+    });
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    renderSW();
+    showToast(`✅ Persona "${nm}" creada en Monday`,'ok');
+  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
+}
+
+function openEditW(id){
+  const it=swItems.find(x=>x.id===id);if(!it)return;
+  ewId=id;
+  document.getElementById('ew-meta').textContent=`${it.name} · ID ${it.id}`;
+  document.getElementById('ew-time').value=it.time||'Pendiente';
+  document.getElementById('ew-sf').value=it.sf||'Pendiente';
+  document.getElementById('ew-hp').value=it.hp||'Pendiente';
+  document.getElementById('ew-ger').value=it.ger||'';
+  document.getElementById('ew-notes').value=it.notes||'';
+  openM('mEditWeek');
+}
+async function saveEditWeek(){
+  if(!ewId)return;
+  const tv=document.getElementById('ew-time').value;
+  const sv=document.getElementById('ew-sf').value;
+  const hv=document.getElementById('ew-hp').value;
+  const nv=document.getElementById('ew-notes').value.trim();
+  const gv=document.getElementById('ew-ger').value.trim();
+  const cv={};
+  cv[COL.time]={label:tv};cv[COL.sf]={label:sv};cv[COL.hp]={label:hv};
+  if(nv) cv[COL.comentarios]=nv;
+  if(gv&&COL.gerencia) cv[COL.gerencia]={label:gv};
+  closeM('mEditWeek');
+  showToast('⏳ Guardando en Monday…','inf');
+  try{
+    await mq(`mutation{change_multiple_column_values(item_id:${ewId},board_id:${BOARD_A},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`);
+    const it=swItems.find(x=>x.id===ewId);
+    if(it){it.time=tv;it.sf=sv;it.hp=hv;it.ger=gv;if(nv)it.notes=nv;}
+    renderSW();
+    showToast('✅ Semana corregida en Monday','ok');
+  }catch(err){showToast('❌ Error: '+err.message,'err');}
+}
+
+/* ══════════════════════
    INIT
-   ═══════════════════════════════ */
-function getWeek(d) {
-  const j = new Date(d.getFullYear(),0,1);
-  return Math.ceil((((d-j)/86400000)+j.getDay()+1)/7);
-}
+   ══════════════════════ */
+function getWeek(d){const j=new Date(d.getFullYear(),0,1);return Math.ceil((((d-j)/86400000)+j.getDay()+1)/7);}
 
-document.addEventListener('DOMContentLoaded', () => {
-  const now    = new Date();
-  const monday = new Date(now); monday.setDate(now.getDate() - ((now.getDay()+6)%7));
-  const friday = new Date(monday); friday.setDate(monday.getDate()+4);
-  const fmt = d => d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'});
-  document.getElementById('currentWeek').textContent = `${fmt(monday)} – ${fmt(friday)} ${now.getFullYear()}`;
-  document.getElementById('collab-period').value = `Semana ${getWeek(now)} – ${now.getFullYear()}`;
-  document.getElementById('ot-date').valueAsDate = now;
-  updateSummary();
+document.addEventListener('DOMContentLoaded',()=>{
+  const now=new Date();
+  const mon=new Date(now);mon.setDate(now.getDate()-((now.getDay()+6)%7));
+  const fri=new Date(mon);fri.setDate(mon.getDate()+4);
+  const fmt=d=>d.toLocaleDateString('es-CO',{day:'2-digit',month:'short'});
+  document.getElementById('k-week').textContent=`${fmt(mon)} – ${fmt(fri)} ${now.getFullYear()}`;
+  document.getElementById('s1period').value=`Semana ${getWeek(now)} – ${now.getFullYear()}`;
+  document.getElementById('ot-date').valueAsDate=now;
+  updSummary();
 
-  /* Auto-calc OT hours */
-  ['ot-start','ot-end'].forEach(id => document.getElementById(id).addEventListener('change', calcOTHours));
-  document.getElementById('ot-total-manual').addEventListener('input', calcOTHours);
+  ['ot-ini','ot-fin'].forEach(id=>document.getElementById(id).addEventListener('change',calcOT));
+  document.getElementById('ot-manual').addEventListener('input',calcOT);
 
-  /* Health check & live load */
   checkBackend();
-  loadAdcars().catch(() => {});
-  loadWeeksFromMonday().catch(() => {});
+  loadAdcars().catch(()=>{});
 
-  /* URL hash navigation */
-  const hash = window.location.hash;
-  if (hash === '#slide2') { const t = document.getElementById('tab2'); if (t) showSlide(2,t); }
-  if (hash === '#slide3') { const t = document.getElementById('tab3'); if (t) showSlide(3,t); }
-  if (hash === '#slide4') { const t = document.getElementById('tab4'); if (t) showSlide(4,t); }
-
-  /* Close modals on backdrop click */
-  document.querySelectorAll('.modal-bg').forEach(bg => {
-    bg.addEventListener('click', e => { if (e.target === bg) bg.classList.remove('open'); });
+  // Close modals on backdrop click
+  document.querySelectorAll('.mbg').forEach(bg=>{
+    bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open');});
   });
 
-  /* Render empty forecast table */
-  renderForecast();
+  const hash=window.location.hash;
+  if(hash==='#slide2'){const t=document.getElementById('tab2');if(t)goSlide(2,t);}
+  if(hash==='#slide3'){const t=document.getElementById('tab3');if(t)goSlide(3,t);}
+  if(hash==='#slide4'){const t=document.getElementById('tab4');if(t)goSlide(4,t);}
 });
 </script>
 </body>
