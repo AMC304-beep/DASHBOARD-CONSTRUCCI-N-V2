@@ -207,161 +207,119 @@
      ══════════════════════════════ -->
 <div class="slide on" id="slide1">
   <div class="section-title">Confirmación de Actualizaciones</div>
-  <div class="section-sub">Registra el cargue semanal en cada sistema. Adcar se lee en vivo del Board <strong>18432741374</strong>.</div>
+  <div class="section-sub">Completa los datos, selecciona el estado de cada sistema y haz clic en <strong>Enviar a Monday</strong>.</div>
 
-  <!-- Colaborador -->
-  <div class="g" style="padding:18px 22px;margin-bottom:20px;border-left:3px solid var(--accent);">
-    <div style="font-size:11px;font-weight:700;color:var(--accent);display:flex;align-items:center;gap:7px;margin-bottom:13px;text-transform:uppercase;letter-spacing:.4px;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      Datos del colaborador
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:11px;">
-      <div class="fg">
-        <label>ADCAR <span id="adcarSpin" style="display:none;font-size:9px;color:var(--muted);">⏳ cargando…</span></label>
-        <select id="s1adcar" class="fi" onchange="propagate()">
-          <option value="">— Sincroniza para cargar —</option>
+  <!-- Formulario único -->
+  <div class="g" style="padding:22px;margin-bottom:20px;">
+
+    <!-- Datos colaborador -->
+    <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;">👤 Datos del Colaborador</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px;">
+      <div>
+        <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">ADCAR <span id="adcarSpin" style="display:none;">⏳</span></label>
+        <select id="s1adcar" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;" onchange="propagate()">
+          <option value="">— Seleccionar —</option>
         </select>
-        <div style="font-size:10px;color:var(--muted);margin-top:3px;">Valores en vivo · <a href="#" onclick="loadAdcars();return false;" style="color:var(--accent);">Recargar</a></div>
+        <div style="font-size:10px;color:var(--muted);margin-top:3px;"><a href="#" onclick="loadAdcars();return false;" style="color:var(--accent);">↻ Recargar ADCARs</a></div>
       </div>
-      <div class="fg">
-        <label>Correo IBM</label>
-        <input type="email" id="s1email" class="fi" placeholder="usuario@ibm.com" oninput="propagate()"/>
+      <div>
+        <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Correo IBM *</label>
+        <input type="email" id="s1email" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;" placeholder="usuario@ibm.com"/>
       </div>
-      <div class="fg">
-        <label>Región <span id="gerSpin" style="display:none;font-size:9px;color:var(--muted);">⏳</span></label>
-        <select id="s1ger" class="fi" onchange="propagate()">
+      <div>
+        <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Región <span id="gerSpin" style="display:none;">⏳</span></label>
+        <select id="s1ger" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;">
           <option value="">— Seleccionar —</option>
         </select>
       </div>
-      <div class="fg">
-        <label>Semana / Período</label>
-        <input type="text" id="s1period" class="fi" placeholder="Semana 28 – 2025" oninput="propagate()"/>
+      <div>
+        <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Semana / Período *</label>
+        <input type="text" id="s1period" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;" placeholder="Semana 28 – 2025"/>
       </div>
     </div>
-    <div id="s1info" style="display:none;margin-top:10px;padding:7px 12px;background:var(--p-green);border:1px solid #a7f3d0;border-radius:8px;font-size:11px;color:var(--success);">
-      ✅ Colaborador: <strong id="s1disp"></strong>
-    </div>
-  </div>
 
-  <!-- KPIs -->
-  <div class="kpi-grid">
-    <div class="g kpi"><div><div class="kpi-n" id="k-pend" style="color:var(--warn);">3</div><div class="kpi-l">Pendientes</div></div><div style="font-size:26px;">⏳</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="k-conf" style="color:var(--success);">0</div><div class="kpi-l">Confirmados</div></div><div style="font-size:26px;">✅</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="k-files" style="color:var(--accent2);">0</div><div class="kpi-l">Soportes</div></div><div style="font-size:26px;">📎</div></div>
-    <div class="g kpi" style="border-left:3px solid var(--accent);"><div><div id="k-week" style="font-size:13px;font-weight:700;color:var(--text);">–</div><div class="kpi-l">Semana actual</div></div><div style="font-size:22px;">📅</div></div>
-  </div>
+    <hr style="border:none;border-top:1px solid var(--border);margin-bottom:20px;"/>
 
-  <!-- Col map -->
-  <div class="cmap" style="margin-bottom:18px;">
-    <strong style="color:#93c5fd;margin-right:5px;font-size:11px;">🔗 Board 18432741374:</strong>
-    <span class="ct">Adcar</span><span class="ct">Región</span><span class="ct">Time</span><span class="ct">Soporte Time</span>
-    <span class="ct">Success Factors</span><span class="ct">Soporte SF</span><span class="ct">My Hour Plan</span><span class="ct">Soporte HP</span><span class="ct">Comentarios</span>
-  </div>
+    <!-- Sistemas -->
+    <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:14px;text-transform:uppercase;letter-spacing:.5px;">📋 Estado de Sistemas</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px;">
 
-  <!-- Cards -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-bottom:22px;">
-    <!-- TIME -->
-    <div class="sc">
-      <div class="sc-bar ba-b"></div>
-      <div class="sc-hd">
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);">
-          <div class="sc-ico" style="background:var(--p-blue);border:1px solid #c7d7fc;">🕐</div>Time (IBM Time Tracker)
+      <!-- TIME -->
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <div style="background:var(--p-blue);border-bottom:1px solid #c7d7fc;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;font-weight:700;color:var(--text);">🕐 Time (IBM Time Tracker)</span>
+          <span id="bdg-time" class="sb sb-pend">Pendiente</span>
         </div>
-        <span id="bdg-time" class="sb sb-pend">Pendiente</span>
-      </div>
-      <div class="sc-body">
-        <div class="fg"><label>Estado en Time</label>
-          <select id="sel-time" class="fi">
+        <div style="padding:14px;">
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Estado</label>
+          <select id="sel-time" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;margin-bottom:10px;" onchange="updSummary()">
             <option value="">— Seleccionar —</option>
             <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
           </select>
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Comentarios</label>
+          <textarea id="txt-time" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit;background:#fafbff;resize:vertical;min-height:55px;margin-bottom:10px;" placeholder="Observaciones…"></textarea>
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">📎 Soporte (opcional)</label>
+          <input type="file" id="fi-time" multiple style="width:100%;padding:6px;border:1px dashed #c7d7fc;border-radius:8px;font-size:11px;background:var(--p-blue);cursor:pointer;" onchange="hf(this.files,'time')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls"/>
+          <div id="fl-time" style="margin-top:6px;"></div>
         </div>
-        <div class="fg"><label>Comentarios</label><textarea id="txt-time" class="fi" placeholder="Observaciones…"></textarea></div>
-        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte Time</div>
-        <div class="upl-zone" id="upl-time" ondragover="dov2(event,'upl-time')" ondragleave="dlv2('upl-time')" ondrop="ddr(event,'time')">
-          <div style="font-size:22px;">📁</div>
-          <div style="font-size:11px;color:var(--muted);margin:3px 0;">Arrastra archivos aquí o</div>
-          <label class="upl-btn">Seleccionar archivos<input type="file" id="fi-time" multiple style="display:none;" onchange="hf(this.files,'time')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/></label>
-        </div>
-        <div id="fl-time" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot">
-        <button class="btn-conf" id="btn-time" onclick="confirm1('time')" type="button">✔ Confirmar Time</button>
-        <span id="ts-time" style="font-size:10px;color:var(--muted);"></span>
-      </div>
-    </div>
-    <!-- SF -->
-    <div class="sc">
-      <div class="sc-bar ba-g"></div>
-      <div class="sc-hd">
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);">
-          <div class="sc-ico" style="background:var(--p-green);border:1px solid #a7f3d0;">🌐</div>Success Factors
-        </div>
-        <span id="bdg-sf" class="sb sb-pend">Pendiente</span>
-      </div>
-      <div class="sc-body">
-        <div class="fg"><label>Estado en SF</label>
-          <select id="sel-sf" class="fi">
-            <option value="">— Seleccionar —</option>
-            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
-          </select>
-        </div>
-        <div class="fg"><label>Comentarios</label><textarea id="txt-sf" class="fi" placeholder="Observaciones…"></textarea></div>
-        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte SF</div>
-        <div class="upl-zone" id="upl-sf" ondragover="dov2(event,'upl-sf')" ondragleave="dlv2('upl-sf')" ondrop="ddr(event,'sf')">
-          <div style="font-size:22px;">📁</div>
-          <div style="font-size:11px;color:var(--muted);margin:3px 0;">Arrastra archivos aquí o</div>
-          <label class="upl-btn">Seleccionar archivos<input type="file" id="fi-sf" multiple style="display:none;" onchange="hf(this.files,'sf')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/></label>
-        </div>
-        <div id="fl-sf" style="margin-top:6px;"></div>
-      </div>
-      <div class="sc-foot">
-        <button class="btn-conf" id="btn-sf" onclick="confirm1('sf')" type="button">✔ Confirmar SF</button>
-        <span id="ts-sf" style="font-size:10px;color:var(--muted);"></span>
-      </div>
-    </div>
-    <!-- HP -->
-    <div class="sc">
-      <div class="sc-bar ba-y"></div>
-      <div class="sc-hd">
-        <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--text);">
-          <div class="sc-ico" style="background:var(--p-yellow);border:1px solid #fde68a;">📅</div>My Hour Plan
-        </div>
-        <span id="bdg-hp" class="sb sb-pend">Pendiente</span>
-      </div>
-      <div class="sc-body">
-        <div class="fg"><label>Estado en HP</label>
-          <select id="sel-hp" class="fi">
-            <option value="">— Seleccionar —</option>
-            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
-          </select>
-        </div>
-        <div class="fg"><label>Comentarios</label><textarea id="txt-hp" class="fi" placeholder="Observaciones…"></textarea></div>
-        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte HP</div>
-        <div class="upl-zone" id="upl-hp" ondragover="dov2(event,'upl-hp')" ondragleave="dlv2('upl-hp')" ondrop="ddr(event,'hp')">
-          <div style="font-size:22px;">📁</div>
-          <div style="font-size:11px;color:var(--muted);margin:3px 0;">Arrastra archivos aquí o</div>
-          <label class="upl-btn">Seleccionar archivos<input type="file" id="fi-hp" multiple style="display:none;" onchange="hf(this.files,'hp')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/></label>
-        </div>
-        <div id="fl-hp" style="margin-top:6px;"></div>
-      </div>
-      <div class="sc-foot">
-        <button class="btn-conf" id="btn-hp" onclick="confirm1('hp')" type="button">✔ Confirmar HP</button>
-        <span id="ts-hp" style="font-size:10px;color:var(--muted);"></span>
-      </div>
-    </div>
-  </div>
 
-  <!-- Sync bar -->
-  <div class="g" style="padding:16px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-left:3px solid var(--accent);">
-    <div>
-      <strong style="font-size:13px;">Sincronizar con Monday Board 18432741374</strong>
-      <p style="font-size:12px;color:var(--muted);margin-top:3px;">Crea el ítem con todas las columnas y sube los soportes.</p>
-      <div id="sync1ok" style="font-size:11px;color:var(--success);font-weight:600;display:none;margin-top:5px;">✅ Sincronizado · <span id="sync1ts"></span></div>
+      <!-- SF -->
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <div style="background:var(--p-green);border-bottom:1px solid #a7f3d0;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;font-weight:700;color:var(--text);">🌐 Success Factors</span>
+          <span id="bdg-sf" class="sb sb-pend">Pendiente</span>
+        </div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Estado</label>
+          <select id="sel-sf" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;margin-bottom:10px;" onchange="updSummary()">
+            <option value="">— Seleccionar —</option>
+            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
+          </select>
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Comentarios</label>
+          <textarea id="txt-sf" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit;background:#fafbff;resize:vertical;min-height:55px;margin-bottom:10px;" placeholder="Observaciones…"></textarea>
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">📎 Soporte (opcional)</label>
+          <input type="file" id="fi-sf" multiple style="width:100%;padding:6px;border:1px dashed #a7f3d0;border-radius:8px;font-size:11px;background:var(--p-green);cursor:pointer;" onchange="hf(this.files,'sf')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls"/>
+          <div id="fl-sf" style="margin-top:6px;"></div>
+        </div>
+      </div>
+
+      <!-- HP -->
+      <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+        <div style="background:var(--p-yellow);border-bottom:1px solid #fde68a;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;font-weight:700;color:var(--text);">📅 My Hour Plan</span>
+          <span id="bdg-hp" class="sb sb-pend">Pendiente</span>
+        </div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Estado</label>
+          <select id="sel-hp" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;margin-bottom:10px;" onchange="updSummary()">
+            <option value="">— Seleccionar —</option>
+            <option>Actualizado</option><option>Sin Actualizar</option><option>Pendiente</option>
+          </select>
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Comentarios</label>
+          <textarea id="txt-hp" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:12px;font-family:inherit;background:#fafbff;resize:vertical;min-height:55px;margin-bottom:10px;" placeholder="Observaciones…"></textarea>
+          <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">📎 Soporte (opcional)</label>
+          <input type="file" id="fi-hp" multiple style="width:100%;padding:6px;border:1px dashed #fde68a;border-radius:8px;font-size:11px;background:var(--p-yellow);cursor:pointer;" onchange="hf(this.files,'hp')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls"/>
+          <div id="fl-hp" style="margin-top:6px;"></div>
+        </div>
+      </div>
     </div>
-    <button class="btn btn-p" onclick="syncSlide1(event)">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      Sincronizar con Monday
+
+    <!-- KPIs inline -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
+      <div style="background:var(--p-blue);border:1px solid #c7d7fc;border-radius:10px;padding:10px 18px;font-size:11px;">Semana: <strong id="k-week">–</strong></div>
+      <div style="background:var(--p-yellow);border:1px solid #fde68a;border-radius:10px;padding:10px 18px;font-size:11px;">⏳ Pendientes: <strong id="k-pend">3</strong></div>
+      <div style="background:var(--p-green);border:1px solid #a7f3d0;border-radius:10px;padding:10px 18px;font-size:11px;">✅ Listos: <strong id="k-conf">0</strong></div>
+      <div style="background:#f3f4f6;border:1px solid #e5e7eb;border-radius:10px;padding:10px 18px;font-size:11px;">📎 Soportes: <strong id="k-files">0</strong></div>
+    </div>
+
+    <!-- Botón único de envío -->
+    <div id="sync1ok" style="display:none;margin-bottom:12px;padding:10px 16px;background:var(--p-green);border:1px solid #a7f3d0;border-radius:10px;font-size:12px;font-weight:700;color:var(--success);">
+      ✅ Enviado a Monday · <span id="sync1ts"></span>
+    </div>
+    <button id="btnEnviar" onclick="enviarAMonday(event)" style="width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Enviar a Monday
     </button>
   </div>
 </div>
@@ -835,14 +793,60 @@ async function loadAdcars(){
 function propagate(){
   const a=document.getElementById('s1adcar').value.trim();
   const e=document.getElementById('s1email').value.trim();
-  const info=document.getElementById('s1info');
-  if(a||e){document.getElementById('s1disp').textContent=`${a} · ${e}`;info.style.display='block';}
-  else info.style.display='none';
   if(a&&!document.getElementById('ot-adcar').value) document.getElementById('ot-adcar').value=a;
   if(e&&!document.getElementById('ot-email').value) document.getElementById('ot-email').value=e;
 }
 
-function getCollab(){return{adcar:document.getElementById('s1adcar').value.trim(),email:document.getElementById('s1email').value.trim(),ger:document.getElementById('s1ger').value.trim(),period:document.getElementById('s1period').value.trim()};}
+function getCollab(){return{adcar:(document.getElementById('s1adcar').value||'').trim(),email:(document.getElementById('s1email').value||'').trim(),ger:(document.getElementById('s1ger').value||'').trim(),period:(document.getElementById('s1period').value||'').trim()};}
+
+/* ── Enviar a Monday — flujo único Slide 1 ── */
+async function enviarAMonday(e){
+  const btn=document.getElementById('btnEnviar');
+  const c=getCollab();
+  if(!c.email&&!c.adcar){showToast('⚠️ Ingresa tu correo IBM o selecciona tu ADCAR','err');document.getElementById('s1email').focus();return;}
+  if(c.email&&!c.email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
+  if(!c.period){showToast('⚠️ Ingresa la semana/período','err');document.getElementById('s1period').focus();return;}
+  const ts=document.getElementById('sel-time').value;
+  const ss=document.getElementById('sel-sf').value;
+  const hs=document.getElementById('sel-hp').value;
+  if(!ts&&!ss&&!hs){showToast('⚠️ Selecciona el estado de al menos un sistema','err');return;}
+  btn.disabled=true;btn.textContent='⏳ Enviando…';
+  pshow('Enviando a Monday Board '+BOARD_A+'…');
+  try{
+    pset(15,'Preparando datos…');
+    const cv={};
+    if(c.ger&&COL.gerencia) cv[COL.gerencia]={label:c.ger};
+    if(ts) cv[COL.time]={label:ts};
+    if(ss) cv[COL.sf]={label:ss};
+    if(hs) cv[COL.hp]={label:hs};
+    const parts=[];
+    const tn=(document.getElementById('txt-time').value||'').trim();if(tn)parts.push('Time: '+tn);
+    const sn=(document.getElementById('txt-sf').value||'').trim();if(sn)parts.push('SF: '+sn);
+    const hn=(document.getElementById('txt-hp').value||'').trim();if(hn)parts.push('HP: '+hn);
+    if(parts.length) cv[COL.comentarios]=parts.join(' | ');
+    pset(30,'Creando registro en Monday…');
+    const nm=(c.adcar||c.email)+' · '+c.period;
+    const res=await mc(BOARD_A,nm,cv);
+    const iid=res?.create_item?.id;
+    pset(55,'Registro creado. Subiendo soportes…');
+    const colMap=[...upl.time.map(f=>({f,col:COL.soporte_time})),...upl.sf.map(f=>({f,col:COL.soporte_sf})),...upl.hp.map(f=>({f,col:COL.soporte_hp}))];
+    let uploaded=0;
+    if(iid&&colMap.length){for(const{f,col}of colMap){try{pset(55+Math.round((uploaded/colMap.length)*40),'Subiendo: '+f.name+'…');await mup(iid,col,f);uploaded++;}catch(fe){console.warn('Upload:',fe);}}}
+    pset(100,'¡Listo!');setTimeout(phide,700);
+    if(ts){document.getElementById('bdg-time').textContent='✅ '+ts;document.getElementById('bdg-time').className='sb sb-ok';}
+    if(ss){document.getElementById('bdg-sf').textContent='✅ '+ss;document.getElementById('bdg-sf').className='sb sb-ok';}
+    if(hs){document.getElementById('bdg-hp').textContent='✅ '+hs;document.getElementById('bdg-hp').className='sb sb-ok';}
+    document.getElementById('sync1ts').textContent=new Date().toLocaleString('es-CO',{dateStyle:'medium',timeStyle:'short'})+(uploaded?' · '+uploaded+' soporte(s)':'');
+    document.getElementById('sync1ok').style.display='block';
+    btn.textContent='✅ Enviado';btn.style.background='var(--success)';
+    showToast('✅ Enviado a Monday'+(uploaded?' con '+uploaded+' soporte(s)':''),'ok');
+    upl.time=[];upl.sf=[];upl.hp=[];
+    ['fl-time','fl-sf','fl-hp'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML='';});
+    ['fi-time','fi-sf','fi-hp'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    updSummary();
+    setTimeout(()=>{btn.disabled=false;btn.textContent='Enviar a Monday';btn.style.background='';},3000);
+  }catch(err){phide();showToast('❌ Error: '+err.message,'err');btn.disabled=false;btn.textContent='Enviar a Monday';btn.style.background='';}
+}
 
 function confirm1(id){
   try{
@@ -880,7 +884,11 @@ function confirm1(id){
   }
 }
 function updSummary(){
-  const n=Object.values(conf).filter(Boolean).length;
+  // Cuenta cuántos sistemas tienen un estado seleccionado
+  const ts=document.getElementById('sel-time')?.value;
+  const ss=document.getElementById('sel-sf')?.value;
+  const hs=document.getElementById('sel-hp')?.value;
+  const n=[ts,ss,hs].filter(Boolean).length;
   document.getElementById('k-conf').textContent=n;
   document.getElementById('k-pend').textContent=3-n;
   document.getElementById('k-files').textContent=upl.time.length+upl.sf.length+upl.hp.length;
@@ -1229,7 +1237,10 @@ async function loadWeeks(){
     const data=await mq(`{boards(ids:[${BOARD_A}]){items_page(limit:500){items{id name column_values(ids:["${COL.gerencia}","${COL.time}","${COL.sf}","${COL.hp}","${COL.comentarios}"]){id text}}}}}`);
     swItems=(data?.boards?.[0]?.items_page?.items||[]).map(it=>{
       const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text;});
-      return{id:it.id,name:it.name,ger:cv[COL.gerencia]||'',time:cv[COL.time]||'',sf:cv[COL.sf]||'',hp:cv[COL.hp]||'',notes:cv[COL.comentarios]||''};
+      // Extraer período del nombre del ítem (ej: "AMC304 · Semana 28 – 2025" → período = "Semana 28 – 2025")
+      const nameParts=it.name.split('·').map(s=>s.trim());
+      const period=nameParts.length>1?nameParts.slice(1).join('·').trim():cv[COL.comentarios]||'';
+      return{id:it.id,name:it.name,period,ger:cv[COL.gerencia]||'',time:cv[COL.time]||'',sf:cv[COL.sf]||'',hp:cv[COL.hp]||'',notes:cv[COL.comentarios]||''};
     });
     pset(100,'¡Listo!');setTimeout(phide,700);
     renderSW();
@@ -1257,8 +1268,8 @@ function renderSW(){
   const pager=document.getElementById('swPager');
   if(!items.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza o agrega una semana.</td></tr>`;pager.textContent='';return;}
   tbody.innerHTML=items.map(it=>`<tr>
-    <td style="font-weight:600;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${it.name}</td>
-    <td style="font-size:11px;color:var(--muted);">${it.notes?`<span title="${it.notes}">${it.notes.substring(0,35)}${it.notes.length>35?'…':''}</span>`:'—'}</td>
+    <td style="font-weight:600;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.name}">${it.name.split('·')[0].trim()}</td>
+    <td style="font-size:11px;color:var(--muted);">${it.period?`<span style="font-weight:600;">${it.period.substring(0,35)}${it.period.length>35?'…':''}</span>`:'—'}</td>
     <td style="text-align:center;">${stBadge(it.time)}</td>
     <td style="text-align:center;">${stBadge(it.sf)}</td>
     <td style="text-align:center;">${stBadge(it.hp)}</td>
@@ -1293,7 +1304,7 @@ async function saveWeek(){
     const nm=`${adcar} · ${period}`;
     const res=await mc(BOARD_A,nm,cv);
     const nid=res?.create_item?.id||'local_'+Date.now();
-    swItems.unshift({id:nid,name:nm,ger:gv,time:tv,sf:sv,hp:hv,notes:nv});
+    swItems.unshift({id:nid,name:nm,period,ger:gv,time:tv,sf:sv,hp:hv,notes:nv});
     pset(100,'¡Listo!');setTimeout(phide,700);
     renderSW();
     showToast(`✅ Semana "${nm}" creada en Monday`,'ok');
@@ -1321,7 +1332,7 @@ async function savePerson(){
     const nm=`${name} (${adcar})`;
     const res=await mc(BOARD_A,nm,cv);
     const nid=res?.create_item?.id||'local_'+Date.now();
-    swItems.unshift({id:nid,name:nm,ger:gv,time:'Pendiente',sf:'Pendiente',hp:'Pendiente',notes:period?`Inicio: ${period}`:''});
+    swItems.unshift({id:nid,name:nm,period:'',ger:gv,time:'Pendiente',sf:'Pendiente',hp:'Pendiente',notes:period?`Inicio: ${period}`:''});
     // Add to ADCAR selects
     ['s1adcar','aw-adcar','mn-adcar'].forEach(id=>{
       const s=document.getElementById(id);if(!s)return;
