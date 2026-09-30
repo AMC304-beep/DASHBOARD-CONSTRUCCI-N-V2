@@ -82,21 +82,20 @@
     .sc-hd{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#fafbff;}
     .sc-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
     .sc-body{padding:14px 16px;flex:1;}
-    .sc-foot{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fafbff;position:relative;z-index:10;}
+    .sc-foot{padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fafbff;}
 
     /* ── Upload ── */
-    .upl{border:2px dashed #c7d7fc;border-radius:10px;padding:12px;text-align:center;background:var(--p-blue);cursor:pointer;position:relative;transition:border-color .2s,background .2s;overflow:hidden;}
-    .upl:hover,.upl.over{border-color:var(--accent);background:#dbeafe;}
-    .upl input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;}
-    .upl-inner{position:relative;z-index:1;pointer-events:none;}
-    .fi-item{display:flex;align-items:center;gap:6px;padding:5px 10px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:5px;font-size:11px;color:var(--accent);cursor:default;}
-    .fi-rm{margin-left:auto;color:var(--danger);cursor:pointer;font-weight:700;font-size:13px;padding:0 3px;z-index:10;position:relative;}
-    /* ── Confirmar btn siempre visible ── */
-    .btn-conf{background:var(--accent);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;position:relative;z-index:5;}
-    .btn-conf:hover{background:#0353e9;transform:translateY(-1px);}
-    .btn-conf:active{transform:translateY(0);}
-    .btn-conf.done{background:var(--success);cursor:default;}
-    .btn-conf:disabled{opacity:.7;cursor:default;}
+    .upl-zone{border:2px dashed #c7d7fc;border-radius:10px;padding:14px 12px;text-align:center;background:var(--p-blue);transition:border-color .2s,background .2s;}
+    .upl-zone.over{border-color:var(--accent);background:#dbeafe;}
+    .upl-btn{display:inline-block;margin-top:6px;padding:5px 14px;background:var(--accent);color:#fff;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;}
+    .upl-btn:hover{background:#0353e9;}
+    .fi-item{display:flex;align-items:center;gap:6px;padding:5px 10px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:5px;font-size:11px;color:var(--accent);}
+    .fi-rm{margin-left:auto;color:var(--danger);cursor:pointer;font-weight:700;font-size:13px;padding:0 4px;}
+    /* ── Confirmar btn ── */
+    .btn-conf{background:var(--accent);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+    .btn-conf:hover{background:#0353e9;}
+    .btn-conf.done{background:var(--success);}
+    .btn-conf:disabled{opacity:.6;cursor:default;}
 
     /* ── Modal ── */
     .mbg{display:none;position:fixed;inset:0;background:rgba(30,42,69,.45);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;padding:16px;}
@@ -279,17 +278,14 @@
         </div>
         <div class="fg"><label>Comentarios</label><textarea id="txt-time" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte Time</div>
-        <div class="upl" id="upl-time" ondragover="dov(event,'upl-time')" ondragleave="dlv('upl-time')" ondrop="ddr(event,'time')">
-          <input type="file" multiple onchange="hf(this.files,'time')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/>
-          <div class="upl-inner">
-            <div style="font-size:20px;margin-bottom:3px;">📁</div>
-            <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o haz clic aquí</div>
-            <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
-          </div>
+        <div class="upl-zone" id="upl-time" ondragover="dov2(event,'upl-time')" ondragleave="dlv2('upl-time')" ondrop="ddr(event,'time')">
+          <div style="font-size:22px;">📁</div>
+          <div style="font-size:11px;color:var(--muted);margin:3px 0;">Arrastra archivos aquí o</div>
+          <label class="upl-btn">Seleccionar archivos<input type="file" id="fi-time" multiple style="display:none;" onchange="hf(this.files,'time')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/></label>
         </div>
         <div id="fl-time" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot" style="position:relative;z-index:10;">
+      <div class="sc-foot">
         <button class="btn-conf" id="btn-time" onclick="confirm1('time')" type="button">✔ Confirmar Time</button>
         <span id="ts-time" style="font-size:10px;color:var(--muted);"></span>
       </div>
@@ -312,17 +308,14 @@
         </div>
         <div class="fg"><label>Comentarios</label><textarea id="txt-sf" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte SF</div>
-        <div class="upl" id="upl-sf" ondragover="dov(event,'upl-sf')" ondragleave="dlv('upl-sf')" ondrop="ddr(event,'sf')">
-          <input type="file" multiple onchange="hf(this.files,'sf')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/>
-          <div class="upl-inner">
-            <div style="font-size:20px;margin-bottom:3px;">📁</div>
-            <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o haz clic aquí</div>
-            <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
-          </div>
+        <div class="upl-zone" id="upl-sf" ondragover="dov2(event,'upl-sf')" ondragleave="dlv2('upl-sf')" ondrop="ddr(event,'sf')">
+          <div style="font-size:22px;">📁</div>
+          <div style="font-size:11px;color:var(--muted);margin:3px 0;">Arrastra archivos aquí o</div>
+          <label class="upl-btn">Seleccionar archivos<input type="file" id="fi-sf" multiple style="display:none;" onchange="hf(this.files,'sf')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/></label>
         </div>
         <div id="fl-sf" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot" style="position:relative;z-index:10;">
+      <div class="sc-foot">
         <button class="btn-conf" id="btn-sf" onclick="confirm1('sf')" type="button">✔ Confirmar SF</button>
         <span id="ts-sf" style="font-size:10px;color:var(--muted);"></span>
       </div>
@@ -345,17 +338,14 @@
         </div>
         <div class="fg"><label>Comentarios</label><textarea id="txt-hp" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte HP</div>
-        <div class="upl" id="upl-hp" ondragover="dov(event,'upl-hp')" ondragleave="dlv('upl-hp')" ondrop="ddr(event,'hp')">
-          <input type="file" multiple onchange="hf(this.files,'hp')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/>
-          <div class="upl-inner">
-            <div style="font-size:20px;margin-bottom:3px;">📁</div>
-            <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o haz clic aquí</div>
-            <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
-          </div>
+        <div class="upl-zone" id="upl-hp" ondragover="dov2(event,'upl-hp')" ondragleave="dlv2('upl-hp')" ondrop="ddr(event,'hp')">
+          <div style="font-size:22px;">📁</div>
+          <div style="font-size:11px;color:var(--muted);margin:3px 0;">Arrastra archivos aquí o</div>
+          <label class="upl-btn">Seleccionar archivos<input type="file" id="fi-hp" multiple style="display:none;" onchange="hf(this.files,'hp')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/></label>
         </div>
         <div id="fl-hp" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot" style="position:relative;z-index:10;">
+      <div class="sc-foot">
         <button class="btn-conf" id="btn-hp" onclick="confirm1('hp')" type="button">✔ Confirmar HP</button>
         <span id="ts-hp" style="font-size:10px;color:var(--muted);"></span>
       </div>
@@ -900,9 +890,9 @@ function updSummary(){
 const ICONS={pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊',pptx:'📊',txt:'📃'};
 function fi_icon(n){return ICONS[n.split('.').pop().toLowerCase()]||'📎';}
 function hf(files,cat){[...files].forEach(f=>{if(f.size>50*1024*1024){showToast(`⚠️ ${f.name} supera 50 MB`,'err');return;}upl[cat].push(f);});renderFiles(cat);updSummary();}
-function ddr(e,cat){e.preventDefault();dlv('upl-'+cat);hf(e.dataTransfer.files,cat);}
-function dov(e,id){e.preventDefault();document.getElementById(id).classList.add('over');}
-function dlv(id){document.getElementById(id).classList.remove('over');}
+function ddr(e,cat){e.preventDefault();dlv2('upl-'+cat);hf(e.dataTransfer.files,cat);}
+function dov2(e,id){e.preventDefault();document.getElementById(id).classList.add('over');}
+function dlv2(id){document.getElementById(id).classList.remove('over');}
 function renderFiles(cat){
   const c=document.getElementById('fl-'+cat);c.innerHTML='';
   upl[cat].forEach((f,i)=>{const d=document.createElement('div');d.className='fi-item';d.innerHTML=`${fi_icon(f.name)}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span><span class="fi-rm" onclick="rmFile('${cat}',${i})">✕</span>`;c.appendChild(d);});
