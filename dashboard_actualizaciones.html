@@ -82,17 +82,21 @@
     .sc-hd{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#fafbff;}
     .sc-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
     .sc-body{padding:14px 16px;flex:1;}
-    .sc-foot{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fafbff;}
-    .btn-conf{background:var(--accent);color:#fff;border:none;padding:7px 16px;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;}
-    .btn-conf:hover{background:#0353e9;}
-    .btn-conf.done{background:var(--success);cursor:default;}
+    .sc-foot{padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fafbff;position:relative;z-index:10;}
 
     /* ── Upload ── */
-    .upl{border:2px dashed #c7d7fc;border-radius:10px;padding:12px;text-align:center;background:var(--p-blue);cursor:pointer;position:relative;transition:border-color .2s,background .2s;}
+    .upl{border:2px dashed #c7d7fc;border-radius:10px;padding:12px;text-align:center;background:var(--p-blue);cursor:pointer;position:relative;transition:border-color .2s,background .2s;overflow:hidden;}
     .upl:hover,.upl.over{border-color:var(--accent);background:#dbeafe;}
-    .upl input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-    .fi-item{display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:4px;font-size:10px;color:var(--accent);}
-    .fi-rm{margin-left:auto;color:var(--danger);cursor:pointer;font-weight:700;}
+    .upl input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;}
+    .upl-inner{position:relative;z-index:1;pointer-events:none;}
+    .fi-item{display:flex;align-items:center;gap:6px;padding:5px 10px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:5px;font-size:11px;color:var(--accent);cursor:default;}
+    .fi-rm{margin-left:auto;color:var(--danger);cursor:pointer;font-weight:700;font-size:13px;padding:0 3px;z-index:10;position:relative;}
+    /* ── Confirmar btn siempre visible ── */
+    .btn-conf{background:var(--accent);color:#fff;border:none;padding:9px 20px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;position:relative;z-index:5;}
+    .btn-conf:hover{background:#0353e9;transform:translateY(-1px);}
+    .btn-conf:active{transform:translateY(0);}
+    .btn-conf.done{background:var(--success);cursor:default;}
+    .btn-conf:disabled{opacity:.7;cursor:default;}
 
     /* ── Modal ── */
     .mbg{display:none;position:fixed;inset:0;background:rgba(30,42,69,.45);backdrop-filter:blur(6px);z-index:500;align-items:center;justify-content:center;padding:16px;}
@@ -276,15 +280,17 @@
         <div class="fg"><label>Comentarios</label><textarea id="txt-time" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte Time</div>
         <div class="upl" id="upl-time" ondragover="dov(event,'upl-time')" ondragleave="dlv('upl-time')" ondrop="ddr(event,'time')">
-          <input type="file" multiple onchange="hf(this.files,'time')"/>
-          <div style="font-size:16px;margin-bottom:3px;">📁</div>
-          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic</div>
-          <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
+          <input type="file" multiple onchange="hf(this.files,'time')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/>
+          <div class="upl-inner">
+            <div style="font-size:20px;margin-bottom:3px;">📁</div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o haz clic aquí</div>
+            <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
+          </div>
         </div>
-        <div id="fl-time"></div>
+        <div id="fl-time" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot">
-        <button class="btn-conf" id="btn-time" onclick="confirm1('time')">✔ Confirmar Time</button>
+      <div class="sc-foot" style="position:relative;z-index:10;">
+        <button class="btn-conf" id="btn-time" onclick="confirm1('time')" type="button">✔ Confirmar Time</button>
         <span id="ts-time" style="font-size:10px;color:var(--muted);"></span>
       </div>
     </div>
@@ -307,15 +313,17 @@
         <div class="fg"><label>Comentarios</label><textarea id="txt-sf" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte SF</div>
         <div class="upl" id="upl-sf" ondragover="dov(event,'upl-sf')" ondragleave="dlv('upl-sf')" ondrop="ddr(event,'sf')">
-          <input type="file" multiple onchange="hf(this.files,'sf')"/>
-          <div style="font-size:16px;margin-bottom:3px;">📁</div>
-          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic</div>
-          <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
+          <input type="file" multiple onchange="hf(this.files,'sf')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/>
+          <div class="upl-inner">
+            <div style="font-size:20px;margin-bottom:3px;">📁</div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o haz clic aquí</div>
+            <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
+          </div>
         </div>
-        <div id="fl-sf"></div>
+        <div id="fl-sf" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot">
-        <button class="btn-conf" id="btn-sf" onclick="confirm1('sf')">✔ Confirmar SF</button>
+      <div class="sc-foot" style="position:relative;z-index:10;">
+        <button class="btn-conf" id="btn-sf" onclick="confirm1('sf')" type="button">✔ Confirmar SF</button>
         <span id="ts-sf" style="font-size:10px;color:var(--muted);"></span>
       </div>
     </div>
@@ -338,15 +346,17 @@
         <div class="fg"><label>Comentarios</label><textarea id="txt-hp" class="fi" placeholder="Observaciones…"></textarea></div>
         <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">📎 Soporte HP</div>
         <div class="upl" id="upl-hp" ondragover="dov(event,'upl-hp')" ondragleave="dlv('upl-hp')" ondrop="ddr(event,'hp')">
-          <input type="file" multiple onchange="hf(this.files,'hp')"/>
-          <div style="font-size:16px;margin-bottom:3px;">📁</div>
-          <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o clic</div>
-          <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
+          <input type="file" multiple onchange="hf(this.files,'hp')" accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls,.txt"/>
+          <div class="upl-inner">
+            <div style="font-size:20px;margin-bottom:3px;">📁</div>
+            <div style="font-size:11px;font-weight:600;color:var(--accent);">Arrastra o haz clic aquí</div>
+            <div style="font-size:10px;color:var(--muted);">PDF · JPG · PNG · DOCX · XLSX</div>
+          </div>
         </div>
-        <div id="fl-hp"></div>
+        <div id="fl-hp" style="margin-top:6px;"></div>
       </div>
-      <div class="sc-foot">
-        <button class="btn-conf" id="btn-hp" onclick="confirm1('hp')">✔ Confirmar HP</button>
+      <div class="sc-foot" style="position:relative;z-index:10;">
+        <button class="btn-conf" id="btn-hp" onclick="confirm1('hp')" type="button">✔ Confirmar HP</button>
         <span id="ts-hp" style="font-size:10px;color:var(--muted);"></span>
       </div>
     </div>
@@ -384,7 +394,7 @@
       <input type="radio" name="otr" value="col" checked onchange="setOTRole(this.value)" style="accent-color:var(--accent);"/> 👤 Colaborador
     </label>
     <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;">
-      <input type="radio" name="otr" value="apr" onchange="setOTRole(this.value)" style="accent-color:var(--accent);"/> ✅ Aprobador
+      <input type="radio" name="otr" value="apr" onchange="reqLiderPwd(this)" style="accent-color:var(--accent);"/> 🔐 Aprobador (Líder)
     </label>
   </div>
 
@@ -399,13 +409,13 @@
       <div class="fg"><label>Correo IBM</label><input type="email" id="ot-email" class="fi" placeholder="usuario@ibm.com"/></div>
       <div class="fg"><label>Fecha solicitud HE</label><input type="date" id="ot-date" class="fi"/></div>
       <div class="two">
-        <div class="fg"><label>Hora inicio</label><input type="time" id="ot-ini" class="fi"/></div>
-        <div class="fg"><label>Hora fin</label><input type="time" id="ot-fin" class="fi"/></div>
+        <div class="fg"><label>Hora inicio</label><input type="time" id="ot-ini" class="fi" onchange="calcOT()" oninput="calcOT()"/></div>
+        <div class="fg"><label>Hora fin</label><input type="time" id="ot-fin" class="fi" onchange="calcOT()" oninput="calcOT()"/></div>
       </div>
       <div class="two">
         <div class="fg"><label>Horas calculadas <span style="color:var(--success);font-size:9px;">(auto)</span></label>
-          <input type="number" id="ot-total" class="fi" readonly style="background:#f0fdf4;font-weight:700;color:var(--success);"/></div>
-        <div class="fg"><label>Ajuste manual</label><input type="number" id="ot-manual" class="fi" min="0.5" max="24" step="0.5" placeholder="Sobreescribir"/></div>
+          <input type="text" id="ot-total" class="fi" readonly style="background:#f0fdf4;font-weight:700;color:var(--success);pointer-events:none;"/></div>
+        <div class="fg"><label>Ajuste manual <span style="color:var(--muted);font-size:9px;">(opcional)</span></label><input type="number" id="ot-manual" class="fi" min="0.5" max="24" step="0.5" placeholder="Solo si necesitas corregir" oninput="calcOT()"/></div>
       </div>
       <div class="fg"><label>Aprobador</label>
         <select id="ot-ldr" class="fi">
@@ -466,9 +476,9 @@
       </select>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-p" onclick="openModNew()">
+      <button class="btn btn-p" onclick="reqModPwd()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Nuevo Registro
+        🔐 Nuevo Registro
       </button>
       <button class="btn btn-s" onclick="loadModalidad()">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
@@ -668,6 +678,22 @@
   </div>
 </div>
 
+<!-- Modal contraseña líderes (HE + Modalidad) — nivel raíz para que funcione desde cualquier slide -->
+<div id="mLiderPwd" class="mbg" style="z-index:999;">
+  <div class="mbox" style="max-width:380px;">
+    <h4 style="margin-bottom:4px;">🔐 Acceso de Líder</h4>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Solo Jesús Alberto Pérez o Víctor Suárez Ardila pueden aprobar solicitudes.</p>
+    <div id="liderPwdErr" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:7px;padding:8px 12px;font-size:11px;color:#dc2626;margin-bottom:10px;"></div>
+    <div class="fg"><label>Contraseña de líder</label>
+      <input type="password" id="liderPwdInput" class="fi" placeholder="••••••••" onkeydown="if(event.key==='Enter')confirmLiderPwd()"/>
+    </div>
+    <div class="m-act">
+      <button class="btn-cancel" onclick="cancelLiderPwd()">Cancelar</button>
+      <button class="btn btn-p" onclick="confirmLiderPwd()">🔓 Ingresar</button>
+    </div>
+  </div>
+</div>
+
 <!-- Progress overlay -->
 <div class="pov" id="pov">
   <div class="pbox">
@@ -680,6 +706,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
+console.log('✅ Script cargado correctamente - v'+Date.now());
 /* ══════════════════════════════════════════════════════
    SECURITY: Token never in browser. All Monday calls
    proxied via backend/server.js reading .env server-side.
@@ -828,18 +855,39 @@ function propagate(){
 function getCollab(){return{adcar:document.getElementById('s1adcar').value.trim(),email:document.getElementById('s1email').value.trim(),ger:document.getElementById('s1ger').value.trim(),period:document.getElementById('s1period').value.trim()};}
 
 function confirm1(id){
-  const c=getCollab();
-  if(!c.adcar&&!c.email){showToast('⚠️ Selecciona tu ADCAR o ingresa tu correo','err');return;}
-  if(c.email&&!c.email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
-  conf[id]=true;
-  document.getElementById('btn-'+id).classList.add('done');
-  document.getElementById('btn-'+id).textContent='✅ Confirmado';
-  document.getElementById('bdg-'+id).textContent='Confirmado';
-  document.getElementById('bdg-'+id).className='sb sb-ok';
-  const now=new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
-  document.getElementById('ts-'+id).textContent=` · ${c.adcar||c.email} · ${now}`;
-  updSummary();
-  showToast(`✅ ${({time:'Time',sf:'Success Factors',hp:'My Hour Plan'}[id])} confirmado`,'ok');
+  try{
+    // Leer ADCAR y correo
+    const adcar=(document.getElementById('s1adcar').value||'').trim();
+    const email=(document.getElementById('s1email').value||'').trim();
+    // Debe haber al menos uno
+    if(!adcar && !email){
+      alert('⚠️ Por favor ingresa tu correo IBM (@ibm.com) en el campo "Correo IBM" y luego confirma.');
+      document.getElementById('s1email').focus();
+      return;
+    }
+    if(email && !email.endsWith('@ibm.com')){
+      alert('⚠️ El correo debe terminar en @ibm.com');
+      return;
+    }
+    // Marcar como confirmado
+    conf[id]=true;
+    // Actualizar botón
+    const btn=document.getElementById('btn-'+id);
+    if(btn){ btn.style.background='#059669'; btn.style.color='#fff'; btn.textContent='✅ Confirmado'; btn.disabled=true; }
+    // Actualizar badge
+    const bdg=document.getElementById('bdg-'+id);
+    if(bdg){ bdg.textContent='Confirmado'; bdg.style.background='#d1fae5'; bdg.style.color='#065f46'; }
+    // Timestamp
+    const ts=document.getElementById('ts-'+id);
+    const now=new Date().toLocaleString('es-CO',{dateStyle:'short',timeStyle:'short'});
+    if(ts) ts.textContent=' · '+(adcar||email)+' · '+now;
+    // KPIs
+    updSummary();
+    showToast('✅ '+({time:'Time',sf:'Success Factors',hp:'My Hour Plan'}[id]||id)+' confirmado','ok');
+  }catch(err){
+    alert('Error en confirm1: '+err.message);
+    console.error(err);
+  }
 }
 function updSummary(){
   const n=Object.values(conf).filter(Boolean).length;
@@ -912,15 +960,59 @@ async function syncSlide1(e){
    ══════════════════════ */
 let otList=[],otIdx=1,otLast=null,otRole='col';
 const LDRS={PEREZ:'Jesús Alberto Pérez',SUAREZ:'Víctor Suárez Ardila'};
+// Contraseñas de líderes — una por líder
+const LIDER_PWDS={PEREZ:'LIDER_PEREZ_2026',SUAREZ:'LIDER_SUAREZ_2026'};
+const MOD_PWD='MODALIDAD_LIDER_2026'; // contraseña para editar Modalidad de Trabajo
+let _liderPwdCallback=null; // función a ejecutar tras autenticación exitosa
+
+function reqLiderPwd(radioEl){
+  // Revertir el radio si cancela
+  _liderPwdCallback=function(ok){
+    if(!ok){document.querySelector('input[name="otr"][value="col"]').checked=true;}
+    else{setOTRole('apr');}
+  };
+  document.getElementById('liderPwdInput').value='';
+  document.getElementById('liderPwdErr').style.display='none';
+  openM('mLiderPwd');
+}
+function reqModPwd(){
+  _liderPwdCallback=function(ok){if(ok)openModNew();};
+  document.getElementById('liderPwdInput').value='';
+  document.getElementById('liderPwdErr').style.display='none';
+  openM('mLiderPwd');
+}
+function confirmLiderPwd(){
+  const v=document.getElementById('liderPwdInput').value.trim();
+  const validLider=Object.values(LIDER_PWDS).includes(v)||v===MOD_PWD;
+  if(!validLider){
+    const e=document.getElementById('liderPwdErr');
+    e.textContent='❌ Contraseña incorrecta.';e.style.display='block';
+    return;
+  }
+  closeM('mLiderPwd');
+  if(_liderPwdCallback){_liderPwdCallback(true);_liderPwdCallback=null;}
+}
+function cancelLiderPwd(){
+  closeM('mLiderPwd');
+  if(_liderPwdCallback){_liderPwdCallback(false);_liderPwdCallback=null;}
+}
 
 function calcOT(){
   const s=document.getElementById('ot-ini').value;
   const e=document.getElementById('ot-fin').value;
   const m=document.getElementById('ot-manual').value;
   const a=document.getElementById('ot-total');
-  if(m&&m.trim()){a.value=m;return;}
-  if(s&&e){const[sh,sm]=s.split(':').map(Number);const[eh,em]=e.split(':').map(Number);const d=(eh*60+em)-(sh*60+sm);if(d>0){a.value=(d/60).toFixed(1);return;}}
-  a.value='';
+  // Si hay ajuste manual, úsalo
+  if(m&&m.trim()&&!isNaN(parseFloat(m))){a.value=parseFloat(m).toFixed(1);return;}
+  // Calcular automáticamente de hora inicio a hora fin
+  if(s&&e){
+    const[sh,sm]=s.split(':').map(Number);
+    const[eh,em]=e.split(':').map(Number);
+    const d=(eh*60+em)-(sh*60+sm);
+    if(d>0){a.value=(d/60).toFixed(1);a.style.color='var(--success)';return;}
+    if(d<0){a.value='⚠️ Hora fin antes de inicio';a.style.color='var(--danger)';return;}
+  }
+  a.value='';a.style.color='';
 }
 function submitOT(){
   const adcar=document.getElementById('ot-adcar').value.trim();
@@ -928,10 +1020,22 @@ function submitOT(){
   const date=document.getElementById('ot-date').value;
   const ini=document.getElementById('ot-ini').value;
   const fin=document.getElementById('ot-fin').value;
-  const total=parseFloat(document.getElementById('ot-manual').value||document.getElementById('ot-total').value);
+  // Leer total — primero manual, luego calculado automáticamente
+  const manualVal=document.getElementById('ot-manual').value.trim();
+  const autoVal=document.getElementById('ot-total').value.trim().replace('⚠️','').trim();
+  const totalRaw=manualVal||autoVal;
+  const total=parseFloat(totalRaw);
   const ldr=document.getElementById('ot-ldr').value;
   const reason=document.getElementById('ot-reason').value.trim();
-  if(!adcar||!email||!date||!ini||!fin||isNaN(total)||!ldr||!reason){showToast('⚠️ Completa todos los campos','err');return;}
+  // Validaciones claras
+  if(!adcar){showToast('⚠️ Ingresa tu ADCAR','err');document.getElementById('ot-adcar').focus();return;}
+  if(!email){showToast('⚠️ Ingresa tu correo IBM','err');document.getElementById('ot-email').focus();return;}
+  if(!email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
+  if(!date){showToast('⚠️ Selecciona la fecha','err');return;}
+  if(!ini||!fin){showToast('⚠️ Ingresa hora inicio y hora fin','err');return;}
+  if(isNaN(total)||total<=0){showToast('⚠️ Las horas calculadas no son válidas. Verifica hora inicio/fin','err');return;}
+  if(!ldr){showToast('⚠️ Selecciona el aprobador','err');return;}
+  if(!reason){showToast('⚠️ Escribe la justificación','err');document.getElementById('ot-reason').focus();return;}
   if(!email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
   const r={id:otIdx++,adcar,email,date,ini,fin,total,ldr,reason,status:'pending',at:new Date().toLocaleString('es-CO')};
   otList.unshift(r);otLast=r.id;
