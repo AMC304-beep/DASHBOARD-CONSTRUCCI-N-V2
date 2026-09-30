@@ -320,6 +320,7 @@
     .card:nth-child(1) { animation-delay: 0.1s; }
     .card:nth-child(2) { animation-delay: 0.2s; }
     .card:nth-child(3) { animation-delay: 0.3s; }
+    .card:nth-child(4) { animation-delay: 0.4s; }
 
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(20px); }
@@ -339,6 +340,10 @@
       border-color: rgba(8,145,178,0.4);
       box-shadow: 0 8px 32px rgba(8,145,178,0.14);
     }
+    .card.green-card:hover {
+      border-color: rgba(5,150,105,0.4);
+      box-shadow: 0 8px 32px rgba(5,150,105,0.14);
+    }
 
     .card-accent-line {
       height: 4px;
@@ -346,8 +351,9 @@
       background: var(--accent);
       flex-shrink: 0;
     }
-    .card.purple .card-accent-line  { background: var(--purple); }
+    .card.purple .card-accent-line    { background: var(--purple); }
     .card.teal-card .card-accent-line { background: var(--teal); }
+    .card.green-card .card-accent-line{ background: #059669; }
 
     .card-body {
       padding: 28px 28px 24px;
@@ -374,6 +380,10 @@
       justify-content: center;
       flex-shrink: 0;
     }
+    .card.green-card .icon-circle {
+      background: #d1fae5;
+      border-color: #a7f3d0;
+    }
     .card.purple .icon-circle {
       background: var(--p-purple);
       border-color: rgba(124,92,216,0.2);
@@ -392,6 +402,10 @@
       background: var(--p-blue);
       border: 1px solid rgba(15,98,254,0.22);
       color: #1e4db7;
+    }
+    .card.green-card .card-badge {
+      background: #d1fae5;
+      color: #065f46;
     }
     .card.purple .card-badge {
       background: var(--p-purple);
@@ -442,8 +456,9 @@
       background: var(--accent);
       flex-shrink: 0;
     }
-    .card.purple .feature-list li::before  { background: var(--purple); }
+    .card.purple .feature-list li::before    { background: var(--purple); }
     .card.teal-card .feature-list li::before { background: var(--teal); }
+    .card.green-card .feature-list li::before{ background: #059669; }
 
     .card-cta {
       display: inline-flex;
@@ -487,6 +502,16 @@
     .card.teal-card .card-cta:hover {
       background: var(--teal);
       box-shadow: 0 4px 18px rgba(8,145,178,0.3);
+      color: #fff;
+    }
+    .card.green-card .card-cta {
+      border-color: rgba(5,150,105,0.3);
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .card.green-card .card-cta:hover {
+      background: #059669;
+      box-shadow: 0 4px 18px rgba(5,150,105,0.3);
       color: #fff;
     }
 
@@ -779,6 +804,35 @@
               <li>Sincronización con Monday.com</li>
             </ul>
             <a href="dashboard_ausencias.html" class="card-cta">
+              Acceder al módulo
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Card 4: Modalidad de Trabajo -->
+        <div class="card green-card">
+          <div class="card-accent-line"></div>
+          <div class="card-body">
+            <div class="card-header-row">
+              <div class="icon-circle">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="3" width="20" height="14" rx="2"/>
+                  <line x1="8" y1="21" x2="16" y2="21"/>
+                  <line x1="12" y1="17" x2="12" y2="21"/>
+                </svg>
+              </div>
+              <span class="card-badge">Modalidad</span>
+            </div>
+            <h2 class="card-title">Modalidad de Trabajo</h2>
+            <p class="card-desc">Registra y consulta la modalidad de trabajo semanal del equipo — presencial, remoto o híbrido — sincronizado con Monday.com.</p>
+            <ul class="feature-list">
+              <li>Vista en tiempo real del equipo</li>
+              <li>Registro y edición por semana</li>
+              <li>Distribución por modalidad</li>
+              <li>Sincronización con Monday.com</li>
+            </ul>
+            <a href="dashboard_actualizaciones.html#slide3" class="card-cta">
               Acceder al módulo
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
