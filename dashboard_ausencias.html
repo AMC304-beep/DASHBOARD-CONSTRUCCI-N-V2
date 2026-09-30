@@ -15,24 +15,15 @@
     body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:var(--bg)!important;color:var(--text)!important;}
     body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(circle,rgba(15,98,254,.07) 1px,transparent 1px);background-size:28px 28px;}
     ::-webkit-scrollbar{width:5px;height:5px;}::-webkit-scrollbar-track{background:#f0f4ff;}::-webkit-scrollbar-thumb{background:rgba(15,98,254,.25);border-radius:4px;}
-
-    /* Card hover */
     .card-lift{transition:transform .2s ease,box-shadow .2s ease;}
     .card-lift:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(15,98,254,.12);}
-
-    /* Slide */
     .slide-enter{animation:fadeIn .3s ease;}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Shimmer */
     @keyframes progressShimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
     .shimmer{background:linear-gradient(90deg,#0f62fe 0%,#78a9ff 50%,#0f62fe 100%);background-size:200% 100%;animation:progressShimmer 1.5s infinite;}
-
     tbody tr{transition:background .15s;}
     tbody tr:hover{background:var(--p-blue)!important;}
-
-    /* FullCalendar */
     .fc .fc-button{background:#0f62fe!important;border-color:#0353e9!important;font-size:12px!important;padding:6px 14px!important;border-radius:6px!important;font-family:'IBM Plex Sans',sans-serif!important;font-weight:600!important;}
     .fc .fc-button:hover{background:#0353e9!important;}
     .fc .fc-button-active,.fc .fc-button:focus{background:#0353e9!important;box-shadow:none!important;outline:none!important;}
@@ -40,29 +31,18 @@
     .fc-daygrid-event{border-radius:5px!important;padding:2px 6px!important;font-size:11px!important;font-weight:600!important;border:none!important;}
     .fc-day-today{background:#eff6ff!important;}
     .fc-col-header-cell{font-size:11px!important;font-weight:700!important;color:#57606a!important;text-transform:uppercase!important;letter-spacing:.6px!important;}
-
-    /* Badge */
     .sbadge{display:inline-flex;align-items:center;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.3px;white-space:nowrap;}
-
-    /* Input focus */
     input:focus,select:focus,textarea:focus{outline:none;border-color:#0f62fe!important;box-shadow:0 0 0 3px rgba(15,98,254,.12)!important;}
-
-    /* Tooltip */
     [data-tip]{position:relative;cursor:default;}
     [data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1f2328;color:#fff;padding:4px 10px;border-radius:5px;font-size:11px;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .2s;z-index:99;}
     [data-tip]:hover::after{opacity:1;}
-
-    /* AUTH gate */
-    #authGate{display:flex;position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0f1a3d 0%,#1e2a45 60%,#0f62fe22 100%);align-items:center;justify-content:center;padding:20px;}
-    .auth-dot{position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(15,98,254,.12) 1px,transparent 1px);background-size:32px 32px;}
-    @keyframes authShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
   </style>
 </head>
 <body class="min-h-screen flex flex-col" style="background:var(--bg);color:var(--text);position:relative;z-index:1;font-family:'IBM Plex Sans',system-ui,sans-serif;">
 
-<!-- ══ MODAL APROBACIÓN — solo Anlli Liliana Varón ══ -->
-<div id="aprPwdModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:9999;display:none;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:16px;padding:32px;max-width:380px;width:90%;box-shadow:0 24px 60px rgba(15,98,254,.2);">
+<!-- ══ MODAL CONTRASEÑA APROBACIÓN ══ -->
+<div id="aprPwdModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:32px;max-width:380px;width:90%;box-shadow:0 24px 60px rgba(15,98,254,.22);">
     <h3 style="font-size:16px;font-weight:700;color:#1e2a45;margin-bottom:4px;">🔐 Acceso de Aprobadora</h3>
     <p style="font-size:11px;color:#6b7fa3;margin-bottom:16px;">Solo <strong style="color:#1e2a45;">Anlli Liliana Varón</strong> puede aprobar o rechazar solicitudes.</p>
     <div id="aprPwdErr" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:7px;padding:8px 12px;font-size:11px;color:#dc2626;margin-bottom:10px;"></div>
@@ -80,7 +60,7 @@
 </div>
 
 <!-- ══ TOAST ══ -->
-<div id="toast" class="fixed bottom-6 right-6 z-[999] flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold max-w-sm transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
+<div id="toast" class="fixed bottom-6 right-6 z-[998] flex items-center gap-3 px-5 py-3 rounded-xl shadow-2xl text-sm font-semibold max-w-sm transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none"
      style="background:#ffffff;color:#1e2a45;border-left:3px solid #0f62fe;border:1px solid #dbe4f8;box-shadow:0 8px 32px rgba(15,98,254,.12);">
   <svg id="toastIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
   <span id="toastMsg">Mensaje</span>
@@ -115,7 +95,7 @@
         class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold"
         style="background:#ffffff;color:#0f62fe;box-shadow:0 1px 4px rgba(15,98,254,.12);">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        Gestión & Aprobación
+        Gestión &amp; Aprobación
       </button>
       <button id="tab2" onclick="switchSlide(2)"
         class="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold" style="color:#6b7fa3;">
@@ -149,14 +129,14 @@
 <!-- ══ MAIN ══ -->
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-5">
 
-  <!-- ── AVISO aprobación ── -->
+  <!-- Aviso aprobación -->
   <div class="flex items-center gap-3 px-5 py-3 rounded-2xl border text-xs font-semibold"
        style="background:#d1fae5;border-color:#a7f3d0;color:#065f46;">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
     <span>Portal de aprobación exclusivo de <strong>Anlli Liliana Varón</strong> (angie.varon@ibm.com) · Nadie más puede aprobar o rechazar solicitudes.</span>
   </div>
 
-  <!-- ══════════ SLIDE 1: Gestión & Aprobación ══════════ -->
+  <!-- ══ SLIDE 1: Gestión & Aprobación ══ -->
   <section id="slide1" class="space-y-5 slide-enter">
 
     <!-- KPIs -->
@@ -165,7 +145,7 @@
     <!-- Main grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
 
-      <!-- Form — crear nueva solicitud en Monday -->
+      <!-- Form crear nueva solicitud -->
       <aside class="lg:col-span-4">
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sticky top-20 card-lift">
           <div class="flex items-center gap-3 mb-4 pb-4 border-b border-slate-100">
@@ -179,16 +159,77 @@
           </div>
 
           <form id="createForm" onsubmit="handleCreateItem(event)" class="space-y-3 text-xs">
+            <!-- Nombre -->
             <div>
               <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Nombre del elemento *</label>
-              <input type="text" id="createItemName" required placeholder="Ej: Ana García — Vacaciones"
+              <input type="text" id="c_name" required placeholder="Ej: Ana García — Vacaciones"
                 class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
             </div>
-
-            <!-- Campos dinámicos según columnas de Monday -->
-            <div id="dynamicFormFields" class="space-y-3"></div>
-
-            <!-- Aprobante fijo (solo lectura) -->
+            <!-- Motivo -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Motivo</label>
+              <select id="c_motivo" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition">
+                <option value="">— Seleccionar —</option>
+                <option>Cumpleaños</option>
+                <option>Vacaciones</option>
+                <option>Dia de la familia</option>
+                <option>Deber Cívico</option>
+                <option>Incapacidad</option>
+                <option>Feridado Disfrutado</option>
+                <option>Calamidad Domestica</option>
+              </select>
+            </div>
+            <!-- Región -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Región</label>
+              <select id="c_region" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition">
+                <option value="">— Seleccionar —</option>
+              </select>
+            </div>
+            <!-- Fecha de Solicitud -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Fecha de Solicitud</label>
+              <input type="date" id="c_date4" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+            </div>
+            <!-- Cronograma -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Cronograma</label>
+              <div class="grid grid-cols-2 gap-2">
+                <input type="date" id="c_timeline_from" placeholder="Desde" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+                <input type="date" id="c_timeline_to" placeholder="Hasta" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+              </div>
+            </div>
+            <!-- Días Ausencias -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Días Ausencias</label>
+              <input type="number" id="c_dias" min="0" step="0.5" placeholder="0" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+            </div>
+            <!-- Backup -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Backup</label>
+              <input type="text" id="c_backup" placeholder="Nombre del backup…" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+            </div>
+            <!-- Observaciones -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Observaciones</label>
+              <textarea id="c_obs" rows="2" placeholder="Observaciones…" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition resize-none"></textarea>
+            </div>
+            <!-- Soporte Ausencia — any file type -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">
+                📎 Soporte Ausencia
+              </label>
+              <div id="aus-drop" onclick="document.getElementById('aus-file-input').click()"
+                ondragover="ausDragOver(event)" ondragleave="ausDragLeave()" ondrop="ausDrop(event)"
+                style="border:2px dashed #c7d7fc;border-radius:10px;padding:14px;text-align:center;background:#e8f0fe;cursor:pointer;transition:border-color .2s,background .2s;">
+                <input type="file" id="aus-file-input" multiple
+                  style="display:none;" onchange="ausHandleFiles(this.files)"/>
+                <div style="font-size:20px;margin-bottom:4px;">📁</div>
+                <div style="font-size:11px;font-weight:600;color:#0f62fe;">Arrastra o haz clic — cualquier tipo de archivo</div>
+              </div>
+              <div id="aus-file-list" style="margin-top:6px;"></div>
+            </div>
+            <!-- Aprobante (readonly) -->
             <div>
               <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Aprobante</label>
               <input type="text" value="Anlli Liliana Varón" readonly
@@ -197,24 +238,9 @@
               <p class="text-[10px] text-slate-400 mt-1">Solo Anlli Liliana Varón puede aprobar solicitudes.</p>
             </div>
 
-            <!-- Soporte file upload -->
-            <div>
-              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">
-                📎 Soporte <span style="font-size:9px;color:#6b7fa3;font-weight:400;"> PDF · JPG · PNG · DOCX · XLSX</span>
-              </label>
-              <div id="aus-drop" onclick="document.getElementById('aus-file-input').click()"
-                ondragover="ausDragOver(event)" ondragleave="ausDragLeave()" ondrop="ausDrop(event)"
-                style="border:2px dashed #c7d7fc;border-radius:10px;padding:14px;text-align:center;background:#e8f0fe;cursor:pointer;transition:border-color .2s,background .2s;position:relative;">
-                <input type="file" id="aus-file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.xlsx,.xls"
-                  style="display:none;" onchange="ausHandleFiles(this.files)"/>
-                <div style="font-size:20px;margin-bottom:4px;">📁</div>
-                <div style="font-size:11px;font-weight:600;color:#0f62fe;">Arrastra o haz clic</div>
-              </div>
-              <div id="aus-file-list" style="margin-top:6px;"></div>
-            </div>
-
             <button type="submit"
-              class="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition mt-2">
+              class="w-full flex items-center justify-center gap-2 py-2.5 text-white font-bold text-xs rounded-xl shadow-md transition mt-2"
+              style="background:#0f62fe;" onmouseover="this.style.background='#0353e9'" onmouseout="this.style.background='#0f62fe'">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               Guardar en Monday
             </button>
@@ -222,22 +248,34 @@
         </div>
       </aside>
 
-      <!-- Tabla + aprobación + charts -->
+      <!-- Tabla + charts -->
       <div class="lg:col-span-8 space-y-5">
 
-        <!-- Table -->
+        <!-- Tabla -->
         <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-4 border-b border-slate-100">
             <div>
               <h2 class="text-sm font-bold text-slate-900">Solicitudes del Tablero</h2>
               <p class="text-[11px] text-slate-400 mt-0.5">Clic en una fila para editar · Aprobación exclusiva de Anlli Liliana Varón</p>
             </div>
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 flex-wrap">
               <div class="relative">
                 <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                 <input type="text" id="searchInput" oninput="filterTable()" placeholder="Buscar…"
-                  class="pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg bg-slate-50 w-44 sm:w-56 transition"/>
+                  class="pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg bg-slate-50 w-36 transition"/>
               </div>
+              <!-- Filtro por Motivo -->
+              <select id="motivoFilter" onchange="filterTable()"
+                class="px-2 py-1.5 text-xs border border-slate-200 rounded-lg bg-slate-50 text-slate-600 font-medium transition">
+                <option value="ALL">Todos los motivos</option>
+                <option>Cumpleaños</option>
+                <option>Vacaciones</option>
+                <option>Dia de la familia</option>
+                <option>Deber Cívico</option>
+                <option>Incapacidad</option>
+                <option>Feridado Disfrutado</option>
+                <option>Calamidad Domestica</option>
+              </select>
               <select id="groupFilter" onchange="filterTable()"
                 class="px-2 py-1.5 text-xs border border-slate-200 rounded-lg bg-slate-50 text-slate-600 font-medium transition">
                 <option value="ALL">Todos los grupos</option>
@@ -246,7 +284,18 @@
           </div>
           <div class="overflow-x-auto rounded-xl border border-slate-100 max-h-[440px] overflow-y-auto">
             <table class="w-full text-left text-xs text-slate-600 whitespace-nowrap">
-              <thead id="tableHead" class="bg-slate-50 text-slate-500 uppercase text-[10px] tracking-wider font-bold border-b border-slate-200 sticky top-0 z-10"></thead>
+              <thead class="bg-slate-50 text-slate-500 uppercase text-[10px] tracking-wider font-bold border-b border-slate-200 sticky top-0 z-10">
+                <tr>
+                  <th class="px-3 py-3">Nombre</th>
+                  <th class="px-3 py-3">Motivo</th>
+                  <th class="px-3 py-3">Región</th>
+                  <th class="px-3 py-3">Fecha Solicitud</th>
+                  <th class="px-3 py-3">Cronograma</th>
+                  <th class="px-3 py-3">Días</th>
+                  <th class="px-3 py-3">Estado Aprobación</th>
+                  <th class="px-3 py-3 text-right">Acción</th>
+                </tr>
+              </thead>
               <tbody id="tableBody" class="divide-y divide-slate-50"></tbody>
             </table>
           </div>
@@ -260,7 +309,7 @@
               <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 7.07 17.07"/></svg>
               </div>
-              <span class="text-xs font-bold text-slate-800">Estado de Solicitudes</span>
+              <span class="text-xs font-bold text-slate-800">Estado de Aprobación</span>
             </div>
             <div class="relative h-44"><canvas id="statusChart"></canvas></div>
           </div>
@@ -269,7 +318,7 @@
               <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
               </div>
-              <span class="text-xs font-bold text-slate-800">Registros por Grupo</span>
+              <span class="text-xs font-bold text-slate-800">Motivos de Ausencia</span>
             </div>
             <div class="relative h-44"><canvas id="groupsChart"></canvas></div>
           </div>
@@ -279,7 +328,7 @@
     </div>
   </section>
 
-  <!-- ══════════ SLIDE 2: Cronograma ══════════ -->
+  <!-- ══ SLIDE 2: Cronograma ══ -->
   <section id="slide2" class="hidden space-y-5 slide-enter">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-100">
@@ -332,26 +381,75 @@
     </div>
     <form id="editForm" onsubmit="saveEditedItem(event)" class="flex-1 overflow-y-auto p-5 space-y-3 text-xs">
       <input type="hidden" id="editItemId"/>
+      <!-- Nombre -->
       <div>
         <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Nombre del elemento *</label>
         <input type="text" id="editItemName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-800 text-xs transition"/>
       </div>
-      <div id="editFields" class="space-y-3"></div>
+      <!-- Motivo -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Motivo</label>
+        <select id="e_motivo" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition">
+          <option value="">— Seleccionar —</option>
+          <option>Cumpleaños</option>
+          <option>Vacaciones</option>
+          <option>Dia de la familia</option>
+          <option>Deber Cívico</option>
+          <option>Incapacidad</option>
+          <option>Feridado Disfrutado</option>
+          <option>Calamidad Domestica</option>
+        </select>
+      </div>
+      <!-- Región -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Región</label>
+        <select id="e_region" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition">
+          <option value="">— Seleccionar —</option>
+        </select>
+      </div>
+      <!-- Fecha Solicitud -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Fecha de Solicitud</label>
+        <input type="date" id="e_date4" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+      </div>
+      <!-- Cronograma -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Cronograma</label>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="date" id="e_timeline_from" placeholder="Desde" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+          <input type="date" id="e_timeline_to" placeholder="Hasta" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+        </div>
+      </div>
+      <!-- Días Ausencias -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Días Ausencias</label>
+        <input type="number" id="e_dias" min="0" step="0.5" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+      </div>
+      <!-- Backup -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Backup</label>
+        <input type="text" id="e_backup" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+      </div>
+      <!-- Observaciones -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Observaciones</label>
+        <textarea id="e_obs" rows="2" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition resize-none"></textarea>
+      </div>
 
-      <!-- Aprobación — solo Anlli Liliana Varón -->
-      <div id="approvalSection" class="p-3 rounded-xl border" style="display:none;background:#fef3c7;border-color:#fde68a;">
+      <!-- Sección Aprobación -->
+      <div id="approvalSection" class="p-3 rounded-xl border" style="background:#fef3c7;border-color:#fde68a;">
         <div style="font-size:10px;font-weight:700;color:#92400e;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">
           🔐 Aprobación — Anlli Liliana Varón (exclusivo)
         </div>
         <div id="aprStatus" style="font-size:12px;color:#1e2a45;margin-bottom:10px;"></div>
         <div style="display:flex;gap:8px;">
-          <button type="button" onclick="reqAprPwd('approve')" id="btnApr"
+          <button type="button" onclick="reqAprPwd('approve')"
             class="flex-1 text-xs font-bold py-2 rounded-lg transition"
             style="background:#059669;color:#fff;border:none;cursor:pointer;"
             onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
             ✅ Aprobar
           </button>
-          <button type="button" onclick="reqAprPwd('reject')" id="btnRej"
+          <button type="button" onclick="reqAprPwd('reject')"
             class="flex-1 text-xs font-bold py-2 rounded-lg transition"
             style="background:#dc2626;color:#fff;border:none;cursor:pointer;"
             onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">
@@ -369,7 +467,8 @@
         <div class="flex gap-2">
           <button type="button" onclick="closeEditModal()" class="px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-lg transition">Cancelar</button>
           <button type="submit"
-            class="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition">
+            class="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white rounded-lg shadow-sm transition"
+            style="background:#0f62fe;" onmouseover="this.style.background='#0353e9'" onmouseout="this.style.background='#0f62fe'">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
             Guardar en Monday
           </button>
@@ -381,138 +480,230 @@
 
 <!-- ══ SCRIPT ══ -->
 <script>
-/* ══════════════════════════════════════════════════════
-   SECURITY: Token never in browser. All calls proxied
-   via backend/server.js which reads .env server-side.
-   ══════════════════════════════════════════════════════ */
-
-/* ── AUTH — solo para botones de aprobación ── */
-const APPROVER_EMAIL = 'angie.varon@ibm.com';
-const APR_PWD        = 'APROBADORA_2026'; // contraseña exclusiva de Anlli Liliana Varón
-let _aprAction=null; // 'approve' | 'reject'
-
-function reqAprPwd(action){
-  _aprAction=action;
-  document.getElementById('aprPwdInput').value='';
-  document.getElementById('aprPwdErr').style.display='none';
-  const m=document.getElementById('aprPwdModal');
-  m.style.display='flex';
-}
-function confirmAprPwd(){
-  const v=document.getElementById('aprPwdInput').value.trim();
-  if(v!==APR_PWD){
-    const e=document.getElementById('aprPwdErr');
-    e.textContent='❌ Contraseña incorrecta. Solo Anlli Liliana Varón puede aprobar.';
-    e.style.display='block';
-    return;
-  }
-  document.getElementById('aprPwdModal').style.display='none';
-  if(_aprAction==='approve') approveItem();
-  else if(_aprAction==='reject') rejectItem();
-  _aprAction=null;
-}
-function cancelAprPwd(){
-  document.getElementById('aprPwdModal').style.display='none';
-  _aprAction=null;
-}
+/* ══════════════════════════════════════════════════
+   TOKEN NEVER IN BROWSER — all calls proxied via
+   backend/server.js reading .env server-side.
+   ══════════════════════════════════════════════════ */
 
 /* ── Config ── */
 const PROXY_BASE = 'http://127.0.0.1:3000';
 const BOARD_ID   = '18432588237';
 const PALETTE    = ['#0f62fe','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#64748b'];
 
-/* ── State ── */
-let boardMeta  = {name:'Gestión de Ausencias',columns:[],groups:[]};
-let boardItems = [];
-let calendar;
-let chartStatus=null, chartGroups=null;
-let ausFiles   = [];
+/* Column IDs (confirmed from Monday API) */
+const COL = {
+  name:      'name',
+  contacto1: 'person',
+  backup:    'text_mm7gxx4s',
+  contacto2: 'multiple_person_mm7gtypz',
+  motivo:    'status',                    // Motivo — status labels
+  region:    'color_mm7g7naz',            // Región — status
+  fechaSol:  'date4',                     // Fecha de Solicitud
+  cronograma:'timerange_mm7gjxra',        // Cronograma — timeline
+  dias:      'numeric_mm7gf0nh',          // Días Ausencias — numbers
+  soporte:   'file_mm7g6w04',             // Soporte Ausencia — file
+  aprobante: 'multiple_person_mm7g8121',  // Aprobante — people (readonly)
+  estado:    'color_mm7gg2a7',            // Estado Aprobación — APPROVAL ONLY
+  obs:       'text_mm7g4np1',             // Observaciones
+};
 
-/* ── API via proxy ── */
-async function api(query,variables={}){
-  const r=await fetch(`${PROXY_BASE}/api/monday/query`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query,variables})});
-  if(!r.ok) throw new Error(`Proxy HTTP ${r.status}`);
-  const j=await r.json(); if(j.error) throw new Error(j.error); return j;
+/* ── Approval password ── */
+const APR_PWD = 'APROBADORA_2026';
+let _aprAction = null; // 'approve' | 'reject'
+
+function reqAprPwd(action) {
+  _aprAction = action;
+  document.getElementById('aprPwdInput').value = '';
+  document.getElementById('aprPwdErr').style.display = 'none';
+  const m = document.getElementById('aprPwdModal');
+  m.style.display = 'flex';
+}
+function confirmAprPwd() {
+  const v = document.getElementById('aprPwdInput').value.trim();
+  if (v !== APR_PWD) {
+    const e = document.getElementById('aprPwdErr');
+    e.textContent = '❌ Contraseña incorrecta. Solo Anlli Liliana Varón puede aprobar.';
+    e.style.display = 'block';
+    return;
+  }
+  document.getElementById('aprPwdModal').style.display = 'none';
+  if (_aprAction === 'approve') approveItem();
+  else if (_aprAction === 'reject') rejectItem();
+  _aprAction = null;
+}
+function cancelAprPwd() {
+  document.getElementById('aprPwdModal').style.display = 'none';
+  _aprAction = null;
 }
 
-async function uploadFileViaProxy(itemId,columnId,file){
-  const fd=new FormData();fd.append('itemId',itemId);fd.append('columnId',columnId);fd.append('file',file,file.name);
-  const r=await fetch(`${PROXY_BASE}/api/monday/upload`,{method:'POST',body:fd});
-  if(!r.ok) throw new Error(`Upload HTTP ${r.status}`);
-  const j=await r.json(); if(j.error) throw new Error(j.error); return j;
+/* ── State ── */
+let boardItems = [];
+let regionOptions = [];
+let calendar;
+let chartStatus = null, chartGroups = null;
+let ausFiles = [];
+
+/* ── API via proxy ── */
+async function api(query, variables = {}) {
+  const r = await fetch(`${PROXY_BASE}/api/monday/query`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ query, variables })
+  });
+  if (!r.ok) throw new Error(`Proxy HTTP ${r.status}`);
+  const j = await r.json();
+  if (j.error) throw new Error(j.error);
+  return j;
+}
+
+async function uploadFileViaProxy(itemId, columnId, file) {
+  const fd = new FormData();
+  fd.append('itemId', itemId);
+  fd.append('columnId', columnId);
+  fd.append('file', file, file.name);
+  const r = await fetch(`${PROXY_BASE}/api/monday/upload`, { method: 'POST', body: fd });
+  if (!r.ok) throw new Error(`Upload HTTP ${r.status}`);
+  const j = await r.json();
+  if (j.error) throw new Error(j.error);
+  return j;
 }
 
 /* ── Toast ── */
-function toast(msg,type='info'){
-  const el=document.getElementById('toast');
-  const colors={success:'#10b981',error:'#ef4444',info:'#0f62fe',warn:'#f59e0b'};
-  el.style.borderLeftColor=colors[type]||colors.info;
-  document.getElementById('toastMsg').textContent=msg;
-  el.classList.remove('translate-y-20','opacity-0');el.classList.add('translate-y-0','opacity-100');
-  clearTimeout(el._t);el._t=setTimeout(()=>{el.classList.add('translate-y-20','opacity-0');el.classList.remove('translate-y-0','opacity-100');},4000);
+function toast(msg, type = 'info') {
+  const el = document.getElementById('toast');
+  const colors = { success: '#10b981', error: '#ef4444', info: '#0f62fe', warn: '#f59e0b' };
+  el.style.borderLeftColor = colors[type] || colors.info;
+  document.getElementById('toastMsg').textContent = msg;
+  el.classList.remove('translate-y-20', 'opacity-0');
+  el.classList.add('translate-y-0', 'opacity-100');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => {
+    el.classList.add('translate-y-20', 'opacity-0');
+    el.classList.remove('translate-y-0', 'opacity-100');
+  }, 4000);
 }
 
 /* ── Progress bar ── */
-function progress(pct){const b=document.getElementById('progressBar');b.style.height=pct>0&&pct<100?'2px':'0';b.style.width=pct+'%';}
+function progress(pct) {
+  const b = document.getElementById('progressBar');
+  b.style.height = (pct > 0 && pct < 100) ? '2px' : '0';
+  b.style.width = pct + '%';
+}
 
 /* ── Slide switch ── */
-function switchSlide(n){
-  const s1=document.getElementById('slide1'),s2=document.getElementById('slide2');
-  const t1=document.getElementById('tab1'),t2=document.getElementById('tab2');
-  const setA=b=>{b.style.background='#ffffff';b.style.color='#0f62fe';b.style.boxShadow='0 1px 4px rgba(15,98,254,.12)';};
-  const setI=b=>{b.style.background='transparent';b.style.color='#6b7fa3';b.style.boxShadow='none';};
-  if(n===1){s1.classList.remove('hidden');s1.classList.add('slide-enter');s2.classList.add('hidden');setA(t1);setI(t2);}
-  else{s2.classList.remove('hidden');s2.classList.add('slide-enter');s1.classList.add('hidden');setA(t2);setI(t1);setTimeout(()=>{if(calendar)calendar.render();},120);}
+function switchSlide(n) {
+  const s1 = document.getElementById('slide1'), s2 = document.getElementById('slide2');
+  const t1 = document.getElementById('tab1'), t2 = document.getElementById('tab2');
+  const setA = b => { b.style.background = '#ffffff'; b.style.color = '#0f62fe'; b.style.boxShadow = '0 1px 4px rgba(15,98,254,.12)'; };
+  const setI = b => { b.style.background = 'transparent'; b.style.color = '#6b7fa3'; b.style.boxShadow = 'none'; };
+  if (n === 1) {
+    s1.classList.remove('hidden'); s1.classList.add('slide-enter');
+    s2.classList.add('hidden'); setA(t1); setI(t2);
+  } else {
+    s2.classList.remove('hidden'); s2.classList.add('slide-enter');
+    s1.classList.add('hidden'); setA(t2); setI(t1);
+    setTimeout(() => { if (calendar) calendar.render(); }, 120);
+  }
 }
 
 /* ── Sync from Monday ── */
-async function syncAllFromMonday(showFeedback=false){
-  const icon=document.getElementById('syncIcon');
-  icon.style.animation='spin 1s linear infinite';icon.style.display='inline-block';
+async function syncAllFromMonday(showFeedback = false) {
+  const icon = document.getElementById('syncIcon');
+  icon.style.animation = 'spin 1s linear infinite';
   progress(30);
-  const q=`query{boards(ids:[${BOARD_ID}]){name groups{id title color}columns{id title type settings_str}items_page(limit:200){items{id name group{id title}column_values{id type text value ...on StatusValue{label label_style{color border}}...on DateValue{date}...on TimelineValue{from to}}}}}}`;
-  try{
-    const data=await api(q);
-    const board=data.data?.boards?.[0];
-    if(board){
-      boardMeta.name=board.name;
-      boardMeta.columns=board.columns||[];
-      boardMeta.groups=board.groups||[];
-      boardItems=board.items_page?.items||[];
-      document.getElementById('boardNameHeader').textContent=board.name||'Gestión de Ausencias';
-      localStorage.setItem('monday_cache_aus',JSON.stringify({boardMeta,boardItems}));
+  const q = `{boards(ids:[18432588237]){name groups{id title}columns{id title type settings_str}items_page(limit:200){items{id name group{id title}column_values{id type text value}}}}}`;
+  try {
+    const data = await api(q);
+    const board = data.data?.boards?.[0];
+    if (board) {
+      document.getElementById('boardNameHeader').textContent = board.name || 'Gestión de Ausencias';
+      boardItems = board.items_page?.items || [];
+      // Extract unique region options from color_mm7g7naz column settings
+      const regCol = (board.columns || []).find(c => c.id === COL.region);
+      if (regCol) {
+        try {
+          const s = JSON.parse(regCol.settings_str || '{}');
+          regionOptions = s.labels ? Object.values(s.labels).filter(Boolean) : [];
+        } catch (e) { regionOptions = []; }
+      }
+      // Also collect any values already in items
+      boardItems.forEach(item => {
+        const cv = item.column_values.find(v => v.id === COL.region);
+        if (cv && cv.text && !regionOptions.includes(cv.text)) regionOptions.push(cv.text);
+      });
+      localStorage.setItem('monday_cache_aus', JSON.stringify({ boardItems, regionOptions }));
       renderAll();
-      if(showFeedback) toast(`✅ ${boardItems.length} registros sincronizados`,'success');
+      if (showFeedback) toast(`✅ ${boardItems.length} registros sincronizados`, 'success');
     }
-  }catch(err){
-    console.warn('[sync]',err);
+  } catch (err) {
+    console.warn('[sync]', err);
     loadCached();
-    if(showFeedback) toast('⚠️ Datos cargados desde caché local','warn');
-  }finally{progress(100);setTimeout(()=>progress(0),600);icon.style.animation='';}
+    if (showFeedback) toast('⚠️ Datos cargados desde caché local', 'warn');
+  } finally {
+    progress(100);
+    setTimeout(() => progress(0), 600);
+    icon.style.animation = '';
+  }
 }
 
-function loadCached(){
-  const c=localStorage.getItem('monday_cache_aus');
-  if(c){const p=JSON.parse(c);boardMeta=p.boardMeta;boardItems=p.boardItems;}
-  else{boardMeta={name:'Control de Ausencias',columns:[{id:'status',title:'Estado',type:'status'},{id:'motivo',title:'Motivo',type:'status'},{id:'timeline',title:'Cronograma',type:'timeline'},{id:'notas',title:'Observaciones',type:'text'}],groups:[{id:'g1',title:'Solicitudes 2025'}]};boardItems=[];}
+function loadCached() {
+  const c = localStorage.getItem('monday_cache_aus');
+  if (c) {
+    const p = JSON.parse(c);
+    boardItems = p.boardItems || [];
+    regionOptions = p.regionOptions || [];
+  } else {
+    boardItems = [];
+    regionOptions = [];
+  }
   renderAll();
 }
 
 /* ── Render all ── */
-function renderAll(){renderKpis();renderTable();renderForm('dynamicFormFields');populateGroupFilter();renderCharts();populateCalendar();}
+function renderAll() {
+  populateRegionSelects();
+  renderKpis();
+  renderTableBody();
+  populateGroupFilter();
+  renderCharts();
+  populateCalendar();
+}
 
-/* ── KPIs ── */
-function renderKpis(){
-  const grid=document.getElementById('kpiGrid');
-  const sc=boardMeta.columns.find(c=>c.type==='status');
-  const counts={};
-  boardItems.forEach(item=>{const v=sc?(item.column_values.find(cv=>cv.id===sc.id)?.text||'Sin estado'):'Sin estado';counts[v]=(counts[v]||0)+1;});
-  const total=boardItems.length;
-  const kd=[
-    {label:'Total registros',val:total,color:'#0f62fe',bg:'#eff6ff',icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>'},
-    ...Object.entries(counts).slice(0,3).map(([label,val],i)=>({label,val,color:PALETTE[(i+1)%PALETTE.length],bg:PALETTE[(i+1)%PALETTE.length]+'18',icon:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>'}))
+/* ── Populate region selects ── */
+function populateRegionSelects() {
+  ['c_region', 'e_region'].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value;
+    sel.innerHTML = '<option value="">— Seleccionar —</option>';
+    regionOptions.forEach(r => {
+      const o = document.createElement('option');
+      o.value = r; o.textContent = r;
+      if (r === cur) o.selected = true;
+      sel.appendChild(o);
+    });
+  });
+}
+
+/* ── KPIs — based on color_mm7gg2a7 (Estado Aprobación) ── */
+function renderKpis() {
+  const grid = document.getElementById('kpiGrid');
+  const total = boardItems.length;
+  let aprobadas = 0, enRevision = 0, rechazadas = 0;
+  boardItems.forEach(item => {
+    const cv = item.column_values.find(v => v.id === COL.estado);
+    const t = (cv?.text || '').toLowerCase();
+    if (t.includes('aprobad')) aprobadas++;
+    else if (t.includes('rechaz')) rechazadas++;
+    else enRevision++; // "En revisión" or empty
+  });
+  const kd = [
+    { label: 'Total Solicitudes', val: total,      color: '#0f62fe', bg: '#eff6ff', icon: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>' },
+    { label: 'Aprobadas',         val: aprobadas,   color: '#059669', bg: '#d1fae5', icon: '<polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>' },
+    { label: 'En Revisión',       val: enRevision,  color: '#d97706', bg: '#fef3c7', icon: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>' },
+    { label: 'Rechazadas',        val: rechazadas,  color: '#dc2626', bg: '#fee2e2', icon: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>' },
   ];
-  grid.innerHTML=kd.map(k=>`
+  grid.innerHTML = kd.map(k => `
     <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex items-center justify-between card-lift">
       <div><p class="text-[10px] font-bold uppercase tracking-wider mb-1" style="color:${k.color}">${k.label}</p>
       <p class="text-2xl font-extrabold text-slate-900" data-target="${k.val}">0</p></div>
@@ -520,303 +711,489 @@ function renderKpis(){
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="${k.color}" stroke-width="2">${k.icon}</svg>
       </div>
     </div>`).join('');
-  document.querySelectorAll('[data-target]').forEach(el=>{
-    const t=parseInt(el.dataset.target);let cur=0;const step=Math.max(1,Math.ceil(t/20));
-    const ti=setInterval(()=>{cur=Math.min(cur+step,t);el.textContent=cur;if(cur>=t)clearInterval(ti);},30);
+  document.querySelectorAll('[data-target]').forEach(el => {
+    const t = parseInt(el.dataset.target); let cur = 0;
+    const step = Math.max(1, Math.ceil(t / 20));
+    const ti = setInterval(() => { cur = Math.min(cur + step, t); el.textContent = cur; if (cur >= t) clearInterval(ti); }, 30);
   });
 }
 
-/* ── Table ── */
-let currentFilter='',currentGroup='ALL';
-function populateGroupFilter(){
-  const sel=document.getElementById('groupFilter');const cur=sel.value;
-  sel.innerHTML='<option value="ALL">Todos los grupos</option>';
-  boardMeta.groups.forEach(g=>{const o=document.createElement('option');o.value=g.title;o.textContent=g.title;if(g.title===cur)o.selected=true;sel.appendChild(o);});
+/* ── Group filter ── */
+function populateGroupFilter() {
+  const sel = document.getElementById('groupFilter');
+  const cur = sel.value;
+  const groups = [...new Set(boardItems.map(i => i.group?.title || 'General'))];
+  sel.innerHTML = '<option value="ALL">Todos los grupos</option>';
+  groups.forEach(g => {
+    const o = document.createElement('option');
+    o.value = g; o.textContent = g;
+    if (g === cur) o.selected = true;
+    sel.appendChild(o);
+  });
 }
-function filterTable(){currentFilter=document.getElementById('searchInput').value.toLowerCase();currentGroup=document.getElementById('groupFilter').value;renderTableBody();}
-function clearFilters(){document.getElementById('searchInput').value='';document.getElementById('groupFilter').value='ALL';currentFilter='';currentGroup='ALL';renderTableBody();}
 
-function renderTable(){
-  const thead=document.getElementById('tableHead');
-  thead.innerHTML=`<tr>
-    <th class="px-4 py-3 text-left">Nombre</th>
-    <th class="px-4 py-3 text-left">Grupo</th>
-    ${boardMeta.columns.map(c=>`<th class="px-4 py-3 text-left">${displayLabel(c.title)}</th>`).join('')}
-    <th class="px-4 py-3 text-right">Acc.</th>
-  </tr>`;
+/* ── Status badge colors ── */
+function approvalColor(text) {
+  const t = (text || '').toLowerCase();
+  if (t.includes('aprobad')) return { bg: '#d1fae5', fg: '#065f46' };
+  if (t.includes('rechaz'))  return { bg: '#fee2e2', fg: '#991b1b' };
+  if (t.includes('revisi'))  return { bg: '#fef3c7', fg: '#92400e' };
+  if (t === '') return { bg: '#f1f5f9', fg: '#475569' };
+  return { bg: '#f1f5f9', fg: '#475569' };
+}
+function motivoColor(text) {
+  const t = (text || '').toLowerCase();
+  if (t.includes('vacacion'))       return { bg: '#dbeafe', fg: '#1d4ed8' };
+  if (t.includes('incapacidad'))    return { bg: '#fce7f3', fg: '#9d174d' };
+  if (t.includes('cumple'))         return { bg: '#fef3c7', fg: '#92400e' };
+  if (t.includes('familia'))        return { bg: '#d1fae5', fg: '#065f46' };
+  if (t.includes('cívico')||t.includes('civico')) return { bg: '#ede9fe', fg: '#5b21b6' };
+  if (t.includes('calamidad'))      return { bg: '#fee2e2', fg: '#991b1b' };
+  return { bg: '#f1f5f9', fg: '#475569' };
+}
+
+/* ── Table body ── */
+let currentFilter = '', currentGroup = 'ALL', currentMotivo = 'ALL';
+
+function filterTable() {
+  currentFilter = document.getElementById('searchInput').value.toLowerCase();
+  currentGroup  = document.getElementById('groupFilter').value;
+  currentMotivo = document.getElementById('motivoFilter').value;
+  renderTableBody();
+}
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('groupFilter').value = 'ALL';
+  document.getElementById('motivoFilter').value = 'ALL';
+  currentFilter = ''; currentGroup = 'ALL'; currentMotivo = 'ALL';
   renderTableBody();
 }
 
-function statusColor(text){
-  const t=(text||'').toLowerCase();
-  if(t.includes('aprob')||t.includes('done')||t.includes('completado'))return{bg:'#d1fae5',fg:'#065f46'};
-  if(t.includes('rechaz')||t.includes('stuck')||t.includes('cancel'))return{bg:'#fee2e2',fg:'#991b1b'};
-  if(t.includes('pend')||t.includes('espera'))return{bg:'#fff3cd',fg:'#856404'};
-  if(t.includes('vacacion')||t.includes('descanso'))return{bg:'#dbeafe',fg:'#1d4ed8'};
-  if(t.includes('incapacidad')||t.includes('médico')||t.includes('medico'))return{bg:'#fce7f3',fg:'#9d174d'};
-  return{bg:'#f1f5f9',fg:'#475569'};
+function getColText(item, colId) {
+  const cv = item.column_values.find(v => v.id === colId);
+  return cv?.text || '';
+}
+function getColVal(item, colId) {
+  return item.column_values.find(v => v.id === colId) || {};
 }
 
-function renderTableBody(){
-  const tbody=document.getElementById('tableBody');
-  const footer=document.getElementById('tableFooter');
-  const filtered=boardItems.filter(item=>{
-    const mg=currentGroup==='ALL'||item.group?.title===currentGroup;
-    const mt=!currentFilter||item.name.toLowerCase().includes(currentFilter)||item.column_values.some(c=>(c.text||'').toLowerCase().includes(currentFilter));
-    return mg&&mt;
+function renderTableBody() {
+  const tbody = document.getElementById('tableBody');
+  const footer = document.getElementById('tableFooter');
+  const filtered = boardItems.filter(item => {
+    const mg = currentGroup === 'ALL' || item.group?.title === currentGroup;
+    const mm = currentMotivo === 'ALL' || getColText(item, COL.motivo) === currentMotivo;
+    const mt = !currentFilter || item.name.toLowerCase().includes(currentFilter) ||
+      item.column_values.some(c => (c.text || '').toLowerCase().includes(currentFilter));
+    return mg && mm && mt;
   });
-  tbody.innerHTML='';
-  if(!filtered.length){
-    tbody.innerHTML=`<tr><td colspan="${boardMeta.columns.length+3}" class="px-4 py-12 text-center text-slate-400 text-xs"><div class="text-3xl mb-2">🔍</div>Sin resultados</td></tr>`;
-    footer.textContent='';return;
+  tbody.innerHTML = '';
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="8" class="px-4 py-12 text-center text-slate-400 text-xs"><div class="text-3xl mb-2">🔍</div>Sin resultados</td></tr>`;
+    footer.textContent = ''; return;
   }
-  filtered.forEach(item=>{
-    const tr=document.createElement('tr');tr.className='cursor-pointer';tr.onclick=()=>openEditModal(item.id);
-    const colCells=boardMeta.columns.map(col=>{
-      const cv=item.column_values.find(v=>v.id===col.id)||{};
-      const text=cv.text||'—';
-      if(col.type==='status'){const{bg,fg}=statusColor(text);return`<td class="px-4 py-3"><span class="sbadge" style="background:${bg};color:${fg}">${text}</span></td>`;}
-      if(col.type==='timeline'){const from=cv.from||'';const to=cv.to||'';return`<td class="px-4 py-3 font-mono text-[10px] text-slate-500">${from?`${from}<span class="text-slate-300 mx-1">→</span>${to}`:'—'}</td>`;}
-      return`<td class="px-4 py-3 text-slate-600 max-w-[160px] truncate">${text}</td>`;
-    }).join('');
-    tr.innerHTML=`
-      <td class="px-4 py-3 font-semibold text-slate-900 max-w-[180px] truncate">${item.name}</td>
-      <td class="px-4 py-3"><span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-500">${item.group?.title||'General'}</span></td>
-      ${colCells}
-      <td class="px-4 py-3 text-right">
+  filtered.forEach(item => {
+    const motivo  = getColText(item, COL.motivo);
+    const region  = getColText(item, COL.region);
+    const fechaSol= getColText(item, COL.fechaSol);
+    const diasV   = getColText(item, COL.dias);
+    const estado  = getColText(item, COL.estado);
+    const tlVal   = getColVal(item, COL.cronograma);
+
+    // Parse timeline
+    let cronTxt = '—';
+    if (tlVal.text) {
+      cronTxt = tlVal.text;
+    } else {
+      // Try parsing from value JSON
+      try {
+        const v = JSON.parse(tlVal.value || '{}');
+        if (v.from) cronTxt = `${v.from} → ${v.to || v.from}`;
+      } catch (e) {}
+    }
+
+    const mc = motivoColor(motivo);
+    const ac = approvalColor(estado);
+
+    const tr = document.createElement('tr');
+    tr.className = 'cursor-pointer';
+    tr.onclick = () => openEditModal(item.id);
+    tr.innerHTML = `
+      <td class="px-3 py-3 font-semibold text-slate-900 max-w-[160px] truncate">${item.name}</td>
+      <td class="px-3 py-3">${motivo ? `<span class="sbadge" style="background:${mc.bg};color:${mc.fg}">${motivo}</span>` : '<span class="text-slate-300">—</span>'}</td>
+      <td class="px-3 py-3 text-slate-600">${region || '<span class="text-slate-300">—</span>'}</td>
+      <td class="px-3 py-3 text-slate-600 font-mono text-[10px]">${fechaSol || '—'}</td>
+      <td class="px-3 py-3 font-mono text-[10px] text-slate-500 max-w-[140px] truncate">${cronTxt}</td>
+      <td class="px-3 py-3 text-slate-700 font-semibold">${diasV || '—'}</td>
+      <td class="px-3 py-3">${estado ? `<span class="sbadge" style="background:${ac.bg};color:${ac.fg}">${estado}</span>` : '<span class="sbadge" style="background:#f1f5f9;color:#475569">En revisión</span>'}</td>
+      <td class="px-3 py-3 text-right">
         <button onclick="event.stopPropagation();openEditModal('${item.id}')"
-          class="px-2 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-[10px] font-bold transition inline-flex items-center gap-1">
+          class="px-2 py-1 rounded-lg text-[10px] font-bold transition inline-flex items-center gap-1"
+          style="background:#e8f0fe;color:#0f62fe;" onmouseover="this.style.background='#dbeafe'" onmouseout="this.style.background='#e8f0fe'">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           Editar
         </button>
       </td>`;
     tbody.appendChild(tr);
   });
-  footer.innerHTML=`<span>${filtered.length} de ${boardItems.length} registros</span>
-    ${currentFilter||currentGroup!=='ALL'?`<button onclick="clearFilters()" class="text-blue-500 hover:text-blue-700 font-semibold">Limpiar filtros</button>`:''}`;
+  footer.innerHTML = `<span>${filtered.length} de ${boardItems.length} registros</span>
+    ${(currentFilter || currentGroup !== 'ALL' || currentMotivo !== 'ALL')
+      ? `<button onclick="clearFilters()" style="color:#0f62fe;font-weight:600;">Limpiar filtros</button>` : ''}`;
 }
 
-/* ── Form fields generator (columnas reales de Monday) ── */
-function renderForm(containerId,item=null){
-  const container=document.getElementById(containerId);
-  if(!container)return;
-  container.innerHTML='';
-  boardMeta.columns.forEach(col=>{
-    // Bloquear edición de columnas de aprobación para todos excepto el aprobador autenticado
-    const titleL=(col.title||'').toLowerCase();
-    const isAprCol=titleL.includes('aprobac')||titleL.includes('aproba')||titleL.includes('estado apro');
-    if(isAprCol) return; // Se maneja por el botón de aprobación, no como campo normal
-    const cv=item?(item.column_values.find(v=>v.id===col.id)||{}):{};
-    container.innerHTML+=buildField(col,cv,item!==null);
+/* ── File upload handlers ── */
+function ausDragOver(e) { e.preventDefault(); document.getElementById('aus-drop').style.borderColor = '#0f62fe'; }
+function ausDragLeave() { document.getElementById('aus-drop').style.borderColor = '#c7d7fc'; }
+function ausDrop(e) { e.preventDefault(); ausDragLeave(); ausHandleFiles(e.dataTransfer.files); }
+function ausHandleFiles(files) {
+  [...files].forEach(f => {
+    if (f.size > 50 * 1024 * 1024) { toast(`⚠️ ${f.name} supera 50 MB`, 'warn'); return; }
+    ausFiles.push(f);
   });
-}
-
-/* Mapeo de nombres de columnas Monday → etiquetas del dashboard */
-const COL_LABELS={'gerencia':'Región','gerências':'Región','gerencia del proyecto':'Región'};
-function displayLabel(title){
-  const k=(title||'').toLowerCase().trim();
-  return COL_LABELS[k]||title;
-}
-
-function buildField(col,cv,isEdit){
-  const label=`<label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">${displayLabel(col.title)}</label>`;
-  const base='w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-800 text-xs transition';
-  if(col.type==='status'){
-    const known=[...new Set(boardItems.map(it=>it.column_values.find(cv2=>cv2.id===col.id)?.text).filter(Boolean))];
-    let extras=[];
-    try{if(col.settings_str){const s=JSON.parse(col.settings_str);if(s.labels)extras=Object.values(s.labels).filter(Boolean);}}catch(e){}
-    const all=[...new Set([...known,...extras])];
-    const opts=(all.length?all:['Aprobado','Pendiente','Rechazado']).map(o=>`<option value="${o}" ${o===cv.text?'selected':''}>${o}</option>`).join('');
-    return`<div>${label}<select name="${col.id}" class="${base}">${opts}</select></div>`;
-  }
-  if(col.type==='timeline'){return`<div>${label}<div class="grid grid-cols-2 gap-2"><input type="date" name="${col.id}_from" value="${cv.from||''}" placeholder="Inicio" class="${base}"/><input type="date" name="${col.id}_to" value="${cv.to||''}" placeholder="Fin" class="${base}"/></div></div>`;}
-  if(col.type==='date'){return`<div>${label}<input type="date" name="${col.id}" value="${cv.date||cv.text||''}" class="${base}"/></div>`;}
-  return`<div>${label}<input type="text" name="${col.id}" value="${isEdit?(cv.text||'):''}" placeholder="${col.title}…" class="${base}"/></div>`;
-}
-
-/* ── File upload ── */
-function ausDragOver(e){e.preventDefault();document.getElementById('aus-drop').style.borderColor='#0f62fe';}
-function ausDragLeave(){document.getElementById('aus-drop').style.borderColor='#c7d7fc';}
-function ausDrop(e){e.preventDefault();ausDragLeave();ausHandleFiles(e.dataTransfer.files);}
-function ausHandleFiles(files){
-  const icons={pdf:'📄',jpg:'🖼',jpeg:'🖼',png:'🖼',docx:'📝',doc:'📝',xlsx:'📊',xls:'📊'};
-  [...files].forEach(f=>{if(f.size>50*1024*1024){toast(`⚠️ ${f.name} supera 50 MB`,'warn');return;}ausFiles.push(f);});
-  const list=document.getElementById('aus-file-list');
-  list.innerHTML=ausFiles.map((f,i)=>{
-    const ext=f.name.split('.').pop().toLowerCase();
-    return`<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:4px;font-size:10px;color:#0f62fe;">
-      ${icons[ext]||'📎'}<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
+  const list = document.getElementById('aus-file-list');
+  list.innerHTML = ausFiles.map((f, i) => `
+    <div style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:#fff;border:1px solid #c7d7fc;border-radius:6px;margin-top:4px;font-size:10px;color:#0f62fe;">
+      📎<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>
       <span onclick="ausFiles.splice(${i},1);ausHandleFiles([])" style="color:#dc2626;cursor:pointer;font-weight:700;">✕</span>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 /* ── Create item ── */
-async function handleCreateItem(e){
+async function handleCreateItem(e) {
   e.preventDefault();
-  const form=document.getElementById('createForm');
-  const name=document.getElementById('createItemName').value.trim();
-  const payload={};const localCols=[];
-  boardMeta.columns.forEach(col=>{
-    const titleL=(col.title||'').toLowerCase();
-    if(titleL.includes('aprobac')||titleL.includes('estado apro'))return;
-    if(col.type==='status'){const v=form[col.id]?.value;if(v){payload[col.id]={label:v};localCols.push({id:col.id,text:v,type:'status'});}}
-    else if(col.type==='timeline'){const from=form[`${col.id}_from`]?.value,to=form[`${col.id}_to`]?.value;if(from){payload[col.id]={from,to:to||from};localCols.push({id:col.id,from,to:to||from,text:`${from} - ${to||from}`,type:'timeline'});}}
-    else if(col.type==='date'){const v=form[col.id]?.value;if(v){payload[col.id]={date:v};localCols.push({id:col.id,date:v,text:v,type:'date'});}}
-    else{const v=form[col.id]?.value;if(v){payload[col.id]=v;localCols.push({id:col.id,text:v,type:'text'});}}
-  });
-  const notesCol=boardMeta.columns.find(c=>c.type==='text');
-  if(notesCol){const ex=payload[notesCol.id]||'';payload[notesCol.id]=[ex,'Aprobante: Anlli Liliana Varón'].filter(Boolean).join(' | ');}
-  const newItem={id:Date.now().toString(),name,group:{id:'g1',title:boardMeta.groups[0]?.title||'General'},column_values:localCols};
-  boardItems.unshift(newItem);renderAll();form.reset();ausFiles=[];document.getElementById('aus-file-list').innerHTML='';
-  toast('⏳ Creando en Monday…','info');
-  try{
-    const q=`mutation{create_item(board_id:${BOARD_ID},item_name:"${name.replace(/"/g,'\\"')}",column_values:${JSON.stringify(JSON.stringify(payload))}){id}}`;
-    const res=await api(q);
-    const cid=res.data?.create_item?.id;
-    if(cid){
-      newItem.id=cid;
-      toast('✅ Elemento creado en Monday','success');
-      for(const f of ausFiles){try{await uploadFileViaProxy(cid,'files',f);}catch(fe){console.warn(fe);}}
-      ausFiles=[];document.getElementById('aus-file-list').innerHTML='';
+  const name    = document.getElementById('c_name').value.trim();
+  const motivo  = document.getElementById('c_motivo').value;
+  const region  = document.getElementById('c_region').value;
+  const fechaSol= document.getElementById('c_date4').value;
+  const tlFrom  = document.getElementById('c_timeline_from').value;
+  const tlTo    = document.getElementById('c_timeline_to').value;
+  const dias    = document.getElementById('c_dias').value;
+  const backup  = document.getElementById('c_backup').value.trim();
+  const obs     = document.getElementById('c_obs').value.trim();
+
+  const cv = {};
+  if (motivo)  cv[COL.motivo]   = { label: motivo };
+  if (region)  cv[COL.region]   = { label: region };
+  if (fechaSol)cv[COL.fechaSol] = { date: fechaSol };
+  if (tlFrom)  cv[COL.cronograma] = { from: tlFrom, to: tlTo || tlFrom };
+  if (dias)    cv[COL.dias]     = parseFloat(dias);
+  if (backup)  cv[COL.backup]   = backup;
+  if (obs)     cv[COL.obs]      = obs;
+
+  // Optimistic local add
+  const localItem = {
+    id: 'tmp_' + Date.now(),
+    name,
+    group: { id: 'g1', title: boardItems[0]?.group?.title || 'General' },
+    column_values: [
+      { id: COL.motivo,    text: motivo,   type: 'status' },
+      { id: COL.region,    text: region,   type: 'status' },
+      { id: COL.fechaSol,  text: fechaSol, type: 'date' },
+      { id: COL.cronograma,text: tlFrom ? `${tlFrom} - ${tlTo || tlFrom}` : '', from: tlFrom, to: tlTo || tlFrom, type: 'timeline' },
+      { id: COL.dias,      text: dias,     type: 'numbers' },
+      { id: COL.backup,    text: backup,   type: 'text' },
+      { id: COL.obs,       text: obs,      type: 'text' },
+      { id: COL.estado,    text: '',       type: 'status' },
+    ]
+  };
+  boardItems.unshift(localItem);
+  renderAll();
+  document.getElementById('createForm').reset();
+  ausFiles = []; document.getElementById('aus-file-list').innerHTML = '';
+  toast('⏳ Creando en Monday…', 'info');
+
+  try {
+    const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const q = `mutation{create_item(board_id:${BOARD_ID},item_name:"${safeName}",column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`;
+    const res = await api(q);
+    const cid = res.data?.create_item?.id;
+    if (cid) {
+      localItem.id = cid;
+      toast('✅ Elemento creado en Monday', 'success');
+      // Upload files
+      const filesToUpload = [...ausFiles];
+      ausFiles = [];
+      for (const f of filesToUpload) {
+        try { await uploadFileViaProxy(cid, COL.soporte, f); }
+        catch (fe) { console.warn('upload err', fe); }
+      }
     }
-  }catch(err){console.warn(err);toast('⚠️ Guardado localmente','warn');}
+  } catch (err) {
+    console.warn('[create]', err);
+    toast('⚠️ Guardado localmente (sin conexión)', 'warn');
+  }
 }
 
 /* ── Edit modal ── */
-function openEditModal(itemId){
-  const item=boardItems.find(i=>i.id===itemId);if(!item)return;
-  document.getElementById('editItemId').value=item.id;
-  document.getElementById('editItemName').value=item.name;
-  renderForm('editFields',item);
-  // Mostrar sección de aprobación — los botones pedirán contraseña al hacer clic
-  const aprSec=document.getElementById('approvalSection');
-  aprSec.style.display='block';
-  const aprCol=boardMeta.columns.find(c=>(c.title||'').toLowerCase().includes('aprobac')||(c.title||'').toLowerCase().includes('estado apro'));
-  if(aprCol){
-    const cv=item.column_values.find(v=>v.id===aprCol.id);
-    document.getElementById('aprStatus').innerHTML=`Estado actual: <strong>${cv?.text||'Sin definir'}</strong>`;
-  }else{
-    document.getElementById('aprStatus').innerHTML='Usa los botones para aprobar o rechazar esta solicitud.';
+function openEditModal(itemId) {
+  const item = boardItems.find(i => i.id === itemId);
+  if (!item) return;
+
+  document.getElementById('editItemId').value = item.id;
+  document.getElementById('editItemName').value = item.name;
+
+  // Populate Motivo
+  const motivo = getColText(item, COL.motivo);
+  document.getElementById('e_motivo').value = motivo;
+
+  // Populate Región — ensure option exists
+  populateRegionSelects();
+  const region = getColText(item, COL.region);
+  const eReg = document.getElementById('e_region');
+  // Add if not present
+  if (region && !regionOptions.includes(region)) {
+    regionOptions.push(region);
+    populateRegionSelects();
   }
+  eReg.value = region;
+
+  // Fecha Solicitud
+  const fechaRaw = getColVal(item, COL.fechaSol);
+  let fechaVal = fechaRaw.text || '';
+  try { const fv = JSON.parse(fechaRaw.value || '{}'); if (fv.date) fechaVal = fv.date; } catch(e){}
+  document.getElementById('e_date4').value = fechaVal;
+
+  // Cronograma
+  const tlRaw = getColVal(item, COL.cronograma);
+  let tlFrom = tlRaw.from || '', tlTo = tlRaw.to || '';
+  if (!tlFrom) {
+    try { const tv = JSON.parse(tlRaw.value || '{}'); tlFrom = tv.from || ''; tlTo = tv.to || ''; } catch(e){}
+  }
+  document.getElementById('e_timeline_from').value = tlFrom;
+  document.getElementById('e_timeline_to').value   = tlTo;
+
+  // Días
+  document.getElementById('e_dias').value = getColText(item, COL.dias);
+  // Backup
+  document.getElementById('e_backup').value = getColText(item, COL.backup);
+  // Observaciones
+  document.getElementById('e_obs').value = getColText(item, COL.obs);
+
+  // Approval section
+  const estadoText = getColText(item, COL.estado) || 'Sin definir';
+  const ac = approvalColor(estadoText);
+  document.getElementById('aprStatus').innerHTML =
+    `Estado actual: <span class="sbadge" style="background:${ac.bg};color:${ac.fg}">${estadoText}</span>`;
+
   document.getElementById('editModal').classList.remove('hidden');
 }
-function closeEditModal(){document.getElementById('editModal').classList.add('hidden');}
+function closeEditModal() { document.getElementById('editModal').classList.add('hidden'); }
 
-async function approveItem(){
-  const itemId=document.getElementById('editItemId').value;
-  const aprCol=boardMeta.columns.find(c=>(c.title||'').toLowerCase().includes('aprobac')||(c.title||'').toLowerCase().includes('estado apro'));
-  if(!aprCol){toast('⚠️ No se encontró columna de aprobación en Monday','warn');return;}
-  const payload={};payload[aprCol.id]={label:'Aprobado'};
-  const item=boardItems.find(i=>i.id===itemId);
-  if(item){const cv=item.column_values.find(v=>v.id===aprCol.id);if(cv)cv.text='Aprobado';else item.column_values.push({id:aprCol.id,text:'Aprobado',type:'status'});}
-  closeEditModal();renderAll();toast('⏳ Aprobando en Monday…','info');
-  try{
-    await api(`mutation{change_multiple_column_values(item_id:${itemId},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(payload))}){id}}`);
-    toast('✅ Solicitud APROBADA en Monday','success');
-  }catch(err){console.warn(err);toast('⚠️ Aprobado localmente','warn');}
+/* ── Approve / Reject ── */
+async function approveItem() {
+  const itemId = document.getElementById('editItemId').value;
+  const cv = {}; cv[COL.estado] = { label: 'Aprobado' };
+  const item = boardItems.find(i => i.id === itemId);
+  if (item) {
+    let cv2 = item.column_values.find(v => v.id === COL.estado);
+    if (cv2) cv2.text = 'Aprobado'; else item.column_values.push({ id: COL.estado, text: 'Aprobado', type: 'status' });
+  }
+  closeEditModal(); renderAll();
+  toast('⏳ Aprobando en Monday…', 'info');
+  try {
+    await api(`mutation{change_multiple_column_values(item_id:${itemId},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`);
+    toast('✅ Solicitud APROBADA en Monday', 'success');
+  } catch (err) { console.warn(err); toast('⚠️ Aprobado localmente', 'warn'); }
 }
 
-async function rejectItem(){
-  const itemId=document.getElementById('editItemId').value;
-  const aprCol=boardMeta.columns.find(c=>(c.title||'').toLowerCase().includes('aprobac')||(c.title||'').toLowerCase().includes('estado apro'));
-  if(!aprCol){toast('⚠️ No se encontró columna de aprobación en Monday','warn');return;}
-  const payload={};payload[aprCol.id]={label:'Rechazado'};
-  const item=boardItems.find(i=>i.id===itemId);
-  if(item){const cv=item.column_values.find(v=>v.id===aprCol.id);if(cv)cv.text='Rechazado';else item.column_values.push({id:aprCol.id,text:'Rechazado',type:'status'});}
-  closeEditModal();renderAll();toast('⏳ Rechazando en Monday…','info');
-  try{
-    await api(`mutation{change_multiple_column_values(item_id:${itemId},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(payload))}){id}}`);
-    toast('❌ Solicitud RECHAZADA en Monday','error');
-  }catch(err){console.warn(err);toast('⚠️ Rechazado localmente','warn');}
+async function rejectItem() {
+  const itemId = document.getElementById('editItemId').value;
+  const cv = {}; cv[COL.estado] = { label: 'Rechazado' };
+  const item = boardItems.find(i => i.id === itemId);
+  if (item) {
+    let cv2 = item.column_values.find(v => v.id === COL.estado);
+    if (cv2) cv2.text = 'Rechazado'; else item.column_values.push({ id: COL.estado, text: 'Rechazado', type: 'status' });
+  }
+  closeEditModal(); renderAll();
+  toast('⏳ Rechazando en Monday…', 'info');
+  try {
+    await api(`mutation{change_multiple_column_values(item_id:${itemId},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`);
+    toast('❌ Solicitud RECHAZADA en Monday', 'error');
+  } catch (err) { console.warn(err); toast('⚠️ Rechazado localmente', 'warn'); }
 }
 
-async function saveEditedItem(e){
+/* ── Save edited item ── */
+async function saveEditedItem(e) {
   e.preventDefault();
-  const form=document.getElementById('editForm');
-  const itemId=document.getElementById('editItemId').value;
-  const name=document.getElementById('editItemName').value.trim();
-  const item=boardItems.find(i=>i.id===itemId);if(!item)return;
-  item.name=name;const payload={};
-  boardMeta.columns.forEach(col=>{
-    const titleL=(col.title||'').toLowerCase();
-    if(titleL.includes('aprobac')||titleL.includes('estado apro'))return;
-    let ev=item.column_values.find(v=>v.id===col.id);
-    if(!ev){ev={id:col.id,type:col.type};item.column_values.push(ev);}
-    if(col.type==='status'){const v=form[col.id]?.value;ev.text=v;ev.label=v;payload[col.id]={label:v};}
-    else if(col.type==='timeline'){const from=form[`${col.id}_from`]?.value,to=form[`${col.id}_to`]?.value;ev.from=from;ev.to=to||from;ev.text=`${from} - ${to||from}`;payload[col.id]={from,to:to||from};}
-    else if(col.type==='date'){const v=form[col.id]?.value;ev.date=v;ev.text=v;payload[col.id]={date:v};}
-    else{const v=form[col.id]?.value;ev.text=v;payload[col.id]=v;}
-  });
-  closeEditModal();renderAll();toast('⏳ Actualizando en Monday…','info');
-  try{
-    const q=`mutation{change_multiple_column_values(item_id:${itemId},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(payload))}){id}change_simple_column_value(item_id:${itemId},board_id:${BOARD_ID},column_id:"name",value:"${name.replace(/"/g,'\\"')}"){id}}`;
+  const itemId  = document.getElementById('editItemId').value;
+  const name    = document.getElementById('editItemName').value.trim();
+  const motivo  = document.getElementById('e_motivo').value;
+  const region  = document.getElementById('e_region').value;
+  const fechaSol= document.getElementById('e_date4').value;
+  const tlFrom  = document.getElementById('e_timeline_from').value;
+  const tlTo    = document.getElementById('e_timeline_to').value;
+  const dias    = document.getElementById('e_dias').value;
+  const backup  = document.getElementById('e_backup').value.trim();
+  const obs     = document.getElementById('e_obs').value.trim();
+
+  const item = boardItems.find(i => i.id === itemId);
+  if (!item) return;
+  item.name = name;
+
+  const cv = {};
+  if (motivo)  cv[COL.motivo]   = { label: motivo };
+  if (region)  cv[COL.region]   = { label: region };
+  if (fechaSol)cv[COL.fechaSol] = { date: fechaSol };
+  if (tlFrom)  cv[COL.cronograma] = { from: tlFrom, to: tlTo || tlFrom };
+  if (dias !== '') cv[COL.dias] = parseFloat(dias);
+  cv[COL.backup] = backup;
+  cv[COL.obs]    = obs;
+
+  // Update local state
+  const setCol = (id, text, extra = {}) => {
+    let cv2 = item.column_values.find(v => v.id === id);
+    if (cv2) Object.assign(cv2, { text, ...extra });
+    else item.column_values.push({ id, text, ...extra });
+  };
+  setCol(COL.motivo,    motivo);
+  setCol(COL.region,    region);
+  setCol(COL.fechaSol,  fechaSol);
+  setCol(COL.cronograma, tlFrom ? `${tlFrom} - ${tlTo || tlFrom}` : '', { from: tlFrom, to: tlTo || tlFrom });
+  setCol(COL.dias,      dias);
+  setCol(COL.backup,    backup);
+  setCol(COL.obs,       obs);
+
+  closeEditModal(); renderAll();
+  toast('⏳ Actualizando en Monday…', 'info');
+  try {
+    const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const q = `mutation{change_multiple_column_values(item_id:${itemId},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`;
     await api(q);
-    toast('✅ Actualizado en Monday','success');
-  }catch(err){console.warn(err);toast('⚠️ Actualizado localmente','warn');}
+    toast('✅ Actualizado en Monday', 'success');
+  } catch (err) { console.warn(err); toast('⚠️ Actualizado localmente', 'warn'); }
 }
 
-async function deleteCurrentItem(){
-  const itemId=document.getElementById('editItemId').value;
-  if(!confirm('¿Eliminar este elemento de Monday?'))return;
-  boardItems=boardItems.filter(i=>i.id!==itemId);
-  closeEditModal();renderAll();toast('⏳ Eliminando de Monday…','info');
-  try{await api(`mutation{delete_item(item_id:${itemId}){id}}`);toast('✅ Elemento eliminado','success');}
-  catch(err){console.warn(err);}
+/* ── Delete item ── */
+async function deleteCurrentItem() {
+  const itemId = document.getElementById('editItemId').value;
+  if (!confirm('¿Eliminar este elemento de Monday?')) return;
+  boardItems = boardItems.filter(i => i.id !== itemId);
+  closeEditModal(); renderAll();
+  toast('⏳ Eliminando de Monday…', 'info');
+  try {
+    await api(`mutation{delete_item(item_id:${itemId}){id}}`);
+    toast('✅ Elemento eliminado', 'success');
+  } catch (err) { console.warn(err); }
 }
 
 /* ── Charts ── */
-function renderCharts(){
-  const sc=boardMeta.columns.find(c=>c.type==='status');
-  const sCounts={};boardItems.forEach(item=>{const v=sc?(item.column_values.find(cv=>cv.id===sc.id)?.text||'Sin estado'):'Sin estado';sCounts[v]=(sCounts[v]||0)+1;});
-  const gCounts={};boardItems.forEach(item=>{const g=item.group?.title||'General';gCounts[g]=(gCounts[g]||0)+1;});
-  const c1=document.getElementById('statusChart').getContext('2d');
-  if(chartStatus)chartStatus.destroy();
-  chartStatus=new Chart(c1,{type:'doughnut',data:{labels:Object.keys(sCounts),datasets:[{data:Object.values(sCounts),backgroundColor:PALETTE,borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'72%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}});
-  const c2=document.getElementById('groupsChart').getContext('2d');
-  if(chartGroups)chartGroups.destroy();
-  chartGroups=new Chart(c2,{type:'bar',data:{labels:Object.keys(gCounts),datasets:[{data:Object.values(gCounts),backgroundColor:'#3b82f6',borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0,font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
-}
+function renderCharts() {
+  // Estado Aprobación chart
+  const sCounts = { 'Aprobado': 0, 'En revisión': 0, 'Rechazado': 0 };
+  boardItems.forEach(item => {
+    const t = getColText(item, COL.estado);
+    if (t.toLowerCase().includes('aprobad')) sCounts['Aprobado']++;
+    else if (t.toLowerCase().includes('rechaz')) sCounts['Rechazado']++;
+    else sCounts['En revisión']++;
+  });
+  const c1 = document.getElementById('statusChart').getContext('2d');
+  if (chartStatus) chartStatus.destroy();
+  chartStatus = new Chart(c1, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(sCounts),
+      datasets: [{ data: Object.values(sCounts), backgroundColor: ['#10b981', '#f59e0b', '#ef4444'], borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, cutout: '72%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+  });
 
-/* ── Calendar ── */
-function populateCalendar(){
-  if(!calendar)return;
-  calendar.removeAllEvents();
-  const fp=document.getElementById('calendarFilterPerson')?.value||'ALL';
-  const fpSel=document.getElementById('calendarFilterPerson');
-  const people=[...new Set(boardItems.map(i=>{const pc=i.column_values.find(c=>c.type==='people'||c.id.includes('person'));return pc?.text||i.name.split('-')[0].trim();}))];
-  if(fpSel){const cur=fpSel.value;fpSel.innerHTML='<option value="ALL">Todas las personas</option>';people.forEach(p=>fpSel.innerHTML+=`<option value="${p}">${p}</option>`);fpSel.value=cur||'ALL';}
-  const tlCol=boardMeta.columns.find(c=>c.type==='timeline'||c.type==='date');
-  boardItems.forEach(item=>{
-    let start=null,end=null;
-    if(tlCol){const tv=item.column_values.find(v=>v.id===tlCol.id);if(tv){start=tv.from||tv.date;end=tv.to||tv.date;if(!start&&tv.text&&tv.text.includes('-')){const pts=tv.text.split('-').map(s=>s.trim());start=pts[0];end=pts[1]||pts[0];}}}
-    if(!start){const dv=item.column_values.find(v=>v.type==='date'||v.type==='timeline');if(dv){start=dv.from||dv.date;end=dv.to||dv.date;}}
-    if(start){
-      const pn=item.name.split('-')[0].trim();
-      if(fp==='ALL'||pn.includes(fp)||item.name.includes(fp)){
-        let ie=new Date(end||start);ie.setDate(ie.getDate()+1);
-        calendar.addEvent({id:item.id,title:item.name,start,end:ie.toISOString().split('T')[0],backgroundColor:'#3b82f6',extendedProps:{id:item.id}});
-      }
+  // Motivos chart
+  const mCounts = {};
+  boardItems.forEach(item => {
+    const t = getColText(item, COL.motivo) || 'Sin motivo';
+    mCounts[t] = (mCounts[t] || 0) + 1;
+  });
+  const c2 = document.getElementById('groupsChart').getContext('2d');
+  if (chartGroups) chartGroups.destroy();
+  chartGroups = new Chart(c2, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(mCounts),
+      datasets: [{ data: Object.values(mCounts), backgroundColor: PALETTE, borderRadius: 6 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, ticks: { precision: 0, font: { size: 9 } } }, x: { ticks: { font: { size: 9 } } } }
     }
   });
 }
-function filterCalendarEvents(){populateCalendar();}
+
+/* ── Calendar ── */
+function populateCalendar() {
+  if (!calendar) return;
+  calendar.removeAllEvents();
+  const fp = document.getElementById('calendarFilterPerson')?.value || 'ALL';
+  const fpSel = document.getElementById('calendarFilterPerson');
+
+  // Collect unique names/people for filter
+  const people = [...new Set(boardItems.map(i => i.name.split(/[-–]/)[0].trim()))];
+  if (fpSel) {
+    const cur = fpSel.value;
+    fpSel.innerHTML = '<option value="ALL">Todas las personas</option>';
+    people.forEach(p => { fpSel.innerHTML += `<option value="${p}">${p}</option>`; });
+    fpSel.value = cur || 'ALL';
+  }
+
+  boardItems.forEach(item => {
+    let start = null, end = null;
+    const tlVal = getColVal(item, COL.cronograma);
+    start = tlVal.from || null;
+    end   = tlVal.to   || null;
+    if (!start) {
+      try {
+        const tv = JSON.parse(tlVal.value || '{}');
+        start = tv.from || null; end = tv.to || null;
+      } catch (e) {}
+    }
+    // fallback to date4
+    if (!start) {
+      const dv = getColVal(item, COL.fechaSol);
+      start = dv.text || null;
+      try { const fv = JSON.parse(dv.value || '{}'); if (fv.date) start = fv.date; } catch(e) {}
+    }
+    if (!start) return;
+
+    const pn = item.name.split(/[-–]/)[0].trim();
+    if (fp !== 'ALL' && !pn.includes(fp) && !item.name.includes(fp)) return;
+
+    let ie = new Date(end || start);
+    ie.setDate(ie.getDate() + 1);
+    const motivo = getColText(item, COL.motivo);
+    const mc = motivoColor(motivo);
+
+    calendar.addEvent({
+      id:    item.id,
+      title: item.name,
+      start,
+      end:   ie.toISOString().split('T')[0],
+      backgroundColor: mc.fg,
+      borderColor:     mc.fg,
+      extendedProps: { id: item.id }
+    });
+  });
+}
+function filterCalendarEvents() { populateCalendar(); }
 
 /* ── DOMContentLoaded ── */
-document.addEventListener('DOMContentLoaded',()=>{
-  const t1=document.getElementById('tab1');const t2=document.getElementById('tab2');
-  t1.style.background='#ffffff';t1.style.color='#0f62fe';t1.style.boxShadow='0 1px 4px rgba(15,98,254,.12)';
-  t2.style.background='transparent';t2.style.color='#6b7fa3';t2.style.boxShadow='none';
+document.addEventListener('DOMContentLoaded', () => {
+  // Init tab styles
+  const t1 = document.getElementById('tab1'), t2 = document.getElementById('tab2');
+  t1.style.background = '#ffffff'; t1.style.color = '#0f62fe'; t1.style.boxShadow = '0 1px 4px rgba(15,98,254,.12)';
+  t2.style.background = 'transparent'; t2.style.color = '#6b7fa3'; t2.style.boxShadow = 'none';
 
-  const calendarEl=document.getElementById('calendar');
-  calendar=new FullCalendar.Calendar(calendarEl,{
-    initialView:'dayGridMonth',locale:'es',
-    headerToolbar:{left:'prev,next today',center:'title',right:'dayGridMonth,timeGridWeek,listMonth'},
-    buttonText:{today:'Hoy',month:'Mes',week:'Semana',list:'Lista'},
-    events:[],
-    eventClick:function(info){openEditModal(info.event.extendedProps.id);}
+  // Init FullCalendar
+  const calendarEl = document.getElementById('calendar');
+  calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    locale: 'es',
+    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listMonth' },
+    buttonText: { today: 'Hoy', month: 'Mes', week: 'Semana', list: 'Lista' },
+    events: [],
+    eventClick: function(info) { openEditModal(info.event.extendedProps.id); }
   });
 
+  // Load data
   syncAllFromMonday(false);
 });
 </script>

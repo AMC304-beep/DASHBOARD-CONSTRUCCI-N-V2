@@ -184,6 +184,10 @@
 
 <!-- NAV -->
 <nav class="snav">
+  <div class="stab" id="tab-mod" onclick="goSlide(3,this)" style="border-bottom-color:var(--accent3);color:var(--accent3);">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    🗓️ Modalidad de Trabajo
+  </div>
   <div class="stab on" id="tab1" onclick="goSlide(1,this)">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
     Confirmación de Actualizaciones
@@ -393,10 +397,16 @@
         <div><div style="font-size:20px;font-weight:800;color:var(--danger);" id="ot-nr">0</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;">Rechazadas</div></div>
         <div><div style="font-size:20px;font-weight:800;color:var(--accent2);" id="ot-nh">0</div><div style="font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;">Hrs aprobadas</div></div>
       </div>
-      <button class="btn btn-s" style="margin-top:14px;" onclick="syncOT(event)">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        Sincronizar con Monday
-      </button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+        <button class="btn btn-s" onclick="syncOT(event)">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Sincronizar con Monday
+        </button>
+        <button class="btn btn-s" onclick="syncOTFromMonday()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Actualizar desde Monday
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -410,7 +420,7 @@
 
   <div class="cmap" style="margin-bottom:18px;">
     <strong style="color:#93c5fd;margin-right:5px;font-size:11px;">🔗 Board 18433232131:</strong>
-    <span class="ct">Adcar</span><span class="ct">Nombre</span><span class="ct">Semana</span><span class="ct">Modalidad</span><span class="ct">Días Presencial</span><span class="ct">Días Remoto</span><span class="ct">Observaciones</span>
+    <span class="ct">Colaborador</span><span class="ct">Región</span><span class="ct">Modalidad de trabajo</span><span class="ct">Comentarios</span>
   </div>
 
   <!-- Toolbar -->
@@ -420,7 +430,7 @@
         class="fi" style="min-width:210px;padding:8px 12px;"/>
       <select id="mod-filter" onchange="filterMod()" class="fi" style="min-width:160px;padding:8px 12px;">
         <option value="">Todas las modalidades</option>
-        <option>Presencial</option><option>Remoto</option><option>Híbrido</option><option>Home Office</option>
+        <option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option>
       </select>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
@@ -429,10 +439,7 @@
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Solo lectura
       </span>
-      <button class="btn btn-p" onclick="reqModPwd()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        🔐 Nuevo Registro
-      </button>
+      <span style="font-size:10px;color:var(--muted);font-style:italic;">Los registros corresponden a colaboradores del equipo · solo se puede editar la modalidad</span>
       <button id="modAuthBtn" onclick="reqModAuth()" class="btn btn-s">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Acceso Líder
@@ -447,9 +454,9 @@
   <!-- KPIs modalidad -->
   <div class="kpi-grid" style="margin-bottom:20px;">
     <div class="g kpi"><div><div class="kpi-n" id="m-total" style="color:var(--accent);">0</div><div class="kpi-l">Total registros</div></div><div style="font-size:26px;">👥</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="m-pres" style="color:var(--success);">0</div><div class="kpi-l">Presencial</div></div><div style="font-size:26px;">🏢</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="m-rem" style="color:var(--accent2);">0</div><div class="kpi-l">Remoto</div></div><div style="font-size:26px;">🏠</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="m-hib" style="color:var(--warn);">0</div><div class="kpi-l">Híbrido</div></div><div style="font-size:26px;">🔄</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-pres" style="color:var(--success);">0</div><div class="kpi-l">Actualizados</div></div><div style="font-size:26px;">✅</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-rem" style="color:var(--warn);">0</div><div class="kpi-l">Pendientes</div></div><div style="font-size:26px;">⏳</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-hib" style="color:var(--danger);">0</div><div class="kpi-l">Sin Actualizar</div></div><div style="font-size:26px;">❌</div></div>
   </div>
 
   <!-- Chart + Table -->
@@ -462,9 +469,8 @@
       <div style="overflow-x:auto;max-height:320px;overflow-y:auto;">
         <table class="tbl" id="modTable">
           <thead><tr>
-            <th>Colaborador / ADCAR</th><th>Semana</th><th>Modalidad</th>
-            <th style="text-align:center;">Días Presencial</th><th style="text-align:center;">Días Remoto</th>
-            <th>Observaciones</th><th style="text-align:center;">Acción</th>
+            <th>Colaborador</th><th>Región</th><th>Modalidad</th>
+            <th>Comentarios</th><th style="text-align:center;">Acción</th>
           </tr></thead>
           <tbody id="modBody"></tbody>
         </table>
@@ -606,67 +612,27 @@
   </div>
 </div>
 
-<!-- MODAL: Nuevo registro modalidad -->
-<div id="mModNew" class="mbg">
-  <div class="mbox">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <h4>➕ Nuevo Registro — Modalidad de Trabajo</h4>
-      <button onclick="closeM('mModNew')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
-    </div>
-    <div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:9px 13px;font-size:11px;color:#92400e;margin-bottom:14px;display:flex;align-items:center;gap:7px;">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      Formulario exclusivo de líderes · <strong>Board 18433232131</strong>
-    </div>
-    <div class="fg"><label>Colaborador / ADCAR</label>
-      <select id="mn-adcar" class="fi"><option value="">— Seleccionar —</option></select>
-    </div>
-    <div class="fg"><label>Semana / Período</label><input type="text" id="mn-sem" class="fi" placeholder="Semana 28 – 2025"/></div>
-    <div class="fg"><label>Modalidad</label>
-      <select id="mn-mod" class="fi">
-        <option value="">— Seleccionar —</option>
-        <option>Presencial</option><option>Remoto</option><option>Híbrido</option><option>Home Office</option>
-      </select>
-    </div>
-    <div class="two">
-      <div class="fg"><label>Días Presencial</label><input type="number" id="mn-pres" class="fi" min="0" max="5" placeholder="0"/></div>
-      <div class="fg"><label>Días Remoto</label><input type="number" id="mn-rem" class="fi" min="0" max="5" placeholder="0"/></div>
-    </div>
-    <div class="fg"><label>Observaciones</label><textarea id="mn-obs" class="fi" placeholder="Observaciones…"></textarea></div>
-    <div class="m-act">
-      <button class="btn-cancel" onclick="closeM('mModNew')">Cancelar</button>
-      <button class="btn btn-p" onclick="saveModNew()">💾 Guardar en Monday</button>
-    </div>
-  </div>
-</div>
-
 <!-- MODAL: Editar registro modalidad (solo líderes) -->
 <div id="mModEdit" class="mbg">
   <div class="mbox">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
       <h4 style="display:flex;align-items:center;gap:8px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Editar Registro
+        Editar Modalidad de Trabajo
       </h4>
       <button onclick="closeM('mModEdit')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
     <div id="me-meta" style="font-size:11px;color:var(--muted);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);"></div>
-    <div class="fg"><label>Colaborador / ADCAR</label>
-      <input type="text" id="me-adcar" class="fi" placeholder="ADCAR"/>
+    <div class="fg"><label>Región</label>
+      <input type="text" id="me-region" class="fi" placeholder="Ej. GBS Colombia"/>
     </div>
-    <div class="fg"><label>Semana / Período</label>
-      <input type="text" id="me-sem" class="fi" placeholder="Semana 28 – 2025"/>
-    </div>
-    <div class="fg"><label>Modalidad</label>
+    <div class="fg"><label>Modalidad de trabajo</label>
       <select id="me-mod" class="fi">
         <option value="">— Seleccionar —</option>
-        <option>Presencial</option><option>Remoto</option><option>Híbrido</option><option>Home Office</option>
+        <option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option>
       </select>
     </div>
-    <div class="two">
-      <div class="fg"><label>Días Presencial</label><input type="number" id="me-pres" class="fi" min="0" max="5" placeholder="0"/></div>
-      <div class="fg"><label>Días Remoto</label><input type="number" id="me-rem" class="fi" min="0" max="5" placeholder="0"/></div>
-    </div>
-    <div class="fg"><label>Observaciones</label><textarea id="me-obs" class="fi" placeholder="Observaciones…"></textarea></div>
+    <div class="fg"><label>Comentarios</label><textarea id="me-obs" class="fi" placeholder="Observaciones…"></textarea></div>
     <div class="m-act">
       <button class="btn-cancel" onclick="closeM('mModEdit')">Cancelar</button>
       <button class="btn btn-p" onclick="saveModEdit()">
@@ -681,7 +647,7 @@
 <div id="mLiderPwd" class="mbg" style="z-index:999;">
   <div class="mbox" style="max-width:380px;">
     <h4 style="margin-bottom:4px;">🔐 Acceso de Líder</h4>
-    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Ingresa la contraseña de líder para aprobar HE o editar Modalidad de Trabajo. Contacta a Jesús Alberto Pérez o Víctor Suárez Ardila si no la tienes.</p>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:14px;">Ingresa la contraseña de líder para aprobar HE o editar Modalidad de Trabajo.</p>
     <div id="liderPwdErr" style="display:none;background:#fee2e2;border:1px solid #fca5a5;border-radius:7px;padding:8px 12px;font-size:11px;color:#dc2626;margin-bottom:10px;"></div>
     <div class="fg"><label>Contraseña de líder</label>
       <input type="password" id="liderPwdInput" class="fi" placeholder="••••••••" onkeydown="if(event.key==='Enter')confirmLiderPwd()"/>
@@ -714,13 +680,19 @@ const PROXY   = 'http://127.0.0.1:3000';
 const BOARD_A = '18432741374';   // Actualizaciones / Confirmaciones / HE
 const BOARD_M = '18433232131';   // Modalidad de Trabajo
 
-/* Column IDs — Board 18432741374 (discover dynamically, fallbacks below) */
+/* Column IDs — Board 18432741374 (hardcoded confirmed IDs) */
 const COL = {
-  adcar:'',gerencia:'color_mm7hc288',semana:'',time:'color_mm7h4cdb',
+  adcar:'',gerencia:'color_mm7hc288',semana:'text_mm7nfrzh',time:'color_mm7h4cdb',
   soporte_time:'file_mm7hg5fg',sf:'color_mm7hdfqa',soporte_sf:'file_mm7hqp3m',
   hp:'status',soporte_hp:'file_mm7h43r0',comentarios:'text_mm7h6n1c',
   aprobador:'color_mm7mtfss',estado_apr:'color_mm7mtv3w',
   horas_extras:'numeric_mm7mrmr6',comentarios_he:'text_mm7my82t'
+};
+/* Column IDs — Board 18433232131 (Modalidad) hardcoded */
+const MOD_COL = {
+  region:'color_mm7hc288',
+  modalidad:'color_mm7h4cdb',
+  comentarios:'text_mm7h6n1c'
 };
 
 /* ── Proxy helper ── */
@@ -794,10 +766,9 @@ async function loadAdcars(){
     const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
     const ac=cols.find(c=>norm(c.title).includes('adcar'));
     const gc=cols.find(c=>norm(c.title).includes('gerencia')||norm(c.title).includes('region'));
-    const wc=cols.find(c=>norm(c.title).includes('semana')||norm(c.title).includes('period')||norm(c.title).includes('periodo'));
     if(ac) COL.adcar=ac.id;
     if(gc) COL.gerencia=gc.id;
-    if(wc) COL.semana=wc.id;
+    // semana is hardcoded as text_mm7nfrzh — no discovery needed
 
     let cur=null; const adcars=new Set(); const gers=new Set();
     do{
@@ -1013,9 +984,8 @@ async function syncSlide1(e){
    ══════════════════════ */
 let otList=[],otIdx=1,otLast=null,otRole='col';
 const LDRS={PEREZ:'Jesús Alberto Pérez',SUAREZ:'Víctor Suárez Ardila'};
-// Contraseñas de líderes — una por líder
-const LIDER_PWDS={PEREZ:'LIDER_PEREZ_2026',SUAREZ:'LIDER_SUAREZ_2026'};
-const MOD_PWD='MODALIDAD_LIDER_2026'; // contraseña para editar Modalidad de Trabajo
+// Contraseña única de líderes
+const LIDER_PWD='LIDER_2026';
 let _liderPwdCallback=null; // función a ejecutar tras autenticación exitosa
 
 function reqLiderPwd(radioEl){
@@ -1030,7 +1000,7 @@ function reqLiderPwd(radioEl){
 }
 function confirmLiderPwd(){
   const v=document.getElementById('liderPwdInput').value.trim();
-  const validLider=Object.values(LIDER_PWDS).includes(v)||v===MOD_PWD;
+  const validLider=v===LIDER_PWD;
   if(!validLider){
     const e=document.getElementById('liderPwdErr');
     e.textContent='❌ Contraseña incorrecta.';e.style.display='block';
@@ -1168,6 +1138,35 @@ async function syncOT(e){
   finally{btn.disabled=false;btn.innerHTML=orig;}
 }
 
+async function syncOTFromMonday(){
+  showToast('⏳ Actualizando cola desde Monday…','inf');
+  try{
+    const data=await mq(`{boards(ids:[${BOARD_A}]){items_page(limit:200){items{id name column_values(ids:["${COL.aprobador}","${COL.estado_apr}","${COL.horas_extras}","${COL.comentarios_he}"]){id text}}}}}`);
+    const items=data?.boards?.[0]?.items_page?.items||[];
+    const norm=s=>(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+    const EL={};
+    items.forEach(it=>{
+      if(!it.name.startsWith('HE ·')) return;
+      const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text||'';});
+      const estTxt=cv[COL.estado_apr]||'';
+      let status='pending';
+      if(norm(estTxt).includes('aprobac')||norm(estTxt).includes('aprobad'))status='approved';
+      else if(norm(estTxt).includes('rechazad'))status='rejected';
+      // Match to local request by ADCAR in item name
+      const parts=it.name.split('·').map(s=>s.trim());
+      const adcar=parts[1]||'';
+      const existing=otList.find(r=>r.adcar===adcar&&r.status==='pending');
+      if(existing&&status!=='pending'){existing.status=status;}
+      else if(!existing&&adcar){
+        const hrs=parseFloat(cv[COL.horas_extras])||0;
+        otList.push({id:otIdx++,adcar,email:'',date:parts[2]||'',ini:'',fin:'',total:hrs,ldr:'',reason:cv[COL.comentarios_he]||'',status,at:it.name});
+      }
+    });
+    renderQueue();updMyOT();
+    showToast('✅ Cola actualizada desde Monday','ok');
+  }catch(err){showToast('❌ Error: '+err.message,'err');}
+}
+
 /* ══════════════════════
    SLIDE 3 — MODALIDAD
    ══════════════════════ */
@@ -1223,27 +1222,15 @@ async function loadModalidad(){
   pshow('Cargando Modalidad de Trabajo del Board '+BOARD_M+'…');
   try{
     pset(20,'Consultando board…');
-    const data=await mq(`{boards(ids:[${BOARD_M}]){columns{id title type}items_page(limit:500){items{id name column_values{id type text value}}}}}`);
-    const board=data?.boards?.[0];
-    if(!board) throw new Error('Board '+BOARD_M+' no encontrado');
-    const cols=board.columns||[];
-    const norm=s=>s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-    // Guardar IDs reales de columnas para edición posterior
-    const ac=cols.find(c=>norm(c.title).includes('adcar'));
-    const sc=cols.find(c=>norm(c.title).includes('semana')||norm(c.title).includes('period'));
-    const mc2=cols.find(c=>norm(c.title).includes('modalidad'));
-    const pc=cols.find(c=>norm(c.title).includes('presencial'));
-    const rc=cols.find(c=>norm(c.title).includes('remoto'));
-    const oc=cols.find(c=>norm(c.title).includes('observ')||norm(c.title).includes('coment'));
-    modColIds={adcar:ac?.id||'',semana:sc?.id||'',modalidad:mc2?.id||'',pres:pc?.id||'',rem:rc?.id||'',obs:oc?.id||''};
-
-    modItems=(board.items_page?.items||[]).map(it=>{
-      const cv={}; it.column_values.forEach(c=>{cv[c.id]=c.text||'';});
-      return{id:it.id,name:it.name,adcar:cv[ac?.id]||it.name,semana:cv[sc?.id]||'',modalidad:cv[mc2?.id]||'',pres:cv[pc?.id]||'0',rem:cv[rc?.id]||'0',obs:cv[oc?.id]||''};
+    const data=await mq(`{boards(ids:[${BOARD_M}]){items_page(limit:500){items{id name column_values(ids:["${MOD_COL.region}","${MOD_COL.modalidad}","${MOD_COL.comentarios}"]){id text}}}}}`);
+    const items=data?.boards?.[0]?.items_page?.items||[];
+    modItems=items.map(it=>{
+      const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text||'';});
+      return{id:it.id,name:it.name,region:cv[MOD_COL.region]||'',modalidad:cv[MOD_COL.modalidad]||'',comentarios:cv[MOD_COL.comentarios]||''};
     });
     pset(100,'¡Listo!');setTimeout(phide,700);
     renderMod();
-    showToast(`✅ ${modItems.length} registros de Modalidad cargados`,'ok');
+    showToast(`✅ ${modItems.length} colaboradores de Modalidad cargados`,'ok');
   }catch(err){phide();showToast('❌ Error Modalidad: '+err.message,'err');}
 }
 
@@ -1255,18 +1242,18 @@ function filterMod(){
 
 function renderMod(){
   const items=modItems.filter(it=>{
-    const mTxt=!modFilter||it.name.toLowerCase().includes(modFilter)||it.adcar.toLowerCase().includes(modFilter)||it.semana.toLowerCase().includes(modFilter);
+    const mTxt=!modFilter||it.name.toLowerCase().includes(modFilter)||it.region.toLowerCase().includes(modFilter);
     const mSt=!modStatusF||it.modalidad===modStatusF;
     return mTxt&&mSt;
   });
-  document.getElementById('m-total').textContent=items.length;
-  document.getElementById('m-pres').textContent=items.filter(i=>i.modalidad==='Presencial').length;
-  document.getElementById('m-rem').textContent=items.filter(i=>i.modalidad==='Remoto'||i.modalidad==='Home Office').length;
-  document.getElementById('m-hib').textContent=items.filter(i=>i.modalidad==='Híbrido').length;
+  document.getElementById('m-total').textContent=modItems.length;
+  document.getElementById('m-pres').textContent=modItems.filter(i=>i.modalidad==='Actualizado').length;
+  document.getElementById('m-rem').textContent=modItems.filter(i=>i.modalidad==='Pendiente').length;
+  document.getElementById('m-hib').textContent=modItems.filter(i=>i.modalidad==='Sin Actualizar').length;
 
   /* Chart */
   const cnt={};items.forEach(i=>{cnt[i.modalidad||'Sin definir']=(cnt[i.modalidad||'Sin definir']||0)+1;});
-  const CC={'Presencial':'#059669','Remoto':'#0f62fe','Híbrido':'#d97706','Home Office':'#7c5cd8','Sin definir':'#6b7fa3'};
+  const CC={'Actualizado':'#059669','Pendiente':'#d97706','Sin Actualizar':'#dc2626','Sin definir':'#6b7fa3'};
   const ctx=document.getElementById('modChart').getContext('2d');
   if(modChart) modChart.destroy();
   modChart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cnt),datasets:[{data:Object.values(cnt),backgroundColor:Object.keys(cnt).map(k=>CC[k]||'#3b82f6'),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}});
@@ -1274,21 +1261,18 @@ function renderMod(){
   /* Table */
   const tbody=document.getElementById('modBody');
   const pager=document.getElementById('modPager');
-  if(!items.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday Board ${BOARD_M}.</td></tr>`;pager.textContent='';return;}
-  const MC={'Presencial':'#059669','Remoto':'#0f62fe','Híbrido':'#d97706','Home Office':'#7c5cd8'};
+  if(!items.length){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday Board ${BOARD_M}.</td></tr>`;pager.textContent='';return;}
+  const MC={'Actualizado':'#059669','Pendiente':'#d97706','Sin Actualizar':'#dc2626'};
   tbody.innerHTML=items.map(it=>{
     const mc=MC[it.modalidad]||'var(--muted)';
-    // Botón de edición: visible siempre, pero comportamiento depende de auth
     const editBtn=modLiderAuth
       ?`<button onclick="openModEdit('${it.id}')" style="background:var(--accent);color:#fff;border:none;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;" title="Editar registro">✏️ Editar</button>`
       :`<button onclick="promptModAuth('${it.id}')" style="background:#f1f5f9;color:var(--muted);border:1px solid #e5e7eb;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;" title="Solo líderes pueden editar">🔒 Editar</button>`;
     return`<tr>
-      <td style="font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.name}">${it.adcar||it.name}</td>
-      <td style="color:var(--muted);font-size:11px;">${it.semana||'—'}</td>
+      <td style="font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.name}">${it.name}</td>
+      <td style="font-size:11px;color:var(--muted);">${it.region||'—'}</td>
       <td><span style="background:${mc}18;color:${mc};border:1px solid ${mc}40;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${it.modalidad||'—'}</span></td>
-      <td style="text-align:center;font-weight:700;">${it.pres||'—'}</td>
-      <td style="text-align:center;font-weight:700;">${it.rem||'—'}</td>
-      <td style="font-size:11px;color:var(--muted);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.obs||''}">${it.obs||'—'}</td>
+      <td style="font-size:11px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.comentarios||''}">${it.comentarios||'—'}</td>
       <td style="text-align:center;">${editBtn}</td>
     </tr>`;
   }).join('');
@@ -1305,89 +1289,36 @@ function promptModAuth(itemId){
   openM('mLiderPwd');
 }
 
-function openModNew(){
-  const now=new Date();
-  document.getElementById('mn-sem').value=`Semana ${getWeek(now)} – ${now.getFullYear()}`;
-  document.getElementById('mn-adcar').value='';
-  document.getElementById('mn-mod').value='';
-  document.getElementById('mn-pres').value='';
-  document.getElementById('mn-rem').value='';
-  document.getElementById('mn-obs').value='';
-  openM('mModNew');
-}
-
-async function saveModNew(){
-  const adcar=document.getElementById('mn-adcar').value.trim();
-  const sem=document.getElementById('mn-sem').value.trim();
-  const mod=document.getElementById('mn-mod').value;
-  const pres=document.getElementById('mn-pres').value||'0';
-  const rem=document.getElementById('mn-rem').value||'0';
-  const obs=document.getElementById('mn-obs').value.trim();
-  if(!adcar||!sem||!mod){showToast('⚠️ ADCAR, semana y modalidad son obligatorios','err');return;}
-  closeM('mModNew');
-  pshow('Creando registro en Monday '+BOARD_M+'…');
-  try{
-    pset(40,'Enviando…');
-    // Construir column_values con los IDs reales del board
-    const cv={};
-    if(modColIds.adcar) cv[modColIds.adcar]=adcar;
-    if(modColIds.semana) cv[modColIds.semana]=sem;
-    if(modColIds.modalidad) cv[modColIds.modalidad]={label:mod};
-    if(modColIds.pres) cv[modColIds.pres]=parseInt(pres)||0;
-    if(modColIds.rem) cv[modColIds.rem]=parseInt(rem)||0;
-    if(modColIds.obs && obs) cv[modColIds.obs]=obs;
-    const nm=`${adcar} · ${sem}`;
-    const res=await mc(BOARD_M,nm,cv);
-    const nid=res?.create_item?.id||'local_'+Date.now();
-    modItems.unshift({id:nid,name:nm,adcar,semana:sem,modalidad:mod,pres,rem,obs});
-    pset(100,'¡Listo!');setTimeout(phide,700);
-    renderMod();
-    showToast(`✅ Registro "${nm}" creado en Monday`,'ok');
-  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
-}
-
 /* Abrir modal de edición de un ítem existente */
 function openModEdit(id){
   const it=modItems.find(x=>x.id===id);if(!it)return;
   modEditId=id;
-  document.getElementById('me-meta').innerHTML=`Editando: <strong>${it.name}</strong> · ID ${it.id} · <a href="https://ibm.monday.com/boards/${BOARD_M}/views/main" target="_blank" rel="noopener" style="color:var(--accent);">Ver en Monday ↗</a>`;
-  document.getElementById('me-adcar').value=it.adcar||'';
-  document.getElementById('me-sem').value=it.semana||'';
+  document.getElementById('me-meta').innerHTML=`Editando: <strong>${it.name}</strong> · <a href="https://ibm.monday.com/boards/${BOARD_M}/views/main" target="_blank" rel="noopener" style="color:var(--accent);">Ver en Monday ↗</a>`;
+  document.getElementById('me-region').value=it.region||'';
   document.getElementById('me-mod').value=it.modalidad||'';
-  document.getElementById('me-pres').value=it.pres||'';
-  document.getElementById('me-rem').value=it.rem||'';
-  document.getElementById('me-obs').value=it.obs||'';
+  document.getElementById('me-obs').value=it.comentarios||'';
   openM('mModEdit');
 }
 
 async function saveModEdit(){
   if(!modEditId){showToast('⚠️ No hay ítem seleccionado','err');return;}
-  const adcar=document.getElementById('me-adcar').value.trim();
-  const sem=document.getElementById('me-sem').value.trim();
+  const region=document.getElementById('me-region').value.trim();
   const mod=document.getElementById('me-mod').value;
-  const pres=document.getElementById('me-pres').value||'0';
-  const rem=document.getElementById('me-rem').value||'0';
   const obs=document.getElementById('me-obs').value.trim();
-  if(!adcar||!sem||!mod){showToast('⚠️ ADCAR, semana y modalidad son obligatorios','err');return;}
+  if(!mod){showToast('⚠️ Selecciona la modalidad de trabajo','err');return;}
   closeM('mModEdit');
   showToast('⏳ Actualizando en Monday…','inf');
   try{
-    // Construir column_values con los IDs reales
+    // Use hardcoded MOD_COL IDs with double-stringify pattern
     const cv={};
-    if(modColIds.adcar) cv[modColIds.adcar]=adcar;
-    if(modColIds.semana) cv[modColIds.semana]=sem;
-    if(modColIds.modalidad) cv[modColIds.modalidad]={label:mod};
-    if(modColIds.pres) cv[modColIds.pres]=parseInt(pres)||0;
-    if(modColIds.rem) cv[modColIds.rem]=parseInt(rem)||0;
-    if(modColIds.obs) cv[modColIds.obs]=obs;
-    // Actualizar el ítem en Monday — mismo patrón que saveEditWeek (inline literals, double-stringify)
-    const nm=`${adcar} · ${sem}`;
+    cv[MOD_COL.region]={label:region};
+    cv[MOD_COL.modalidad]={label:mod};
+    cv[MOD_COL.comentarios]=obs;
     await mq(`mutation{change_multiple_column_values(item_id:${modEditId},board_id:${BOARD_M},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`);
-    // Actualizar estado local
     const it=modItems.find(x=>x.id===modEditId);
-    if(it){it.adcar=adcar;it.semana=sem;it.modalidad=mod;it.pres=pres;it.rem=rem;it.obs=obs;it.name=nm;}
+    if(it){it.region=region;it.modalidad=mod;it.comentarios=obs;}
     renderMod();
-    showToast(`✅ Registro "${nm}" actualizado en Monday`,'ok');
+    showToast(`✅ Modalidad de "${it?.name||modEditId}" actualizada en Monday`,'ok');
   }catch(err){showToast('❌ Error al actualizar: '+err.message,'err');}
   finally{modEditId=null;}
 }
