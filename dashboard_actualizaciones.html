@@ -184,10 +184,6 @@
 
 <!-- NAV -->
 <nav class="snav">
-  <div class="stab" id="tab-mod" onclick="goSlide(3,this)" style="border-bottom-color:var(--accent3);color:var(--accent3);">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-    🗓️ Modalidad de Trabajo
-  </div>
   <div class="stab on" id="tab1" onclick="goSlide(1,this)">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
     Confirmación de Actualizaciones
@@ -199,10 +195,6 @@
   <div class="stab" id="tab3" onclick="goSlide(3,this)">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
     Modalidad de Trabajo
-  </div>
-  <div class="stab" id="tab4" onclick="goSlide(4,this)">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    Semanas / Personas
   </div>
 </nav>
 
@@ -236,10 +228,8 @@
           <option value="">— Seleccionar —</option>
         </select>
       </div>
-      <div>
-        <label style="display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;">Semana / Período *</label>
-        <input type="text" id="s1period" style="width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;background:#fafbff;" placeholder="Semana 28 – 2025"/>
-      </div>
+      <!-- Semana oculta — se calcula automáticamente y se sincroniza con Monday -->
+      <input type="hidden" id="s1period"/>
     </div>
 
     <hr style="border:none;border-top:1px solid var(--border);margin-bottom:20px;"/>
@@ -416,30 +406,28 @@
      ══════════════════════════════ -->
 <div class="slide" id="slide3">
   <div class="section-title">Modalidad de Trabajo</div>
-  <div class="section-sub">Conectado en vivo al Board Monday <strong>18433232131</strong>. Se sincroniza automáticamente al cargar.</div>
+  <div class="section-sub">Conectado en vivo al Board Monday <strong>18433232131</strong>. Líderes pueden editar y aprobar. ADCARs solo lectura.</div>
 
   <div class="cmap" style="margin-bottom:18px;">
     <strong style="color:#93c5fd;margin-right:5px;font-size:11px;">🔗 Board 18433232131:</strong>
-    <span class="ct">Colaborador</span><span class="ct">Región</span><span class="ct">Modalidad de trabajo</span><span class="ct">Comentarios</span>
+    <span class="ct">Colaborador</span><span class="ct">Región</span><span class="ct">Modalidad</span><span class="ct">Semana</span><span class="ct">Aprobador</span><span class="ct">Estado Aprobación</span><span class="ct">Comentarios</span>
   </div>
 
   <!-- Toolbar -->
   <div class="g" style="padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <input type="text" id="mod-search" oninput="filterMod()" placeholder="🔍 Buscar colaborador o semana…"
+      <input type="text" id="mod-search" oninput="filterMod()" placeholder="🔍 Buscar colaborador…"
         class="fi" style="min-width:210px;padding:8px 12px;"/>
       <select id="mod-filter" onchange="filterMod()" class="fi" style="min-width:160px;padding:8px 12px;">
         <option value="">Todas las modalidades</option>
-        <option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option>
+        <option>Ausente</option><option>Home Office</option><option>Presencial</option>
       </select>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-      <!-- Badge de estado de acceso líder -->
       <span id="modAuthBadge" style="display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border-radius:20px;font-size:10px;font-weight:700;background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Solo lectura
       </span>
-      <span style="font-size:10px;color:var(--muted);font-style:italic;">Los registros corresponden a colaboradores del equipo · solo se puede editar la modalidad</span>
       <button id="modAuthBtn" onclick="reqModAuth()" class="btn btn-s">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Acceso Líder
@@ -453,23 +441,24 @@
 
   <!-- KPIs modalidad -->
   <div class="kpi-grid" style="margin-bottom:20px;">
-    <div class="g kpi"><div><div class="kpi-n" id="m-total" style="color:var(--accent);">0</div><div class="kpi-l">Total registros</div></div><div style="font-size:26px;">👥</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="m-pres" style="color:var(--success);">0</div><div class="kpi-l">Actualizados</div></div><div style="font-size:26px;">✅</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="m-rem" style="color:var(--warn);">0</div><div class="kpi-l">Pendientes</div></div><div style="font-size:26px;">⏳</div></div>
-    <div class="g kpi"><div><div class="kpi-n" id="m-hib" style="color:var(--danger);">0</div><div class="kpi-l">Sin Actualizar</div></div><div style="font-size:26px;">❌</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-total" style="color:var(--accent);">0</div><div class="kpi-l">Total</div></div><div style="font-size:26px;">👥</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-pres" style="color:var(--success);">0</div><div class="kpi-l">Presencial</div></div><div style="font-size:26px;">🏢</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-rem" style="color:var(--accent2);">0</div><div class="kpi-l">Home Office</div></div><div style="font-size:26px;">🏠</div></div>
+    <div class="g kpi"><div><div class="kpi-n" id="m-hib" style="color:var(--warn);">0</div><div class="kpi-l">Ausente</div></div><div style="font-size:26px;">📋</div></div>
   </div>
 
   <!-- Chart + Table -->
-  <div style="display:grid;grid-template-columns:280px 1fr;gap:18px;margin-bottom:20px;" class="mod-layout">
+  <div style="display:grid;grid-template-columns:260px 1fr;gap:18px;margin-bottom:20px;" class="mod-layout">
     <div class="g" style="padding:18px;">
       <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;">📊 Distribución Modalidad</div>
       <div style="position:relative;height:200px;"><canvas id="modChart"></canvas></div>
     </div>
     <div class="g" style="padding:0;overflow:hidden;">
-      <div style="overflow-x:auto;max-height:320px;overflow-y:auto;">
+      <div style="overflow-x:auto;max-height:360px;overflow-y:auto;">
         <table class="tbl" id="modTable">
           <thead><tr>
             <th>Colaborador</th><th>Región</th><th>Modalidad</th>
+            <th>Semana</th><th>Aprobador</th><th>Estado</th>
             <th>Comentarios</th><th style="text-align:center;">Acción</th>
           </tr></thead>
           <tbody id="modBody"></tbody>
@@ -480,137 +469,6 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════
-     SLIDE 4 — SEMANAS / PERSONAS
-     ══════════════════════════════ -->
-<div class="slide" id="slide4">
-  <div class="section-title">Semanas y Personas</div>
-  <div class="section-sub">Gestiona semanas y colaboradores del Board <strong>18432741374</strong>. Los cambios se reflejan en Monday inmediatamente.</div>
-
-  <!-- Toolbar -->
-  <div class="g" style="padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <input type="text" id="sw-search" oninput="filterSW()" placeholder="🔍 Buscar colaborador o semana…"
-        class="fi" style="min-width:210px;padding:8px 12px;"/>
-      <select id="sw-filter" onchange="filterSW()" class="fi" style="min-width:160px;padding:8px 12px;">
-        <option value="">Todos los estados</option>
-        <option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option>
-      </select>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="btn btn-p" onclick="openAddWeek()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Agregar Semana
-      </button>
-      <button class="btn btn-s" onclick="openAddPerson()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-        Agregar Persona
-      </button>
-      <button class="btn btn-s" onclick="loadWeeks()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-        Sincronizar
-      </button>
-    </div>
-  </div>
-
-  <div class="g" style="padding:0;overflow:hidden;">
-    <div style="overflow-x:auto;max-height:580px;overflow-y:auto;">
-      <table class="tbl" id="swTable">
-        <thead><tr>
-          <th>Colaborador / ADCAR</th><th>Período</th>
-          <th style="text-align:center;">Time</th><th style="text-align:center;">Success Factors</th>
-          <th style="text-align:center;">My Hour Plan</th><th>Región</th><th style="text-align:center;">Acción</th>
-        </tr></thead>
-        <tbody id="swBody"></tbody>
-      </table>
-    </div>
-    <div id="swPager" style="padding:9px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);"></div>
-  </div>
-</div>
-
-<!-- MODAL: Agregar Semana -->
-<div id="mAddWeek" class="mbg">
-  <div class="mbox">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <h4>➕ Agregar Nueva Semana</h4>
-      <button onclick="closeM('mAddWeek')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
-    </div>
-    <div class="fg"><label>Colaborador / ADCAR</label>
-      <select id="aw-adcar" class="fi"><option value="">— Seleccionar colaborador —</option></select>
-    </div>
-    <div class="fg"><label>Período / Semana</label><input type="text" id="aw-period" class="fi" placeholder="Semana 28 – 2025"/></div>
-    <div class="three">
-      <div class="fg"><label>Time</label>
-        <select id="aw-time" class="fi"><option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option></select>
-      </div>
-      <div class="fg"><label>Success Factors</label>
-        <select id="aw-sf" class="fi"><option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option></select>
-      </div>
-      <div class="fg"><label>My Hour Plan</label>
-        <select id="aw-hp" class="fi"><option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option></select>
-      </div>
-    </div>
-    <div class="fg"><label>Región</label><input type="text" id="aw-ger" class="fi" placeholder="Ej. GBS Colombia"/></div>
-    <div class="fg"><label>Comentarios</label><textarea id="aw-notes" class="fi" placeholder="Observaciones…"></textarea></div>
-    <div class="m-act">
-      <button class="btn-cancel" onclick="closeM('mAddWeek')">Cancelar</button>
-      <button class="btn btn-p" onclick="saveWeek()">💾 Guardar en Monday</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Agregar Persona -->
-<div id="mAddPerson" class="mbg">
-  <div class="mbox">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <h4>👤 Agregar Nueva Persona</h4>
-      <button onclick="closeM('mAddPerson')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
-    </div>
-    <div class="notice">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      Se creará un nuevo elemento en Monday Board <strong>18432741374</strong>.
-    </div>
-    <div class="fg"><label>Nombre completo *</label><input type="text" id="ap-name" class="fi" placeholder="Ej. María González"/></div>
-    <div class="two">
-      <div class="fg"><label>ADCAR *</label><input type="text" id="ap-adcar" class="fi" placeholder="Ej. MGA001"/></div>
-      <div class="fg"><label>Correo IBM *</label><input type="email" id="ap-email" class="fi" placeholder="usuario@ibm.com"/></div>
-    </div>
-    <div class="fg"><label>Región</label><input type="text" id="ap-ger" class="fi" placeholder="Ej. GBS Colombia"/></div>
-    <div class="fg"><label>Semana inicial</label><input type="text" id="ap-period" class="fi" placeholder="Semana 28 – 2025"/></div>
-    <div class="m-act">
-      <button class="btn-cancel" onclick="closeM('mAddPerson')">Cancelar</button>
-      <button class="btn btn-p" onclick="savePerson()">➕ Crear en Monday</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Editar semana -->
-<div id="mEditWeek" class="mbg">
-  <div class="mbox">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <h4>✏️ Corregir Semana</h4>
-      <button onclick="closeM('mEditWeek')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
-    </div>
-    <div id="ew-meta" style="font-size:11px;color:var(--muted);margin-bottom:12px;"></div>
-    <div class="three">
-      <div class="fg"><label>Time</label>
-        <select id="ew-time" class="fi"><option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option></select>
-      </div>
-      <div class="fg"><label>Success Factors</label>
-        <select id="ew-sf" class="fi"><option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option></select>
-      </div>
-      <div class="fg"><label>My Hour Plan</label>
-        <select id="ew-hp" class="fi"><option>Actualizado</option><option>Pendiente</option><option>Sin Actualizar</option></select>
-      </div>
-    </div>
-    <div class="fg"><label>Región</label><input type="text" id="ew-ger" class="fi" placeholder="Ej. GBS Colombia"/></div>
-    <div class="fg"><label>Comentarios</label><textarea id="ew-notes" class="fi" placeholder="Observaciones…"></textarea></div>
-    <div class="m-act">
-      <button class="btn-cancel" onclick="closeM('mEditWeek')">Cancelar</button>
-      <button class="btn btn-p" onclick="saveEditWeek()">💾 Guardar en Monday</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODAL: Editar registro modalidad (solo líderes) -->
 <div id="mModEdit" class="mbg">
@@ -623,13 +481,32 @@
       <button onclick="closeM('mModEdit')" style="background:transparent;border:none;font-size:18px;cursor:pointer;color:var(--muted);">✕</button>
     </div>
     <div id="me-meta" style="font-size:11px;color:var(--muted);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);"></div>
-    <div class="fg"><label>Región</label>
-      <input type="text" id="me-region" class="fi" placeholder="Ej. GBS Colombia"/>
-    </div>
-    <div class="fg"><label>Modalidad de trabajo</label>
+    <div class="fg"><label>Modalidad de trabajo *</label>
       <select id="me-mod" class="fi">
         <option value="">— Seleccionar —</option>
-        <option>Pendiente</option><option>Actualizado</option><option>Sin Actualizar</option>
+        <option>Ausente</option><option>Home Office</option><option>Presencial</option>
+      </select>
+    </div>
+    <div class="fg"><label>Semana (Desde – Hasta)</label>
+      <div class="two">
+        <input type="date" id="me-sem-from" class="fi" title="Inicio semana"/>
+        <input type="date" id="me-sem-to" class="fi" title="Fin semana"/>
+      </div>
+    </div>
+    <div class="fg"><label>Aprobador</label>
+      <select id="me-apr" class="fi">
+        <option value="">— Seleccionar —</option>
+        <option>Jesus Alberto Perez</option>
+        <option>Victor Suarez</option>
+        <option>Anlli Liliana Varón</option>
+      </select>
+    </div>
+    <div class="fg"><label>Estado Aprobación</label>
+      <select id="me-estado" class="fi">
+        <option value="">— Seleccionar —</option>
+        <option>En revisión</option>
+        <option>Aprobación</option>
+        <option>Rechazadas</option>
       </select>
     </div>
     <div class="fg"><label>Comentarios</label><textarea id="me-obs" class="fi" placeholder="Observaciones…"></textarea></div>
@@ -688,12 +565,19 @@ const COL = {
   aprobador:'color_mm7mtfss',estado_apr:'color_mm7mtv3w',
   horas_extras:'numeric_mm7mrmr6',comentarios_he:'text_mm7my82t'
 };
-/* Column IDs — Board 18433232131 (Modalidad) hardcoded */
+/* Column IDs — Board 18433232131 (Modalidad) hardcoded — confirmados via API */
 const MOD_COL = {
-  region:'color_mm7hc288',
-  modalidad:'color_mm7h4cdb',
-  comentarios:'text_mm7h6n1c'
+  region:    'color_mm7hc288',   // Región: NOR-PAC, NORESTE, CENTRO-SUR, PACIFICO
+  modalidad: 'color_mm7h4cdb',   // Modalidad: Ausente, Home Office, Presencial
+  semana:    'timerange_mm7m57ra',// Fecha Solicitud HE (timeline = semana)
+  aprobador: 'color_mm7mtfss',   // Aprobador: Jesus Alberto Perez, Victor Suarez, Anlli Liliana Varón
+  estado:    'color_mm7mtv3w',   // Estado Aprobación: En revisión, Aprobación, Rechazadas
+  comentarios:'text_mm7h6n1c'    // Comentarios
 };
+/* Opciones reales de modalidad del tablero */
+const MOD_OPTS=['Ausente','Home Office','Presencial'];
+/* Opciones reales de aprobador */
+const MOD_APR_OPTS=['Jesus Alberto Perez','Victor Suarez','Anlli Liliana Varón'];
 
 /* ── Proxy helper ── */
 async function mq(query, variables={}) {
@@ -742,7 +626,6 @@ function goSlide(n,tab){
   document.getElementById('slide'+n).classList.add('on');
   tab.classList.add('on');
   if(n===3 && modItems.length===0) loadModalidad();
-  if(n===4 && swItems.length===0) loadWeeks();
 }
 
 /* ── Modal helpers ── */
@@ -792,8 +675,8 @@ async function loadAdcars(){
       const o=document.createElement('option');o.value=v;o.textContent=v;
       if(v===cur2)o.selected=true;sel.appendChild(o);
     });
-    // Update aw-adcar and mn-adcar selects
-    ['aw-adcar','mn-adcar'].forEach(id=>{
+    // Update mn-adcar select (Modalidad)
+    ['mn-adcar'].forEach(id=>{
       const s2=document.getElementById(id); if(!s2)return;
       s2.innerHTML='<option value="">— Seleccionar —</option>';
       [...adcars].sort((a,b)=>a.localeCompare(b,'es')).forEach(v=>{
@@ -830,7 +713,7 @@ async function enviarAMonday(e){
   const c=getCollab();
   if(!c.email&&!c.adcar){showToast('⚠️ Ingresa tu correo IBM o selecciona tu ADCAR','err');document.getElementById('s1email').focus();return;}
   if(c.email&&!c.email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
-  if(!c.period){showToast('⚠️ Ingresa la semana/período','err');document.getElementById('s1period').focus();return;}
+  // c.period es calculado automáticamente (campo oculto), no requiere validación manual
   const ts=document.getElementById('sel-time').value;
   const ss=document.getElementById('sel-sf').value;
   const hs=document.getElementById('sel-hp').value;
@@ -1222,15 +1105,25 @@ async function loadModalidad(){
   pshow('Cargando Modalidad de Trabajo del Board '+BOARD_M+'…');
   try{
     pset(20,'Consultando board…');
-    const data=await mq(`{boards(ids:[${BOARD_M}]){items_page(limit:500){items{id name column_values(ids:["${MOD_COL.region}","${MOD_COL.modalidad}","${MOD_COL.comentarios}"]){id text}}}}}`);
+    const cols=[MOD_COL.region,MOD_COL.modalidad,MOD_COL.semana,MOD_COL.aprobador,MOD_COL.estado,MOD_COL.comentarios].map(x=>`"${x}"`).join(',');
+    const data=await mq(`{boards(ids:[${BOARD_M}]){items_page(limit:500){items{id name column_values(ids:[${cols}]){id text value}}}}}`);
     const items=data?.boards?.[0]?.items_page?.items||[];
     modItems=items.map(it=>{
-      const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text||'';});
-      return{id:it.id,name:it.name,region:cv[MOD_COL.region]||'',modalidad:cv[MOD_COL.modalidad]||'',comentarios:cv[MOD_COL.comentarios]||''};
+      const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text||'';cv[c.id+'_val']=c.value||'';});
+      // Extraer fechas desde/hasta del timeline
+      let semFrom='',semTo='';
+      try{const v=JSON.parse(cv[MOD_COL.semana+'_val']||'{}');semFrom=v.from||'';semTo=v.to||'';}catch(e){}
+      return{id:it.id,name:it.name,
+        region:cv[MOD_COL.region]||'',
+        modalidad:cv[MOD_COL.modalidad]||'',
+        semFrom,semTo,
+        aprobador:cv[MOD_COL.aprobador]||'',
+        estado:cv[MOD_COL.estado]||'',
+        comentarios:cv[MOD_COL.comentarios]||''};
     });
     pset(100,'¡Listo!');setTimeout(phide,700);
     renderMod();
-    showToast(`✅ ${modItems.length} colaboradores de Modalidad cargados`,'ok');
+    showToast(`✅ ${modItems.length} colaboradores cargados`,'ok');
   }catch(err){phide();showToast('❌ Error Modalidad: '+err.message,'err');}
 }
 
@@ -1247,13 +1140,13 @@ function renderMod(){
     return mTxt&&mSt;
   });
   document.getElementById('m-total').textContent=modItems.length;
-  document.getElementById('m-pres').textContent=modItems.filter(i=>i.modalidad==='Actualizado').length;
-  document.getElementById('m-rem').textContent=modItems.filter(i=>i.modalidad==='Pendiente').length;
-  document.getElementById('m-hib').textContent=modItems.filter(i=>i.modalidad==='Sin Actualizar').length;
+  document.getElementById('m-pres').textContent=modItems.filter(i=>i.modalidad==='Presencial').length;
+  document.getElementById('m-rem').textContent=modItems.filter(i=>i.modalidad==='Home Office').length;
+  document.getElementById('m-hib').textContent=modItems.filter(i=>i.modalidad==='Ausente').length;
 
   /* Chart */
   const cnt={};items.forEach(i=>{cnt[i.modalidad||'Sin definir']=(cnt[i.modalidad||'Sin definir']||0)+1;});
-  const CC={'Actualizado':'#059669','Pendiente':'#d97706','Sin Actualizar':'#dc2626','Sin definir':'#6b7fa3'};
+  const CC={'Presencial':'#059669','Home Office':'#0f62fe','Ausente':'#d97706','Sin definir':'#6b7fa3'};
   const ctx=document.getElementById('modChart').getContext('2d');
   if(modChart) modChart.destroy();
   modChart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(cnt),datasets:[{data:Object.values(cnt),backgroundColor:Object.keys(cnt).map(k=>CC[k]||'#3b82f6'),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,font:{size:10}}}}}});
@@ -1261,218 +1154,77 @@ function renderMod(){
   /* Table */
   const tbody=document.getElementById('modBody');
   const pager=document.getElementById('modPager');
-  if(!items.length){tbody.innerHTML=`<tr><td colspan="5" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday Board ${BOARD_M}.</td></tr>`;pager.textContent='';return;}
-  const MC={'Actualizado':'#059669','Pendiente':'#d97706','Sin Actualizar':'#dc2626'};
+  if(!items.length){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza desde Monday Board ${BOARD_M}.</td></tr>`;pager.textContent='';return;}
+  const MC={'Presencial':'#059669','Home Office':'#0f62fe','Ausente':'#d97706'};
+  const EC={'Aprobación':'#059669','En revisión':'#d97706','Rechazadas':'#dc2626'};
   tbody.innerHTML=items.map(it=>{
-    const mc=MC[it.modalidad]||'var(--muted)';
+    const mc=MC[it.modalidad]||'#6b7fa3';
+    const ec=EC[it.estado]||'#6b7fa3';
+    const sem=it.semFrom?(it.semFrom+(it.semTo&&it.semTo!==it.semFrom?' → '+it.semTo:'')):'—';
     const editBtn=modLiderAuth
-      ?`<button onclick="openModEdit('${it.id}')" style="background:var(--accent);color:#fff;border:none;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;" title="Editar registro">✏️ Editar</button>`
+      ?`<button onclick="openModEdit('${it.id}')" style="background:var(--accent);color:#fff;border:none;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">✏️ Editar</button>`
       :`<button onclick="promptModAuth('${it.id}')" style="background:#f1f5f9;color:var(--muted);border:1px solid #e5e7eb;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:600;cursor:pointer;" title="Solo líderes pueden editar">🔒 Editar</button>`;
     return`<tr>
-      <td style="font-weight:600;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.name}">${it.name}</td>
+      <td style="font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.name}">${it.name}</td>
       <td style="font-size:11px;color:var(--muted);">${it.region||'—'}</td>
       <td><span style="background:${mc}18;color:${mc};border:1px solid ${mc}40;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${it.modalidad||'—'}</span></td>
-      <td style="font-size:11px;color:var(--muted);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.comentarios||''}">${it.comentarios||'—'}</td>
+      <td style="font-size:11px;color:var(--muted);white-space:nowrap;">${sem}</td>
+      <td style="font-size:11px;color:var(--muted);">${it.aprobador||'—'}</td>
+      <td><span style="background:${ec}18;color:${ec};border:1px solid ${ec}40;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${it.estado||'—'}</span></td>
+      <td style="font-size:11px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.comentarios||''}">${it.comentarios||'—'}</td>
       <td style="text-align:center;">${editBtn}</td>
     </tr>`;
   }).join('');
-  pager.textContent=`${items.length} de ${modItems.length} registros · Board ${BOARD_M}${modLiderAuth?' · 🔓 Sesión líder activa':''}`;
+  pager.textContent=`${items.length} de ${modItems.length} registros · Board ${BOARD_M}${modLiderAuth?' · 🔓 Líder activo':''}`;
 }
 
 /* Abrir edición tras auth (clic en botón 🔒) */
 function promptModAuth(itemId){
-  _liderPwdCallback=function(ok){
-    if(ok){setModLiderAuth(true);openModEdit(itemId);}
-  };
+  _liderPwdCallback=function(ok){if(ok){setModLiderAuth(true);openModEdit(itemId);}};
   document.getElementById('liderPwdInput').value='';
   document.getElementById('liderPwdErr').style.display='none';
   openM('mLiderPwd');
 }
 
-/* Abrir modal de edición de un ítem existente */
+/* Abrir modal de edición */
 function openModEdit(id){
   const it=modItems.find(x=>x.id===id);if(!it)return;
   modEditId=id;
   document.getElementById('me-meta').innerHTML=`Editando: <strong>${it.name}</strong> · <a href="https://ibm.monday.com/boards/${BOARD_M}/views/main" target="_blank" rel="noopener" style="color:var(--accent);">Ver en Monday ↗</a>`;
-  document.getElementById('me-region').value=it.region||'';
   document.getElementById('me-mod').value=it.modalidad||'';
+  document.getElementById('me-sem-from').value=it.semFrom||'';
+  document.getElementById('me-sem-to').value=it.semTo||'';
+  document.getElementById('me-apr').value=it.aprobador||'';
+  document.getElementById('me-estado').value=it.estado||'';
   document.getElementById('me-obs').value=it.comentarios||'';
   openM('mModEdit');
 }
 
 async function saveModEdit(){
   if(!modEditId){showToast('⚠️ No hay ítem seleccionado','err');return;}
-  const region=document.getElementById('me-region').value.trim();
   const mod=document.getElementById('me-mod').value;
+  const semFrom=document.getElementById('me-sem-from').value;
+  const semTo=document.getElementById('me-sem-to').value||semFrom;
+  const apr=document.getElementById('me-apr').value;
+  const estado=document.getElementById('me-estado').value;
   const obs=document.getElementById('me-obs').value.trim();
   if(!mod){showToast('⚠️ Selecciona la modalidad de trabajo','err');return;}
   closeM('mModEdit');
   showToast('⏳ Actualizando en Monday…','inf');
   try{
-    // Use hardcoded MOD_COL IDs with double-stringify pattern
     const cv={};
-    cv[MOD_COL.region]={label:region};
     cv[MOD_COL.modalidad]={label:mod};
+    if(semFrom) cv[MOD_COL.semana]={from:semFrom,to:semTo};
+    if(apr) cv[MOD_COL.aprobador]={label:apr};
+    if(estado) cv[MOD_COL.estado]={label:estado};
     cv[MOD_COL.comentarios]=obs;
     await mq(`mutation{change_multiple_column_values(item_id:${modEditId},board_id:${BOARD_M},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`);
     const it=modItems.find(x=>x.id===modEditId);
-    if(it){it.region=region;it.modalidad=mod;it.comentarios=obs;}
+    if(it){it.modalidad=mod;it.semFrom=semFrom;it.semTo=semTo;it.aprobador=apr;it.estado=estado;it.comentarios=obs;}
     renderMod();
-    showToast(`✅ Modalidad de "${it?.name||modEditId}" actualizada en Monday`,'ok');
-  }catch(err){showToast('❌ Error al actualizar: '+err.message,'err');}
-  finally{modEditId=null;}
-}
-
-/* ══════════════════════
-   SLIDE 4 — SEMANAS/PERSONAS
-   ══════════════════════ */
-let swItems=[],swFilter='',swStatusF='',ewId=null;
-
-async function loadWeeks(){
-  pshow('Cargando semanas desde Monday…');
-  try{
-    pset(20,'Consultando tablero…');
-    const data=await mq(`{boards(ids:[${BOARD_A}]){items_page(limit:500){items{id name column_values(ids:["${COL.gerencia}","${COL.time}","${COL.sf}","${COL.hp}","${COL.comentarios}"]){id text}}}}}`);
-    swItems=(data?.boards?.[0]?.items_page?.items||[]).map(it=>{
-      const cv={};it.column_values.forEach(c=>{cv[c.id]=c.text;});
-      // Extraer período del nombre del ítem (ej: "AMC304 · Semana 28 – 2025" → período = "Semana 28 – 2025")
-      const nameParts=it.name.split('·').map(s=>s.trim());
-      const period=nameParts.length>1?nameParts.slice(1).join('·').trim():cv[COL.comentarios]||'';
-      return{id:it.id,name:it.name,period,ger:cv[COL.gerencia]||'',time:cv[COL.time]||'',sf:cv[COL.sf]||'',hp:cv[COL.hp]||'',notes:cv[COL.comentarios]||''};
-    });
-    pset(100,'¡Listo!');setTimeout(phide,700);
-    renderSW();
-    showToast(`✅ ${swItems.length} registros cargados`,'ok');
-  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
-}
-
-function filterSW(){swFilter=document.getElementById('sw-search').value.toLowerCase();swStatusF=document.getElementById('sw-filter').value;renderSW();}
-
-function stBadge(v){
-  const vl=(v||'').toLowerCase();
-  if(vl.includes('actual'))return`<span style="background:#d1fae5;color:#065f46;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
-  if(vl.includes('pend'))return`<span style="background:#fef3c7;color:#92400e;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
-  if(vl.includes('sin'))return`<span style="background:#fee2e2;color:#991b1b;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
-  return`<span style="background:#f1f5f9;color:#475569;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;">${v||'—'}</span>`;
-}
-
-function renderSW(){
-  const items=swItems.filter(it=>{
-    const mt=!swFilter||it.name.toLowerCase().includes(swFilter)||it.ger.toLowerCase().includes(swFilter);
-    const ms=!swStatusF||it.time===swStatusF||it.sf===swStatusF||it.hp===swStatusF;
-    return mt&&ms;
-  });
-  const tbody=document.getElementById('swBody');
-  const pager=document.getElementById('swPager');
-  if(!items.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--muted);font-size:12px;">📭 Sin registros. Sincroniza o agrega una semana.</td></tr>`;pager.textContent='';return;}
-  tbody.innerHTML=items.map(it=>`<tr>
-    <td style="font-weight:600;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${it.name}">${it.name.split('·')[0].trim()}</td>
-    <td style="font-size:11px;color:var(--muted);">${it.period?`<span style="font-weight:600;">${it.period.substring(0,35)}${it.period.length>35?'…':''}</span>`:'—'}</td>
-    <td style="text-align:center;">${stBadge(it.time)}</td>
-    <td style="text-align:center;">${stBadge(it.sf)}</td>
-    <td style="text-align:center;">${stBadge(it.hp)}</td>
-    <td style="font-size:11px;color:var(--muted);">${it.ger||'—'}</td>
-    <td style="text-align:center;"><button onclick="openEditW('${it.id}')" style="background:var(--p-blue);color:var(--accent);border:1px solid #c7d7fc;padding:3px 11px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer;">✏️ Corregir</button></td>
-  </tr>`).join('');
-  pager.textContent=`${items.length} de ${swItems.length} registros`;
-}
-
-function openAddWeek(){
-  const now=new Date();
-  document.getElementById('aw-period').value=`Semana ${getWeek(now)} – ${now.getFullYear()}`;
-  openM('mAddWeek');
-}
-async function saveWeek(){
-  const adcar=document.getElementById('aw-adcar').value.trim();
-  const period=document.getElementById('aw-period').value.trim();
-  const tv=document.getElementById('aw-time').value;
-  const sv=document.getElementById('aw-sf').value;
-  const hv=document.getElementById('aw-hp').value;
-  const gv=document.getElementById('aw-ger').value.trim();
-  const nv=document.getElementById('aw-notes').value.trim();
-  if(!adcar||!period){showToast('⚠️ Selecciona el colaborador e ingresa el período','err');return;}
-  const cv={};
-  cv[COL.time]={label:tv};cv[COL.sf]={label:sv};cv[COL.hp]={label:hv};
-  if(gv) cv[COL.gerencia]={label:gv};
-  if(nv) cv[COL.comentarios]=nv;
-  closeM('mAddWeek');
-  pshow('Creando semana en Monday…');
-  try{
-    pset(40,'Enviando…');
-    const nm=`${adcar} · ${period}`;
-    const res=await mc(BOARD_A,nm,cv);
-    const nid=res?.create_item?.id||'local_'+Date.now();
-    swItems.unshift({id:nid,name:nm,period,ger:gv,time:tv,sf:sv,hp:hv,notes:nv});
-    pset(100,'¡Listo!');setTimeout(phide,700);
-    renderSW();
-    showToast(`✅ Semana "${nm}" creada en Monday`,'ok');
-  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
-}
-
-function openAddPerson(){openM('mAddPerson');}
-async function savePerson(){
-  const name=document.getElementById('ap-name').value.trim();
-  const adcar=document.getElementById('ap-adcar').value.trim();
-  const email=document.getElementById('ap-email').value.trim();
-  const gv=document.getElementById('ap-ger').value.trim();
-  const period=document.getElementById('ap-period').value.trim();
-  if(!name||!adcar||!email){showToast('⚠️ Nombre, ADCAR y correo son obligatorios','err');return;}
-  if(!email.endsWith('@ibm.com')){showToast('⚠️ El correo debe ser @ibm.com','err');return;}
-  const cv={};
-  if(COL.adcar) cv[COL.adcar]=adcar;
-  if(gv&&COL.gerencia) cv[COL.gerencia]={label:gv};
-  cv[COL.time]={label:'Pendiente'};cv[COL.sf]={label:'Pendiente'};cv[COL.hp]={label:'Pendiente'};
-  if(period&&COL.comentarios) cv[COL.comentarios]=`Inicio: ${period}`;
-  closeM('mAddPerson');
-  pshow('Creando persona en Monday…');
-  try{
-    pset(40,'Enviando…');
-    const nm=`${name} (${adcar})`;
-    const res=await mc(BOARD_A,nm,cv);
-    const nid=res?.create_item?.id||'local_'+Date.now();
-    swItems.unshift({id:nid,name:nm,period:'',ger:gv,time:'Pendiente',sf:'Pendiente',hp:'Pendiente',notes:period?`Inicio: ${period}`:''});
-    // Add to ADCAR selects
-    ['s1adcar','aw-adcar','mn-adcar'].forEach(id=>{
-      const s=document.getElementById(id);if(!s)return;
-      const o=new Option(adcar,adcar);s.appendChild(o);
-    });
-    pset(100,'¡Listo!');setTimeout(phide,700);
-    renderSW();
-    showToast(`✅ Persona "${nm}" creada en Monday`,'ok');
-  }catch(err){phide();showToast('❌ Error: '+err.message,'err');}
-}
-
-function openEditW(id){
-  const it=swItems.find(x=>x.id===id);if(!it)return;
-  ewId=id;
-  document.getElementById('ew-meta').textContent=`${it.name} · ID ${it.id}`;
-  document.getElementById('ew-time').value=it.time||'Pendiente';
-  document.getElementById('ew-sf').value=it.sf||'Pendiente';
-  document.getElementById('ew-hp').value=it.hp||'Pendiente';
-  document.getElementById('ew-ger').value=it.ger||'';
-  document.getElementById('ew-notes').value=it.notes||'';
-  openM('mEditWeek');
-}
-async function saveEditWeek(){
-  if(!ewId)return;
-  const tv=document.getElementById('ew-time').value;
-  const sv=document.getElementById('ew-sf').value;
-  const hv=document.getElementById('ew-hp').value;
-  const nv=document.getElementById('ew-notes').value.trim();
-  const gv=document.getElementById('ew-ger').value.trim();
-  const cv={};
-  cv[COL.time]={label:tv};cv[COL.sf]={label:sv};cv[COL.hp]={label:hv};
-  if(nv) cv[COL.comentarios]=nv;
-  if(gv&&COL.gerencia) cv[COL.gerencia]={label:gv};
-  closeM('mEditWeek');
-  showToast('⏳ Guardando en Monday…','inf');
-  try{
-    await mq(`mutation{change_multiple_column_values(item_id:${ewId},board_id:${BOARD_A},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`);
-    const it=swItems.find(x=>x.id===ewId);
-    if(it){it.time=tv;it.sf=sv;it.hp=hv;it.ger=gv;if(nv)it.notes=nv;}
-    renderSW();
-    showToast('✅ Semana corregida en Monday','ok');
+    showToast(`✅ "${it?.name||modEditId}" actualizado en Monday`,'ok');
   }catch(err){showToast('❌ Error: '+err.message,'err');}
+  finally{modEditId=null;}
 }
 
 /* ══════════════════════
@@ -1504,7 +1256,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   const hash=window.location.hash;
   if(hash==='#slide2'){const t=document.getElementById('tab2');if(t)goSlide(2,t);}
   if(hash==='#slide3'){const t=document.getElementById('tab3');if(t)goSlide(3,t);}
-  if(hash==='#slide4'){const t=document.getElementById('tab4');if(t)goSlide(4,t);}
 });
 </script>
 </body>

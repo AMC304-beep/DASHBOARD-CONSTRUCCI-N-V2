@@ -41,7 +41,7 @@ const MONDAY_TOKEN    = process.env.MONDAY_API_TOKEN;
 const MONDAY_API      = 'https://api.monday.com/v2';
 const PORT            = parseInt(process.env.PORT || '3000', 10);
 const HOST            = '127.0.0.1'; // MUST be localhost – never 0.0.0.0
-const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://127.0.0.1:3000,http://localhost:3000').split(',').map(s => s.trim());
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://127.0.0.1:3000,http://localhost:3000,https://amc304-beep.github.io').split(',').map(s => s.trim());
 
 /* ── App setup ───────────────────────────────────────────────────────────── */
 const app = express();
@@ -50,15 +50,15 @@ const app = express();
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc:  ["'self'"],
-      scriptSrc:   ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com', 'https://fonts.googleapis.com',
-                    'https://cdn.jsdelivr.net'],
-      styleSrc:    ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.tailwindcss.com'],
-      fontSrc:     ["'self'", 'https://fonts.gstatic.com'],
-      imgSrc:      ["'self'", 'data:', 'https:'],
-      connectSrc:  ["'self'"],   // front-end only talks to this proxy
-      frameSrc:    ["'none'"],
-      objectSrc:   ["'none'"],
+      defaultSrc:     ["'self'"],
+      scriptSrc:      ["'self'", "'unsafe-inline'", 'https://cdn.tailwindcss.com', 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net'],
+      scriptSrcAttr:  ["'unsafe-inline'"],   // permite onclick/onchange/oninput inline en HTML
+      styleSrc:       ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.tailwindcss.com'],
+      fontSrc:        ["'self'", 'https://fonts.gstatic.com'],
+      imgSrc:         ["'self'", 'data:', 'https:'],
+      connectSrc:     ["'self'", 'http://127.0.0.1:3000', 'http://localhost:3000'],
+      frameSrc:       ["'none'"],
+      objectSrc:      ["'none'"],
     }
   },
   hsts: { maxAge: 31536000, includeSubDomains: true, preload: true }
@@ -67,7 +67,10 @@ app.use(helmet({
 /* CORS – only allow configured origins */
 app.use(cors({
   origin: (origin, cb) => {
+    // allow: no origin (file://, curl, Postman), or any listed origin
     if (!origin || ALLOWED_ORIGINS.includes(origin)) return cb(null, true);
+    // allow any subdomain of github.io
+    if (origin && origin.endsWith('.github.io')) return cb(null, true);
     cb(new Error('CORS: origin not allowed'));
   },
   methods: ['GET', 'POST'],
@@ -169,7 +172,7 @@ app.post('/api/monday/query', async (req, res) => {
     res.json({ data });
   } catch (err) {
     log('error', 'monday_query_fail', { error: err.message });
-    res.status(502).json({ error: 'Monday API error. See server logs.' });
+    res.status(502).json({ error: 'Monday API error: ' + err.message });
   }
 });
 
