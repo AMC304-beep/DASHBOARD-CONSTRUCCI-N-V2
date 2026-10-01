@@ -84,7 +84,7 @@
       <div>
         <div id="boardNameHeader" style="color:#1e2a45;" class="text-sm font-semibold leading-tight">Gestión de Ausencias · Construcción 2026</div>
         <div class="flex items-center gap-2 mt-0.5">
-          <span class="text-[11px]" style="color:#6b7fa3;">Board <b style="color:#1e2a45;">18432588237</b></span>
+          <span class="text-[11px]" style="color:#6b7fa3;">Board <b style="color:#1e2a45;">18432741374</b></span>
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
           <span id="connLabel" class="text-[11px] font-medium" style="color:#059669;">En vivo</span>
         </div>
@@ -110,7 +110,7 @@
         <svg id="syncIcon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         <span class="hidden sm:inline">Sincronizar</span>
       </button>
-      <a href="https://ibm.monday.com/boards/18432588237" target="_blank" rel="noopener"
+      <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener"
         class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg"
         style="color:#6b7fa3;background:#f0f4ff;border:1px solid #dbe4f8;" data-tip="Abrir en Monday">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -154,16 +154,17 @@
             </div>
             <div>
               <h2 class="text-sm font-bold text-slate-900">Nueva Solicitud</h2>
-              <p class="text-[11px] text-slate-400 mt-0.5">Se crea en Monday Board 18432588237</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">Se crea en Monday Board 18432741374</p>
             </div>
           </div>
 
           <form id="createForm" onsubmit="handleCreateItem(event)" class="space-y-3 text-xs">
-            <!-- Nombre -->
+            <!-- Nombre del ADCAR -->
             <div>
-              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Nombre del elemento *</label>
-              <input type="text" id="c_name" required placeholder="Ej: Ana García — Vacaciones"
-                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Nombre del ADCAR *</label>
+              <select id="c_adcar" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition" onchange="onAdcarSelected()">
+                <option value="">— Seleccionar ADCAR —</option>
+              </select>
             </div>
             <!-- Motivo -->
             <div>
@@ -195,19 +196,25 @@
             <div>
               <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Cronograma</label>
               <div class="grid grid-cols-2 gap-2">
-                <input type="date" id="c_timeline_from" placeholder="Desde" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
-                <input type="date" id="c_timeline_to" placeholder="Hasta" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+                <input type="date" id="c_timeline_from" placeholder="Desde" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition" oninput="autoCalcDias('c')"/>
+                <input type="date" id="c_timeline_to" placeholder="Hasta" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition" oninput="autoCalcDias('c')"/>
               </div>
             </div>
-            <!-- Días Ausencias -->
+            <!-- Días Ausencias (auto-calculado) -->
             <div>
-              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Días Ausencias</label>
-              <input type="number" id="c_dias" min="0" step="0.5" placeholder="0" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Días Ausencias <span style="font-weight:400;color:#059669;">(auto)</span></label>
+              <input type="number" id="c_dias" min="0" step="0.5" placeholder="Auto desde cronograma" readonly
+                class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg transition" style="background:#f0fdf4;color:#065f46;font-weight:600;"/>
             </div>
             <!-- Backup -->
             <div>
               <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Backup</label>
               <input type="text" id="c_backup" placeholder="Nombre del backup…" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+            </div>
+            <!-- Correo del Backup -->
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Correo del Backup</label>
+              <input type="email" id="c_backup_email" placeholder="backup@ibm.com" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
             </div>
             <!-- Observaciones -->
             <div>
@@ -353,9 +360,9 @@
 <!-- ══ FOOTER ══ -->
 <footer style="background:#ffffff;border-top:1px solid #dbe4f8;" class="py-4 px-6 mt-2">
   <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-3">
-    <span class="text-xs" style="color:#6b7fa3;">© <strong style="color:#1e2a45;">IBM Corporation</strong> — Gestión de Ausencias · Board <b style="color:#1e2a45;">18432588237</b></span>
+    <span class="text-xs" style="color:#6b7fa3;">© <strong style="color:#1e2a45;">IBM Corporation</strong> — Gestión de Ausencias · Board <b style="color:#1e2a45;">18432741374</b></span>
     <div class="flex gap-4">
-      <a href="https://ibm.monday.com/boards/18432588237" target="_blank" rel="noopener" class="text-xs" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Monday</a>
+      <a href="https://ibm.monday.com/boards/18432741374" target="_blank" rel="noopener" class="text-xs" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Monday</a>
       <a href="index_v2.html" class="text-xs" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Portal</a>
       <a href="dashboard_actualizaciones.html" class="text-xs" style="color:#6b7fa3;" onmouseover="this.style.color='#0f62fe'" onmouseout="this.style.color='#6b7fa3'">Actualizaciones</a>
     </div>
@@ -381,10 +388,10 @@
     </div>
     <form id="editForm" onsubmit="saveEditedItem(event)" class="flex-1 overflow-y-auto p-5 space-y-3 text-xs">
       <input type="hidden" id="editItemId"/>
-      <!-- Nombre -->
+      <!-- Nombre (readonly — generado automáticamente) -->
       <div>
-        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Nombre del elemento *</label>
-        <input type="text" id="editItemName" required class="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-800 text-xs transition"/>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Nombre del elemento</label>
+        <input type="text" id="editItemName" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-slate-800 text-xs transition" style="background:#f7f8fa;color:#57606a;" readonly/>
       </div>
       <!-- Motivo -->
       <div>
@@ -416,19 +423,25 @@
       <div>
         <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Cronograma</label>
         <div class="grid grid-cols-2 gap-2">
-          <input type="date" id="e_timeline_from" placeholder="Desde" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
-          <input type="date" id="e_timeline_to" placeholder="Hasta" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+          <input type="date" id="e_timeline_from" placeholder="Desde" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition" oninput="autoCalcDias('e')"/>
+          <input type="date" id="e_timeline_to" placeholder="Hasta" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition" oninput="autoCalcDias('e')"/>
         </div>
       </div>
-      <!-- Días Ausencias -->
+      <!-- Días Ausencias (auto-calculado) -->
       <div>
-        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Días Ausencias</label>
-        <input type="number" id="e_dias" min="0" step="0.5" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Días Ausencias <span style="font-weight:400;color:#059669;">(auto)</span></label>
+        <input type="number" id="e_dias" min="0" step="0.5" readonly
+          class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg transition" style="background:#f0fdf4;color:#065f46;font-weight:600;"/>
       </div>
       <!-- Backup -->
       <div>
         <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Backup</label>
         <input type="text" id="e_backup" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
+      </div>
+      <!-- Correo del Backup -->
+      <div>
+        <label class="block font-semibold text-slate-600 mb-1.5 uppercase tracking-wide text-[10px]">Correo del Backup</label>
+        <input type="email" id="e_backup_email" placeholder="backup@ibm.com" class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg bg-slate-50 transition"/>
       </div>
       <!-- Observaciones -->
       <div>
@@ -487,24 +500,25 @@
 
 /* ── Config ── */
 const PROXY_BASE = 'http://127.0.0.1:3000';
-const BOARD_ID   = '18432588237';
+const BOARD_ID   = '18432741374';
 const PALETTE    = ['#0f62fe','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#64748b'];
 
 /* Column IDs (confirmed from Monday API) */
 const COL = {
-  name:      'name',
-  contacto1: 'person',
-  backup:    'text_mm7gxx4s',
-  contacto2: 'multiple_person_mm7gtypz',
-  motivo:    'status',                    // Motivo — status labels
-  region:    'color_mm7g7naz',            // Región — status
-  fechaSol:  'date4',                     // Fecha de Solicitud
-  cronograma:'timerange_mm7gjxra',        // Cronograma — timeline
-  dias:      'numeric_mm7gf0nh',          // Días Ausencias — numbers
-  soporte:   'file_mm7g6w04',             // Soporte Ausencia — file
-  aprobante: 'multiple_person_mm7g8121',  // Aprobante — people (readonly)
-  estado:    'color_mm7gg2a7',            // Estado Aprobación — APPROVAL ONLY
-  obs:       'text_mm7g4np1',             // Observaciones
+  name:         'name',
+  contacto1:    'person',
+  backup:       'text_mm7gxx4s',
+  backupEmail:  'email_mkr2b5yv',         // Correo del Backup — email column
+  contacto2:    'multiple_person_mm7gtypz',
+  motivo:       'status',                  // Motivo — status labels
+  region:       'color_mm7g7naz',          // Región — status
+  fechaSol:     'date4',                   // Fecha de Solicitud
+  cronograma:   'timerange_mm7gjxra',      // Cronograma — timeline
+  dias:         'numeric_mm7gf0nh',        // Días Ausencias — numbers
+  soporte:      'file_mm7g6w04',           // Soporte Ausencia — file
+  aprobante:    'multiple_person_mm7g8121',// Aprobante — people (readonly)
+  estado:       'color_mm7gg2a7',          // Estado Aprobación — APPROVAL ONLY
+  obs:          'text_mm7g4np1',           // Observaciones
 };
 
 /* ── Approval password ── */
@@ -611,7 +625,7 @@ async function syncAllFromMonday(showFeedback = false) {
   const icon = document.getElementById('syncIcon');
   icon.style.animation = 'spin 1s linear infinite';
   progress(30);
-  const q = `{boards(ids:[18432588237]){name groups{id title}columns{id title type settings_str}items_page(limit:200){items{id name group{id title}column_values{id type text value}}}}}`;
+  const q = `{boards(ids:[18432741374]){name groups{id title}columns{id title type settings_str}items_page(limit:200){items{id name group{id title}column_values{id type text value}}}}}`;
   try {
     const data = await api(q);
     const board = data.data?.boards?.[0];
@@ -662,11 +676,63 @@ function loadCached() {
 /* ── Render all ── */
 function renderAll() {
   populateRegionSelects();
+  populateAdcarSelect();
   renderKpis();
   renderTableBody();
   populateGroupFilter();
   renderCharts();
   populateCalendar();
+}
+
+/* ── Auto-calculate días ausencias ── */
+function autoCalcDias(prefix) {
+  const from = document.getElementById(prefix + '_timeline_from').value;
+  const to   = document.getElementById(prefix + '_timeline_to').value;
+  const diasEl = document.getElementById(prefix + '_dias');
+  if (from && to) {
+    const d1 = new Date(from), d2 = new Date(to);
+    if (d2 >= d1) {
+      const diff = Math.round((d2 - d1) / (1000 * 60 * 60 * 24)) + 1;
+      diasEl.value = diff;
+      return;
+    }
+  }
+  if (from && !to) { diasEl.value = 1; return; }
+  diasEl.value = '';
+}
+
+/* ── Populate ADCAR select (unique names, no duplicates) ── */
+function populateAdcarSelect() {
+  const sel = document.getElementById('c_adcar');
+  if (!sel) return;
+  const cur = sel.value;
+  // Collect unique first-part names (before dash separator) or full names
+  const seen = new Set();
+  const names = [];
+  boardItems.forEach(item => {
+    const base = item.name.split(/\s*[-–]\s*/)[0].trim();
+    if (base && !seen.has(base)) { seen.add(base); names.push(base); }
+  });
+  names.sort((a, b) => a.localeCompare(b));
+  sel.innerHTML = '<option value="">— Seleccionar ADCAR —</option>';
+  names.forEach(n => {
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n;
+    if (n === cur) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+/* ── When ADCAR selected: pre-fill region from existing row ── */
+function onAdcarSelected() {
+  const adcarName = document.getElementById('c_adcar').value;
+  if (!adcarName) return;
+  // Find the most recent item for this ADCAR
+  const match = boardItems.find(i => i.name.split(/\s*[-–]\s*/)[0].trim() === adcarName);
+  if (match) {
+    const region = getColText(match, COL.region);
+    if (region) document.getElementById('c_region').value = region;
+  }
 }
 
 /* ── Populate region selects ── */
@@ -861,7 +927,7 @@ function ausHandleFiles(files) {
 /* ── Create item ── */
 async function handleCreateItem(e) {
   e.preventDefault();
-  const name    = document.getElementById('c_name').value.trim();
+  const adcar   = document.getElementById('c_adcar').value.trim();
   const motivo  = document.getElementById('c_motivo').value;
   const region  = document.getElementById('c_region').value;
   const fechaSol= document.getElementById('c_date4').value;
@@ -869,58 +935,85 @@ async function handleCreateItem(e) {
   const tlTo    = document.getElementById('c_timeline_to').value;
   const dias    = document.getElementById('c_dias').value;
   const backup  = document.getElementById('c_backup').value.trim();
+  const backupEmail = document.getElementById('c_backup_email').value.trim();
   const obs     = document.getElementById('c_obs').value.trim();
 
-  const cv = {};
-  if (motivo)  cv[COL.motivo]   = { label: motivo };
-  if (region)  cv[COL.region]   = { label: region };
-  if (fechaSol)cv[COL.fechaSol] = { date: fechaSol };
-  if (tlFrom)  cv[COL.cronograma] = { from: tlFrom, to: tlTo || tlFrom };
-  if (dias)    cv[COL.dias]     = parseFloat(dias);
-  if (backup)  cv[COL.backup]   = backup;
-  if (obs)     cv[COL.obs]      = obs;
+  // Auto-generate item name from ADCAR + motivo
+  const name = motivo ? `${adcar} — ${motivo}` : adcar;
 
-  // Optimistic local add
+  const cv = {};
+  if (motivo)      cv[COL.motivo]   = { label: motivo };
+  if (region)      cv[COL.region]   = { label: region };
+  if (fechaSol)    cv[COL.fechaSol] = { date: fechaSol };
+  if (tlFrom)      cv[COL.cronograma] = { from: tlFrom, to: tlTo || tlFrom };
+  if (dias)        cv[COL.dias]     = parseFloat(dias);
+  if (backup)      cv[COL.backup]   = backup;
+  if (backupEmail) cv[COL.backupEmail] = { email: backupEmail, text: backupEmail };
+  if (obs)         cv[COL.obs]      = obs;
+
+  // Check if this ADCAR already has a row → update instead of create
+  const existingItem = boardItems.find(i => i.name.split(/\s*[-–]\s*/)[0].trim() === adcar);
+
+  // Optimistic local add/update
   const localItem = {
-    id: 'tmp_' + Date.now(),
+    id: existingItem ? existingItem.id : ('tmp_' + Date.now()),
     name,
     group: { id: 'g1', title: boardItems[0]?.group?.title || 'General' },
     column_values: [
-      { id: COL.motivo,    text: motivo,   type: 'status' },
-      { id: COL.region,    text: region,   type: 'status' },
-      { id: COL.fechaSol,  text: fechaSol, type: 'date' },
-      { id: COL.cronograma,text: tlFrom ? `${tlFrom} - ${tlTo || tlFrom}` : '', from: tlFrom, to: tlTo || tlFrom, type: 'timeline' },
-      { id: COL.dias,      text: dias,     type: 'numbers' },
-      { id: COL.backup,    text: backup,   type: 'text' },
-      { id: COL.obs,       text: obs,      type: 'text' },
-      { id: COL.estado,    text: '',       type: 'status' },
+      { id: COL.motivo,      text: motivo,      type: 'status' },
+      { id: COL.region,      text: region,      type: 'status' },
+      { id: COL.fechaSol,    text: fechaSol,    type: 'date' },
+      { id: COL.cronograma,  text: tlFrom ? `${tlFrom} - ${tlTo || tlFrom}` : '', from: tlFrom, to: tlTo || tlFrom, type: 'timeline' },
+      { id: COL.dias,        text: dias,        type: 'numbers' },
+      { id: COL.backup,      text: backup,      type: 'text' },
+      { id: COL.backupEmail, text: backupEmail, type: 'email' },
+      { id: COL.obs,         text: obs,         type: 'text' },
+      { id: COL.estado,      text: '',          type: 'status' },
     ]
   };
-  boardItems.unshift(localItem);
+
+  if (existingItem) {
+    // Update existing row in local state
+    const idx = boardItems.indexOf(existingItem);
+    boardItems[idx] = { ...existingItem, name, column_values: localItem.column_values };
+  } else {
+    boardItems.unshift(localItem);
+  }
   renderAll();
   document.getElementById('createForm').reset();
   ausFiles = []; document.getElementById('aus-file-list').innerHTML = '';
-  toast('⏳ Creando en Monday…', 'info');
 
-  try {
-    const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-    const q = `mutation{create_item(board_id:${BOARD_ID},item_name:"${safeName}",column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`;
-    const res = await api(q);
-    const cid = res.data?.create_item?.id;
-    if (cid) {
-      localItem.id = cid;
-      toast('✅ Elemento creado en Monday', 'success');
-      // Upload files
-      const filesToUpload = [...ausFiles];
-      ausFiles = [];
-      for (const f of filesToUpload) {
-        try { await uploadFileViaProxy(cid, COL.soporte, f); }
-        catch (fe) { console.warn('upload err', fe); }
+  if (existingItem) {
+    toast('⏳ Sincronizando fila existente en Monday…', 'info');
+    try {
+      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      const qn = `mutation{change_item_value(board_id:${BOARD_ID},item_id:${existingItem.id},column_id:"name",value:${JSON.stringify(JSON.stringify(safeName))}){id}}`;
+      await api(qn).catch(() => {});
+      const qcv = `mutation{change_multiple_column_values(item_id:${existingItem.id},board_id:${BOARD_ID},column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`;
+      await api(qcv);
+      toast('✅ Fila del ADCAR actualizada en Monday', 'success');
+    } catch (err) { console.warn('[update-row]', err); toast('⚠️ Actualizado localmente', 'warn'); }
+  } else {
+    toast('⏳ Creando en Monday…', 'info');
+    try {
+      const safeName = name.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+      const q = `mutation{create_item(board_id:${BOARD_ID},item_name:"${safeName}",column_values:${JSON.stringify(JSON.stringify(cv))}){id}}`;
+      const res = await api(q);
+      const cid = res.data?.create_item?.id;
+      if (cid) {
+        localItem.id = cid;
+        toast('✅ Elemento creado en Monday', 'success');
+        const filesToUpload = [...ausFiles];
+        ausFiles = [];
+        for (const f of filesToUpload) {
+          try { await uploadFileViaProxy(cid, COL.soporte, f); }
+          catch (fe) { console.warn('upload err', fe); }
+        }
       }
+    } catch (err) {
+      console.warn('[create]', err);
+      toast('⚠️ Guardado localmente (sin conexión)', 'warn');
     }
-  } catch (err) {
-    console.warn('[create]', err);
-    toast('⚠️ Guardado localmente (sin conexión)', 'warn');
   }
 }
 
@@ -962,10 +1055,25 @@ function openEditModal(itemId) {
   document.getElementById('e_timeline_from').value = tlFrom;
   document.getElementById('e_timeline_to').value   = tlTo;
 
-  // Días
-  document.getElementById('e_dias').value = getColText(item, COL.dias);
+  // Días (recalculate from timeline if both dates present)
+  const existingDias = getColText(item, COL.dias);
+  if (tlFrom && tlTo) {
+    const d1 = new Date(tlFrom), d2 = new Date(tlTo);
+    if (d2 >= d1) {
+      document.getElementById('e_dias').value = Math.round((d2 - d1) / (1000 * 60 * 60 * 24)) + 1;
+    } else {
+      document.getElementById('e_dias').value = existingDias;
+    }
+  } else {
+    document.getElementById('e_dias').value = existingDias;
+  }
   // Backup
   document.getElementById('e_backup').value = getColText(item, COL.backup);
+  // Correo del Backup
+  const beRaw = getColVal(item, COL.backupEmail);
+  let beVal = beRaw.text || '';
+  try { const bev = JSON.parse(beRaw.value || '{}'); if (bev.email) beVal = bev.email; } catch(e) {}
+  document.getElementById('e_backup_email').value = beVal;
   // Observaciones
   document.getElementById('e_obs').value = getColText(item, COL.obs);
 
@@ -1015,29 +1123,31 @@ async function rejectItem() {
 /* ── Save edited item ── */
 async function saveEditedItem(e) {
   e.preventDefault();
-  const itemId  = document.getElementById('editItemId').value;
-  const name    = document.getElementById('editItemName').value.trim();
-  const motivo  = document.getElementById('e_motivo').value;
-  const region  = document.getElementById('e_region').value;
-  const fechaSol= document.getElementById('e_date4').value;
-  const tlFrom  = document.getElementById('e_timeline_from').value;
-  const tlTo    = document.getElementById('e_timeline_to').value;
-  const dias    = document.getElementById('e_dias').value;
-  const backup  = document.getElementById('e_backup').value.trim();
-  const obs     = document.getElementById('e_obs').value.trim();
+  const itemId     = document.getElementById('editItemId').value;
+  const name       = document.getElementById('editItemName').value.trim();
+  const motivo     = document.getElementById('e_motivo').value;
+  const region     = document.getElementById('e_region').value;
+  const fechaSol   = document.getElementById('e_date4').value;
+  const tlFrom     = document.getElementById('e_timeline_from').value;
+  const tlTo       = document.getElementById('e_timeline_to').value;
+  const dias       = document.getElementById('e_dias').value;
+  const backup     = document.getElementById('e_backup').value.trim();
+  const backupEmail= document.getElementById('e_backup_email').value.trim();
+  const obs        = document.getElementById('e_obs').value.trim();
 
   const item = boardItems.find(i => i.id === itemId);
   if (!item) return;
   item.name = name;
 
   const cv = {};
-  if (motivo)  cv[COL.motivo]   = { label: motivo };
-  if (region)  cv[COL.region]   = { label: region };
-  if (fechaSol)cv[COL.fechaSol] = { date: fechaSol };
-  if (tlFrom)  cv[COL.cronograma] = { from: tlFrom, to: tlTo || tlFrom };
-  if (dias !== '') cv[COL.dias] = parseFloat(dias);
-  cv[COL.backup] = backup;
-  cv[COL.obs]    = obs;
+  if (motivo)      cv[COL.motivo]      = { label: motivo };
+  if (region)      cv[COL.region]      = { label: region };
+  if (fechaSol)    cv[COL.fechaSol]    = { date: fechaSol };
+  if (tlFrom)      cv[COL.cronograma]  = { from: tlFrom, to: tlTo || tlFrom };
+  if (dias !== '') cv[COL.dias]        = parseFloat(dias);
+  cv[COL.backup]      = backup;
+  if (backupEmail) cv[COL.backupEmail] = { email: backupEmail, text: backupEmail };
+  cv[COL.obs]         = obs;
 
   // Update local state
   const setCol = (id, text, extra = {}) => {
@@ -1045,13 +1155,14 @@ async function saveEditedItem(e) {
     if (cv2) Object.assign(cv2, { text, ...extra });
     else item.column_values.push({ id, text, ...extra });
   };
-  setCol(COL.motivo,    motivo);
-  setCol(COL.region,    region);
-  setCol(COL.fechaSol,  fechaSol);
-  setCol(COL.cronograma, tlFrom ? `${tlFrom} - ${tlTo || tlFrom}` : '', { from: tlFrom, to: tlTo || tlFrom });
-  setCol(COL.dias,      dias);
-  setCol(COL.backup,    backup);
-  setCol(COL.obs,       obs);
+  setCol(COL.motivo,      motivo);
+  setCol(COL.region,      region);
+  setCol(COL.fechaSol,    fechaSol);
+  setCol(COL.cronograma,  tlFrom ? `${tlFrom} - ${tlTo || tlFrom}` : '', { from: tlFrom, to: tlTo || tlFrom });
+  setCol(COL.dias,        dias);
+  setCol(COL.backup,      backup);
+  setCol(COL.backupEmail, backupEmail);
+  setCol(COL.obs,         obs);
 
   closeEditModal(); renderAll();
   toast('⏳ Actualizando en Monday…', 'info');
@@ -1126,8 +1237,14 @@ function populateCalendar() {
   const fp = document.getElementById('calendarFilterPerson')?.value || 'ALL';
   const fpSel = document.getElementById('calendarFilterPerson');
 
-  // Collect unique names/people for filter
-  const people = [...new Set(boardItems.map(i => i.name.split(/[-–]/)[0].trim()))];
+  // Collect unique ADCAR names (no duplicates) for filter
+  const seen = new Set();
+  const people = [];
+  boardItems.forEach(i => {
+    const base = i.name.split(/\s*[-–]\s*/)[0].trim();
+    if (base && !seen.has(base)) { seen.add(base); people.push(base); }
+  });
+  people.sort((a, b) => a.localeCompare(b));
   if (fpSel) {
     const cur = fpSel.value;
     fpSel.innerHTML = '<option value="ALL">Todas las personas</option>';
