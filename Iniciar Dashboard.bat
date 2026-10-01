@@ -8,38 +8,51 @@ echo   Iniciando servidor backend...
 echo  ========================================
 echo.
 
-cd /d "%~dp0backend"
+set BACKEND=C:\Users\AngelaCartagena\Desktop\ibm-backend
+set BOX=C:\Users\AngelaCartagena\Box\Analisis Variacion Cartera
 
 :: Verificar que Node.js existe
 where node >nul 2>&1
 if %errorlevel% neq 0 (
     color 0C
     echo  ERROR: Node.js no esta instalado.
-    echo  Descarga Node.js 20 LTS desde: https://nodejs.org
+    echo  Descarga Node.js desde: https://nodejs.org
+    echo.
+    pause
+    exit /b 1
+)
+
+:: Verificar que la carpeta ibm-backend existe
+if not exist "%BACKEND%" (
+    color 0C
+    echo  ERROR: No se encuentra la carpeta del servidor.
+    echo  Ejecuta primero: Actualizar Dashboard.bat
     echo.
     pause
     exit /b 1
 )
 
 :: Verificar que .env existe
-if not exist ".env" (
+if not exist "%BACKEND%\.env" (
     color 0C
     echo  ERROR: Falta el archivo .env con el token de Monday.
-    echo  Crea el archivo backend\.env con:
-    echo  MONDAY_API_TOKEN=tu_token_aqui
+    echo  Ruta esperada: %BACKEND%\.env
     echo.
     pause
     exit /b 1
 )
 
 :: Verificar que node_modules existe
-if not exist "node_modules" (
+if not exist "%BACKEND%\node_modules" (
     echo  Instalando dependencias por primera vez...
-    echo  (esto toma ~1 minuto, solo ocurre una vez)
-    echo.
+    cd /d "%BACKEND%"
     npm install
     echo.
 )
+
+:: Detener cualquier servidor previo
+taskkill /F /IM node.exe >nul 2>&1
+timeout /t 1 >nul
 
 echo  Servidor iniciado correctamente.
 echo  ========================================
@@ -55,6 +68,7 @@ echo.
 start "" "http://127.0.0.1:3000/index_v2.html"
 
 :: Iniciar el servidor
+cd /d "%BACKEND%"
 node server.js
 
 :: Si el servidor se detiene
